@@ -58,12 +58,12 @@
   <!-- Estilos Customizados do Projeto -->
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-brandCream text-[#232722] font-calibri selection:bg-brandTerracotta selection:text-white">
+<body class="bg-brandCream text-[#232722] font-calibri selection:bg-brandTerracotta selection:text-white overflow-x-hidden w-full max-w-full">
 
   <!-- Barra Superior de Destaque / Boas-vindas (Nítida e com Alto Contraste) -->
   <div class="top-bar-announcement">
-    <div class="max-w-6xl mx-auto flex items-center justify-center gap-2.5">
-      <span class="inline-block w-2.5 h-2.5 rounded-full bg-brandPeach animate-pulse"></span>
+    <div class="max-w-6xl mx-auto flex flex-wrap sm:flex-nowrap items-center justify-center gap-2 text-center">
+      <span class="inline-block w-2 h-2 rounded-full bg-brandPeach animate-pulse shrink-0"></span>
       <p class="text-xs sm:text-sm tracking-wide text-[#FAF6EF]">
         Viva experiências únicas em <strong class="text-[#F8E2CE] font-bold">Gramado, Canela, Nova Petrópolis e Porto Alegre</strong> com o seu <strong class="text-[#F8E2CE] font-bold">BRINDA Card</strong>.
       </p>
@@ -143,36 +143,36 @@
           </p>
 
           <!-- Chamadas para Ação Rápidas -->
-          <div class="flex flex-wrap items-center gap-4 pt-2">
-            <a href="#brinda-card" class="btn-primary">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2 w-full sm:w-auto">
+            <a href="#brinda-card" class="btn-primary text-center">
               <span>Garantir meu BRINDA Card</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
-            <a href="#cervejarias" class="btn-secondary">
+            <a href="#cervejarias" class="btn-secondary text-center">
               <span>Conhecer Cervejarias</span>
             </a>
           </div>
 
           <!-- Pílulas de Confiança e Benefícios -->
-          <div class="grid grid-cols-3 gap-3 pt-6 border-t border-brandGreen/10">
-            <div class="bg-white/80 backdrop-blur-sm p-3.5 rounded-2xl border border-brandGreen/10 text-center shadow-sm">
-              <span class="block text-xl font-bold text-brandGreen">6 Meses</span>
-              <span class="text-xs text-stone-600">Validade do Cartão</span>
+          <div class="grid grid-cols-3 gap-2 sm:gap-3 pt-6 border-t border-brandGreen/10">
+            <div class="bg-white/80 backdrop-blur-sm p-2 sm:p-3.5 rounded-2xl border border-brandGreen/10 text-center shadow-sm">
+              <span class="block text-base sm:text-xl font-bold text-brandGreen">6 Meses</span>
+              <span class="text-[0.65rem] sm:text-xs text-stone-600 block leading-tight">Validade</span>
             </div>
-            <div class="bg-white/80 backdrop-blur-sm p-3.5 rounded-2xl border border-brandGreen/10 text-center shadow-sm">
-              <span class="block text-xl font-bold text-brandTerracotta">Sem Pressa</span>
-              <span class="text-xs text-stone-600">Escolha onde ir</span>
+            <div class="bg-white/80 backdrop-blur-sm p-2 sm:p-3.5 rounded-2xl border border-brandGreen/10 text-center shadow-sm">
+              <span class="block text-base sm:text-xl font-bold text-brandTerracotta">Sem Pressa</span>
+              <span class="text-[0.65rem] sm:text-xs text-stone-600 block leading-tight">Escolha onde ir</span>
             </div>
-            <div class="bg-white/80 backdrop-blur-sm p-3.5 rounded-2xl border border-brandGreen/10 text-center shadow-sm">
-              <span class="block text-xl font-bold text-brandGreen">100% Digital</span>
-              <span class="text-xs text-stone-600">QR Code no celular</span>
+            <div class="bg-white/80 backdrop-blur-sm p-2 sm:p-3.5 rounded-2xl border border-brandGreen/10 text-center shadow-sm">
+              <span class="block text-base sm:text-xl font-bold text-brandGreen">100% Digital</span>
+              <span class="text-[0.65rem] sm:text-xs text-stone-600 block leading-tight">QR Code</span>
             </div>
           </div>
 
         </div>
 
         <!-- Imagem do Hero em Moldura Orgânica -->
-        <div class="lg:col-span-5 relative">
+        <div class="lg:col-span-5 relative mt-6 lg:mt-0">
           <div class="relative mx-auto max-w-md lg:max-w-none">
             
             <!-- Moldura e Foto da Serra Gaúcha -->
@@ -181,18 +181,18 @@
             </div>
 
             <!-- Card Flutuante Acolhedor de Degustação -->
-            <div class="absolute -bottom-6 -left-4 sm:-left-8 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-brandGold/30 flex items-center gap-3.5 max-w-xs">
-              <img src="assets/degustacao.jpg" alt="Degustação" class="w-14 h-14 rounded-xl object-cover">
-              <div>
-                <span class="text-xs font-semibold uppercase tracking-wider text-brandTerracotta block">Degustações Guiadas</span>
-                <span class="text-sm font-bold text-brandGreen block">Conheça, prove, viva!</span>
-                <span class="text-xs text-stone-500">Kits artesanais exclusivos</span>
+            <div class="absolute -bottom-4 left-2 right-2 sm:left-auto sm:-left-6 sm:right-auto bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-2xl shadow-xl border border-brandGold/30 flex items-center gap-3 sm:max-w-xs">
+              <img src="assets/degustacao.jpg" alt="Degustação" class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl object-cover shrink-0">
+              <div class="min-w-0">
+                <span class="text-[0.65rem] sm:text-xs font-semibold uppercase tracking-wider text-brandTerracotta block">Degustações Guiadas</span>
+                <span class="text-xs sm:text-sm font-bold text-brandGreen block truncate">Conheça, prove, viva!</span>
+                <span class="text-[0.65rem] sm:text-xs text-stone-500 block truncate">Kits artesanais exclusivos</span>
               </div>
             </div>
 
             <!-- Selo Oficial Flutuante -->
-            <div class="absolute -top-5 -right-4 bg-brandGreen text-brandCream p-3 rounded-full shadow-lg border-2 border-brandGold flex items-center justify-center">
-              <img src="assets/logo.jpg" alt="Selo Oficial" class="w-12 h-12 rounded-full">
+            <div class="absolute -top-3 -right-2 sm:-top-5 sm:-right-4 bg-brandGreen text-brandCream p-2 sm:p-3 rounded-full shadow-lg border-2 border-brandGold flex items-center justify-center">
+              <img src="assets/logo.jpg" alt="Selo Oficial" class="w-9 h-9 sm:w-12 sm:h-12 rounded-full">
             </div>
 
           </div>
@@ -238,9 +238,9 @@
             </div>
             
             <!-- Etiqueta Acolhedora Flutuante -->
-            <div class="absolute -bottom-4 right-4 sm:right-6 bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-brandGold/40 flex items-center gap-2 text-xs font-bold text-brandGreen">
-              <span class="w-2 h-2 rounded-full bg-brandTerracotta"></span>
-              <span>Avenida Borges de Medeiros • Gramado - RS</span>
+            <div class="absolute -bottom-3 right-2 sm:right-6 bg-white/95 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg border border-brandGold/40 flex items-center gap-1.5 sm:gap-2 text-[0.7rem] sm:text-xs font-bold text-brandGreen max-w-[92%] truncate">
+              <span class="w-2 h-2 rounded-full bg-brandTerracotta shrink-0"></span>
+              <span class="truncate">Avenida Borges de Medeiros • Gramado - RS</span>
             </div>
           </div>
 
@@ -344,7 +344,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
         
         <!-- COLUNA ESQUERDA: CARTÃO 3D VIRTUAL + SIMULADOR DO COMPRADOR -->
-        <div class="lg:col-span-5 space-y-6 sticky top-28">
+        <div class="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
           
           <!-- Mockup Realista e Elegante do BRINDA CARD -->
           <div class="brinda-card-3d">
@@ -518,7 +518,7 @@
           <!-- Bloco 4: Forma de Pagamento -->
           <div class="space-y-3 pt-2 border-t border-stone-200">
             <span class="block text-xs font-bold uppercase tracking-wider text-brandGreen">Forma de Pagamento Preferida:</span>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
               <label class="border-2 border-stone-200 hover:border-brandGreen rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer transition-all has-[:checked]:border-brandGreen has-[:checked]:bg-brandGreen/5">
                 <input type="radio" name="payment_method" value="PIX" checked class="text-brandGreen focus:ring-brandGreen">
                 <span class="text-sm font-bold text-stone-800">⚡ PIX</span>
@@ -534,22 +534,22 @@
           </div>
 
           <!-- Bloco 5: Resumo e Valor Total Atualizado -->
-          <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200 space-y-3">
+          <div class="p-4 sm:p-5 rounded-2xl bg-stone-50 border border-stone-200 space-y-3">
             <span class="text-xs uppercase tracking-wider text-stone-500 font-bold block">Resumo do Pedido</span>
             <ul id="calcExperiencesList" class="space-y-1">
               <!-- Preenchido via app.js -->
             </ul>
             
             <div class="pt-3 border-t-2 border-stone-300 flex items-baseline justify-between">
-              <span class="text-base font-bold text-brandGreen">TOTAL A PAGAR:</span>
-              <span class="text-2xl sm:text-3xl font-extrabold text-brandTerracotta" id="calcTotal">R$ 140,00</span>
+              <span class="text-sm sm:text-base font-bold text-brandGreen">TOTAL A PAGAR:</span>
+              <span class="text-xl sm:text-3xl font-extrabold text-brandTerracotta" id="calcTotal">R$ 140,00</span>
             </div>
           </div>
 
           <!-- Bloco 6: Aceite dos Termos e Condições -->
           <div class="space-y-2">
             <label class="flex items-start gap-3 cursor-pointer">
-              <input type="checkbox" id="termsCheckbox" checked class="mt-1 w-4 h-4 rounded text-brandTerracotta focus:ring-brandTerracotta border-stone-300">
+              <input type="checkbox" id="termsCheckbox" checked class="mt-1 w-4 h-4 rounded text-brandTerracotta focus:ring-brandTerracotta border-stone-300 shrink-0">
               <span class="text-xs sm:text-sm text-stone-600 leading-tight">
                 Declaro que li e concordo com os <a href="#termos" class="open-terms-modal text-brandTerracotta underline font-semibold hover:text-brandGreen">Termos e Condições Gerais de Uso</a> do BRINDA Serra (cartão nominal para maiores de 18 anos).
               </span>
@@ -562,11 +562,11 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
           </button>
           
-          <div class="flex items-center justify-center gap-4 text-xs text-stone-500">
+          <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[0.7rem] sm:text-xs text-stone-500 text-center pt-1">
             <span>🔒 Ambiente Seguro</span>
-            <span>•</span>
-            <span>⚡ Envio Imediato por E-mail & WhatsApp</span>
-            <span>•</span>
+            <span class="hidden sm:inline">•</span>
+            <span>⚡ Envio Imediato</span>
+            <span class="hidden sm:inline">•</span>
             <span>📋 Validade de 6 Meses</span>
           </div>
 
@@ -597,7 +597,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch">
           
           <!-- Imagem da Cervejaria Farol -->
-          <div class="lg:col-span-5 relative h-72 sm:h-96 lg:h-auto min-h-[380px]">
+          <div class="lg:col-span-5 relative h-64 sm:h-80 lg:h-auto min-h-[240px] sm:min-h-[380px]">
             <img src="assets/cervejaria-farol.jpg" alt="Cervejaria Farol Canela" class="w-full h-full object-cover">
             <div class="absolute top-4 left-4 bg-brandGreen/90 text-brandCream text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm border border-brandGold/40 shadow-sm">
               Canela • Tradicional da Serra
@@ -605,7 +605,7 @@
           </div>
 
           <!-- Conteúdo Organizado e Respirado -->
-          <div class="lg:col-span-7 p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-6">
+          <div class="lg:col-span-7 p-5 sm:p-8 lg:p-10 flex flex-col justify-between space-y-6">
             
             <div class="space-y-3">
               <span class="text-xs uppercase tracking-widest text-brandTerracotta font-bold block">Primeira Cervejaria Artesanal</span>
@@ -998,7 +998,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <!-- Retângulo com Efeito de Fundo Terracota para Contraste Impressionante -->
-      <div class="chocolate-terracotta-card rounded-cozy p-8 sm:p-12">
+      <div class="chocolate-terracotta-card rounded-cozy p-5 sm:p-8 lg:p-12">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           <div class="lg:col-span-7 space-y-4">
@@ -1046,7 +1046,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
         
         <!-- Formulário de Contato -->
-        <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-cozy border border-brandGreen/15 shadow-sm space-y-6">
+        <div class="lg:col-span-7 bg-white p-5 sm:p-8 rounded-cozy border border-brandGreen/15 shadow-sm space-y-6">
           <div>
             <span class="badge-pill badge-green text-xs">Fale Conosco</span>
             <h2 class="text-2xl sm:text-3xl font-bold text-brandGreen mt-1">Entre em Contato</h2>
@@ -1078,7 +1078,7 @@
         <!-- SAC & Assistente Virtual + Card Verde com Texto Nítido -->
         <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
           
-          <div class="bg-white p-6 sm:p-8 rounded-cozy border border-brandGreen/15 shadow-sm space-y-4">
+          <div class="bg-white p-5 sm:p-8 rounded-cozy border border-brandGreen/15 shadow-sm space-y-4">
             <div class="w-12 h-12 rounded-full bg-brandPeach/30 text-brandTerracotta flex items-center justify-center text-xl">
               💬
             </div>
@@ -1094,20 +1094,20 @@
           </div>
 
           <!-- CARD VERDE OFICIAL: COM TEXTO 100% NÍTIDO E BRILHANTE (CORRIGIDO) -->
-          <div class="contact-official-card p-6 rounded-cozy space-y-3">
+          <div class="contact-official-card p-5 sm:p-6 rounded-cozy space-y-3">
             <span class="text-xs uppercase tracking-widest text-[#F8E2CE] font-bold block">Atendimento Oficial</span>
-            <div class="space-y-2 text-sm">
-              <p class="flex items-center gap-2">
+            <div class="space-y-2.5 text-xs sm:text-sm">
+              <p class="flex flex-wrap items-center gap-1.5 sm:gap-2 break-all">
                 <span>✉️</span>
                 <strong class="text-[#F8E2CE]">E-mail:</strong>
                 <a href="mailto:brindacard@gmail.com" class="text-white underline hover:text-[#F8E2CE] transition-colors">brindacard@gmail.com</a>
               </p>
-              <p class="flex items-center gap-2">
+              <p class="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <span>📍</span>
                 <strong class="text-[#F8E2CE]">Localização:</strong>
                 <span class="text-[#FAF6EF]">Serra Gaúcha (Canela / Gramado - RS)</span>
               </p>
-              <p class="flex items-center gap-2">
+              <p class="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <span>⚖️</span>
                 <strong class="text-[#F8E2CE]">Foro de Eleição:</strong>
                 <span class="text-[#FAF6EF]">Comarca de Canela - RS</span>
