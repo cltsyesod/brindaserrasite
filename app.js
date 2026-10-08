@@ -212,7 +212,7 @@ function initCityFilters() {
         b.classList.remove('active');
         b.style.backgroundColor = '#FFFFFF';
         b.style.color = '#3F4A3E';
-        b.style.borderColor = '#E3D9C9';
+        b.style.borderColor = 'rgba(78, 3, 3, 0.32)';
       });
 
       btn.classList.add('active');
