@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRINDA Serra | Experiências Inesquecíveis na Serra Gaúcha</title>
+  <meta name="description" content="Descubra as melhores cervejarias artesanais, vinícolas e fábricas de chocolate da Serra Gaúcha e região com o BRINDA Card. Conheça, prove, viva!">
+  
+  <!-- Favicon com a logo oficial -->
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+
+  <!-- Fonte Calibri / Carlito / Candara Fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN com personalização -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandGreen: {
+              DEFAULT: '#3F4A3E',
+              dark: '#2D362C',
+              light: '#536152'
+            },
+            brandCream: {
+              DEFAULT: '#F4EEE4',
+              soft: '#FAF6EF',
+              darker: '#E7DEC9'
+            },
+            brandTerracotta: {
+              DEFAULT: '#C96C4A',
+              hover: '#B55D3D',
+              light: '#DF8868'
+            },
+            brandPeach: {
+              DEFAULT: '#E7B8A0',
+              soft: '#F4D4C3'
+            },
+            brandGold: '#C9A86A',
+          },
+          fontFamily: {
+            calibri: ['Calibri', 'Carlito', 'Candara', 'Plus Jakarta Sans', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          borderRadius: {
+            'soft': '1.25rem',
+            'cozy': '1.75rem',
+            'pill': '9999px',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Estilos Customizados do Projeto -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-brandCream text-[#232722] font-calibri selection:bg-brandTerracotta selection:text-white">
+
+  <!-- Barra Superior de Destaque / Boas-vindas (Nítida e com Alto Contraste) -->
+  <div class="top-bar-announcement">
+    <div class="max-w-6xl mx-auto flex items-center justify-center gap-2.5">
+      <span class="inline-block w-2.5 h-2.5 rounded-full bg-brandPeach animate-pulse"></span>
+      <p class="text-xs sm:text-sm tracking-wide text-[#FAF6EF]">
+        Viva experiências únicas em <strong class="text-[#F8E2CE] font-bold">Gramado, Canela, Nova Petrópolis e Porto Alegre</strong> com o seu <strong class="text-[#F8E2CE] font-bold">BRINDA Card</strong>.
+      </p>
+    </div>
+  </div>
+
+  <!-- Cabeçalho / Navegação Acolhedora -->
+  <header class="header-glass sticky top-0 z-50 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logotipo Oficial BRINDA SERRA -->
+      <a href="#inicio" class="flex items-center gap-3.5 group">
+        <img src="assets/logo.jpg" alt="Logo BRINDA Serra" class="w-12 h-12 rounded-full object-cover shadow-sm border border-brandGold/40 group-hover:scale-105 transition-transform duration-300">
+        <div class="flex flex-col">
+          <span class="text-xl sm:text-2xl font-bold tracking-tight text-brandGreen group-hover:text-brandTerracotta transition-colors">BRINDA Serra</span>
+          <span class="text-[0.7rem] uppercase tracking-widest text-brandTerracotta font-semibold -mt-1">Experiências</span>
+        </div>
+      </a>
+
+      <!-- Menu Desktop -->
+      <nav class="hidden md:flex items-center gap-1.5 lg:gap-2">
+        <a href="#inicio" class="nav-link">Início</a>
+        <a href="#brinda-card" class="nav-link font-bold text-brandTerracotta bg-brandTerracotta/10 hover:bg-brandTerracotta hover:text-white">BRINDA Card</a>
+        <a href="#cervejarias" class="nav-link">Cervejarias</a>
+        <a href="#vinicolas" class="nav-link">Vinícolas</a>
+        <a href="#chocolates" class="nav-link">Chocolates</a>
+        <a href="#contato" class="nav-link">Contato</a>
+      </nav>
+
+      <!-- Botão CTA Cabeçalho -->
+      <div class="hidden sm:flex items-center gap-3">
+        <a href="#brinda-card" class="btn-primary text-sm !py-2.5 !px-5 shadow-sm">
+          <span>Adquirir BRINDA Card</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+      </div>
+
+      <!-- Botão Menu Mobile -->
+      <button id="mobileMenuBtn" aria-label="Abrir Menu" class="md:hidden p-2 rounded-xl text-brandGreen hover:bg-brandGreen/10 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+
+    <!-- Gaveta Mobile -->
+    <div id="mobileMenu" class="hidden md:hidden bg-brandCream-soft border-b border-brandGreen/15 px-6 py-5 space-y-3">
+      <a href="#inicio" class="mobile-nav-link block py-2 text-base font-semibold text-brandGreen hover:text-brandTerracotta">Início</a>
+      <a href="#brinda-card" class="mobile-nav-link block py-2 text-base font-bold text-brandTerracotta">BRINDA Card</a>
+      <a href="#cervejarias" class="mobile-nav-link block py-2 text-base font-semibold text-brandGreen hover:text-brandTerracotta">Cervejarias</a>
+      <a href="#vinicolas" class="mobile-nav-link block py-2 text-base font-semibold text-brandGreen hover:text-brandTerracotta">Vinícolas</a>
+      <a href="#chocolates" class="mobile-nav-link block py-2 text-base font-semibold text-brandGreen hover:text-brandTerracotta">Chocolates</a>
+      <a href="#contato" class="mobile-nav-link block py-2 text-base font-semibold text-brandGreen hover:text-brandTerracotta">Contato</a>
+      <div class="pt-3 border-t border-brandGreen/10">
+        <a href="#brinda-card" class="btn-primary w-full text-center text-sm">Adquirir BRINDA Card</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- SEÇÃO 1: HERO COM FUNDO LIMPO & ACOLHEDOR (Sem pontinhos) -->
+  <section id="inicio" class="hero-clean-bg pt-10 pb-16 md:pt-16 md:pb-24 overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        
+        <!-- Conteúdo do Hero -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brandTerracotta/10 border border-brandTerracotta/20 text-brandTerracotta text-sm font-semibold">
+            <span class="w-2 h-2 rounded-full bg-brandTerracotta"></span>
+            <span>Brinda Serra • Experiências Inesquecíveis</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-brandGreen leading-tight">
+            Experiências inesquecíveis para verdadeiros <span class="text-brandTerracotta underline decoration-brandPeach/60 decoration-wavy underline-offset-8">amantes da vida!</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-stone-700 leading-relaxed max-w-2xl font-normal">
+            Proporcionar aos visitantes da Serra Gaúcha, Porto Alegre e região descobrir a existência de cervejarias, vinícolas e fábricas de chocolate premiadas. Desfrute de degustações exclusivas por um valor acessível e viva roteiros encantadores.
+          </p>
+
+          <!-- Chamadas para Ação Rápidas -->
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a href="#brinda-card" class="btn-primary">
+              <span>Garantir meu BRINDA Card</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <a href="#cervejarias" class="btn-secondary">
+              <span>Conhecer Cervejarias</span>
+            </a>
+          </div>
+
+          <!-- Pílulas de Confiança e Benefícios -->
+          <div class="grid grid-cols-3 gap-3 pt-6 border-t border-brandGreen/10">
+            <div class="bg-white/80 backdrop-blur-sm p-3.5 rounded-2xl border border-brandGreen/10 text-center shadow-sm">
+              <span class="block text-xl font-bold text-brandGreen">6 Meses</span>
+              <span class="text-xs text-stone-600">Validade do Cartão</span>
+            </div>
+            <div class="bg-white/80 backdrop-blur-sm p-3.5 rounded-2xl border border-brandGreen/10 text-center shadow-sm">
+              <span class="block text-xl font-bold text-brandTerracotta">Sem Pressa</span>
+              <span class="text-xs text-stone-600">Escolha onde ir</span>
+            </div>
+            <div class="bg-white/80 backdrop-blur-sm p-3.5 rounded-2xl border border-brandGreen/10 text-center shadow-sm">
+              <span class="block text-xl font-bold text-brandGreen">100% Digital</span>
+              <span class="text-xs text-stone-600">QR Code no celular</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Imagem do Hero em Moldura Orgânica -->
+        <div class="lg:col-span-5 relative">
+          <div class="relative mx-auto max-w-md lg:max-w-none">
+            
+            <!-- Moldura e Foto da Serra Gaúcha -->
+            <div class="overflow-hidden rounded-[2.2rem] shadow-2xl border-4 border-white aspect-[4/5] bg-stone-200">
+              <img src="assets/hero-serra.jpg" alt="Serra Gaúcha - Brinda Serra" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+            </div>
+
+            <!-- Card Flutuante Acolhedor de Degustação -->
+            <div class="absolute -bottom-6 -left-4 sm:-left-8 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-brandGold/30 flex items-center gap-3.5 max-w-xs">
+              <img src="assets/degustacao.jpg" alt="Degustação" class="w-14 h-14 rounded-xl object-cover">
+              <div>
+                <span class="text-xs font-semibold uppercase tracking-wider text-brandTerracotta block">Degustações Guiadas</span>
+                <span class="text-sm font-bold text-brandGreen block">Conheça, prove, viva!</span>
+                <span class="text-xs text-stone-500">Kits artesanais exclusivos</span>
+              </div>
+            </div>
+
+            <!-- Selo Oficial Flutuante -->
+            <div class="absolute -top-5 -right-4 bg-brandGreen text-brandCream p-3 rounded-full shadow-lg border-2 border-brandGold flex items-center justify-center">
+              <img src="assets/logo.jpg" alt="Selo Oficial" class="w-12 h-12 rounded-full">
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- SEÇÃO 2: NOSSO OBJETIVO COM FOTO ELEGANTE DE GRAMADO           -->
+  <!-- ============================================================== -->
+  <section class="py-16 md:py-20 bg-brandCream-soft border-y border-brandGreen/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Showcase Editorial Elegante com a Foto de Gramado Iluminada -->
+      <div class="bg-white rounded-cozy border border-brandGreen/15 shadow-sm p-6 sm:p-10 mb-14 overflow-hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          
+          <!-- Texto de Apresentação e Objetivo -->
+          <div class="lg:col-span-6 space-y-4">
+            <span class="badge-pill badge-green">Nossa Missão na Serra</span>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brandGreen">Nosso Objetivo</h2>
+            
+            <p class="text-base sm:text-lg text-stone-700 leading-relaxed font-normal">
+              Proporcionar aos visitantes da Serra Gaúcha, Porto Alegre e região descobrir a existência de <strong>cervejarias</strong>, <strong>vinícolas</strong> e <strong>fábricas de chocolate</strong>, ter a experiência única de degustar diferentes tipos de produtos de cada casa por um valor acessível e também de passeios guiados e degustação de vinhos e chocolates.
+            </p>
+
+            <p class="text-sm sm:text-base text-stone-600 leading-relaxed">
+              Ao comprar o <strong>BRINDA Card</strong> há uma enorme gama de possibilidades de roteiros para visitar e aproveitar! Você tem liberdade para escolher as paradas que mais combinam com você.
+            </p>
+
+            <div class="p-3.5 rounded-xl bg-brandCream-soft border border-brandPeach/40 flex items-center gap-3 text-xs sm:text-sm font-semibold text-brandGreen">
+              <span class="text-xl">✨</span>
+              <span>Conheça, prove e viva o melhor de Gramado, Canela e região no seu próprio ritmo.</span>
+            </div>
+          </div>
+
+          <!-- Foto Noturna Elegante de Gramado com Iluminação e Arquitetura -->
+          <div class="lg:col-span-6 relative">
+            <div class="overflow-hidden rounded-[2rem] shadow-xl border-4 border-white aspect-[16/10] bg-stone-900 group">
+              <img src="assets/serra02.jpg" alt="Avenida Borges de Medeiros Iluminada em Gramado" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            </div>
+            
+            <!-- Etiqueta Acolhedora Flutuante -->
+            <div class="absolute -bottom-4 right-4 sm:right-6 bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-brandGold/40 flex items-center gap-2 text-xs font-bold text-brandGreen">
+              <span class="w-2 h-2 rounded-full bg-brandTerracotta"></span>
+              <span>Avenida Borges de Medeiros • Gramado - RS</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Três Pilares da Experiência -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        
+        <!-- Pilar Cervejarias -->
+        <div class="soft-card p-6 sm:p-7 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-100/80 text-amber-800 flex items-center justify-center mb-5 text-2xl">
+              🍺
+            </div>
+            <h3 class="text-xl font-bold text-brandGreen mb-2">Cervejarias Artesanais</h3>
+            <p class="text-sm text-stone-600 leading-relaxed">
+              Descubra cervejarias históricas em Canela, Gramado, Nova Petrópolis e Porto Alegre com kits de degustação dos melhores rótulos regionais.
+            </p>
+          </div>
+          <div class="pt-5 mt-4 border-t border-stone-100 flex items-center justify-between">
+            <span class="text-xs font-semibold text-brandTerracotta">Disponível Imediatamente</span>
+            <a href="#cervejarias" class="text-xs font-bold text-brandGreen hover:underline">Ver Casas &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Pilar Vinícolas -->
+        <div class="soft-card p-6 sm:p-7 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-rose-100/80 text-rose-800 flex items-center justify-center mb-5 text-2xl">
+              🍷
+            </div>
+            <h3 class="text-xl font-bold text-brandGreen mb-2">Vinícolas & Terroirs</h3>
+            <p class="text-sm text-stone-600 leading-relaxed">
+              Passeios guiados, taças premiadas e visitas às adegas tradicionais da região das hortênsias, como a renomada Jolimont e parceiros.
+            </p>
+          </div>
+          <div class="pt-5 mt-4 border-t border-stone-100 flex items-center justify-between">
+            <span class="badge-pill bg-brandPeach/20 text-brandTerracotta text-[0.75rem]">Em Breve</span>
+            <a href="#vinicolas" class="text-xs font-bold text-brandGreen hover:underline">Ver Tours &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Pilar Chocolates -->
+        <div class="soft-card p-6 sm:p-7 flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-stone-200/80 text-stone-800 flex items-center justify-center mb-5 text-2xl">
+              🍫
+            </div>
+            <h3 class="text-xl font-bold text-brandGreen mb-2">Chocolates Artesanais</h3>
+            <p class="text-sm text-stone-600 leading-relaxed">
+              O autêntico sabor que fez a Serra Gaúcha famosa no Brasil inteiro. Conheça a produção, prove receitas puras e sinta o aroma inconfundível.
+            </p>
+          </div>
+          <div class="pt-5 mt-4 border-t border-stone-100 flex items-center justify-between">
+            <span class="badge-pill bg-brandPeach/20 text-brandTerracotta text-[0.75rem]">Em Breve</span>
+            <a href="#chocolates" class="text-xs font-bold text-brandGreen hover:underline">Saiba Mais &rarr;</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Banner Acolhedor de Liberdade de Roteiro -->
+      <div class="mt-10 bg-white rounded-cozy p-6 sm:p-8 border border-brandGreen/15 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-brandPeach/30 text-brandTerracotta flex items-center justify-center shrink-0 text-xl font-bold">
+            🗺️
+          </div>
+          <div>
+            <h4 class="text-base sm:text-lg font-bold text-brandGreen">Você no controle do seu próprio tempo</h4>
+            <p class="text-sm text-stone-600">Não precisa escolher os locais agora. Ao comprar o BRINDA Card, você tem 6 meses para visitar no seu próprio ritmo.</p>
+          </div>
+        </div>
+        <a href="#brinda-card" class="btn-soft text-sm whitespace-nowrap">Configurar Meu Cartão</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- SEÇÃO 3: BRINDA CARD EM MÁXIMA EVIDÊNCIA (DESTAQUE CENTRAL)      -->
+  <!-- ============================================================== -->
+  <section id="brinda-card" class="py-16 md:py-24 relative overflow-hidden bg-gradient-to-b from-brandCream via-[#FAF6EF] to-brandCream">
+    
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Cabeçalho da Seção com Destaque Especial -->
+      <div class="text-center max-w-3xl mx-auto space-y-3 mb-12">
+        <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-brandTerracotta text-white text-xs uppercase tracking-widest font-bold shadow-sm">
+          ★ Destaque Principal
+        </div>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-brandGreen tracking-tight">BRINDA CARD</h2>
+        <p class="text-lg sm:text-xl text-brandTerracotta font-semibold italic">
+          "Compre seu BRINDA Card e adicione as experiências da sua vida!"
+        </p>
+        <p class="text-sm sm:text-base text-stone-600">
+          O BRINDA Card é o seu passaporte exclusivo com QR Code nominal. Você paga a adesão uma única vez (R$ 10,00) e adiciona as experiências que mais te interessarem.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+        
+        <!-- COLUNA ESQUERDA: CARTÃO 3D VIRTUAL + SIMULADOR DO COMPRADOR -->
+        <div class="lg:col-span-5 space-y-6 sticky top-28">
+          
+          <!-- Mockup Realista e Elegante do BRINDA CARD -->
+          <div class="brinda-card-3d">
+            <div class="card-foil-border">
+              
+              <!-- Topo do Cartão -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <img src="assets/logo.jpg" alt="Logo" class="card-emblem object-cover">
+                  <div>
+                    <span class="block text-xs uppercase tracking-widest font-bold text-brandGold">BRINDA CARD</span>
+                    <span class="text-[0.65rem] text-stone-300">Cartão Virtual Oficial</span>
+                  </div>
+                </div>
+                <div class="bg-brandGold/20 border border-brandGold/50 px-2.5 py-1 rounded-full text-[0.65rem] font-bold text-brandGold-light tracking-wide uppercase">
+                  VIP PASS
+                </div>
+              </div>
+
+              <!-- Meio do Cartão: QR Code & Chip -->
+              <div class="flex items-center justify-between my-2">
+                <div class="space-y-1">
+                  <div class="w-10 h-8 rounded-lg bg-gradient-to-tr from-amber-300 via-amber-200 to-yellow-500 opacity-90 border border-amber-600/40 shadow-inner flex items-center justify-center">
+                    <div class="w-6 h-5 border border-amber-800/40 rounded-sm"></div>
+                  </div>
+                  <span class="text-[0.65rem] text-stone-300 tracking-widest font-mono">DIGITAL MEMBER</span>
+                </div>
+
+                <div class="bg-white/95 p-1.5 rounded-xl shadow-md flex flex-col items-center">
+                  <!-- QR Code Simulado Elegante -->
+                  <div class="w-12 h-12 bg-stone-900 rounded-lg flex items-center justify-center p-1">
+                    <svg viewBox="0 0 24 24" class="w-full h-full text-white fill-current">
+                      <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 0h4v4h-4v-4zm-4-2h2v2h-2v-2zm0 4h2v4h-2v-4zm4 0h2v2h-2v-2zm-6-2h2v2h-2v-2zm-2 2h2v4h-2v-4z"/>
+                    </svg>
+                  </div>
+                  <span class="text-[0.55rem] text-stone-700 font-mono mt-0.5">BS-2026-VIP</span>
+                </div>
+              </div>
+
+              <!-- Rodapé do Cartão com Nome Dinâmico do Titular -->
+              <div class="pt-2 border-t border-brandGold/20 flex items-end justify-between">
+                <div>
+                  <span class="text-[0.6rem] text-stone-400 block uppercase tracking-wider">Titular do Cartão</span>
+                  <span class="text-sm font-bold tracking-wide text-brandCream truncate max-w-[200px] block" id="cardHolderPreviewName">
+                    SEU NOME AQUI
+                  </span>
+                </div>
+                <div class="text-right">
+                  <span class="text-[0.6rem] text-stone-400 block uppercase tracking-wider">Validade</span>
+                  <span class="text-xs font-semibold text-brandGold-light">6 Meses da Compra</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Campo para Digitar o Nome do Titular e Ver em Tempo Real -->
+          <div class="bg-white p-5 rounded-2xl border border-brandGreen/15 shadow-sm space-y-3">
+            <label for="cardHolderNameInput" class="block text-xs font-bold uppercase tracking-wider text-brandGreen">
+              Personalize o seu Cartão:
+            </label>
+            <div class="relative">
+              <input type="text" id="cardHolderNameInput" placeholder="Digite seu nome completo..." maxlength="40" class="form-input-soft pl-10 text-sm">
+              <span class="absolute left-3 top-3 text-stone-400 text-sm">👤</span>
+            </div>
+            <p class="text-xs text-stone-500">
+              * O BRINDA Card é <strong>nominal e intransferível</strong> (vinculado ao seu documento na entrada dos parceiros).
+            </p>
+          </div>
+
+          <!-- Resumo de Benefícios Garantidos -->
+          <div class="bg-brandCream-soft p-5 rounded-2xl border border-brandGreen/10 space-y-2.5 text-xs sm:text-sm text-stone-700">
+            <div class="flex items-center gap-2">
+              <span class="text-brandGreen font-bold">✓</span>
+              <span>Acesso imediato à rede credenciada de Canela, Gramado e região.</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brandGreen font-bold">✓</span>
+              <span>Degustação sem custo adicional nas casas escolhidas.</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-brandGreen font-bold">✓</span>
+              <span>Valide com documento oficial e QR Code direto no celular.</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- COLUNA DIREITA: CONFIGURADOR & CALCULADORA DE PACOTES -->
+        <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-cozy border border-brandGreen/15 shadow-md space-y-8">
+          
+          <!-- Bloco 1: Adesão Obrigatória -->
+          <div class="p-4 rounded-xl bg-brandCream-soft border border-brandGold/40 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-brandGreen text-white flex items-center justify-center font-bold text-sm">
+                ✓
+              </div>
+              <div>
+                <span class="font-bold text-brandGreen text-sm block">Adesão BRINDA Card (Obrigatória)</span>
+                <span class="text-xs text-stone-500">Gera login pessoal, QR Code e validade de 6 meses</span>
+              </div>
+            </div>
+            <span class="text-base font-bold text-brandGreen">R$ 10,00</span>
+          </div>
+
+          <!-- Bloco 2: Experiências com Cervejarias -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold text-brandGreen flex items-center gap-2">
+                <span>🍺 Cervejarias Artesanais</span>
+              </h3>
+              <span class="text-xs text-brandTerracotta font-semibold">Escolha quantas casas quer degustar</span>
+            </div>
+            <p class="text-xs text-stone-500">
+              Decida quantas cervejarias quer visitar e degustar, verifique e visite as participantes a seu critério. Não precisa definir o local agora!
+            </p>
+
+            <div class="space-y-2.5 pt-1">
+              
+              <!-- Sem Cervejaria -->
+              <label class="plan-option-card flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <input type="radio" name="beer_plan" value="none" data-price="0" data-name="Nenhuma Cervejaria" class="sr-only">
+                  <div class="plan-checkbox"><span class="text-white text-xs font-bold">✓</span></div>
+                  <div>
+                    <span class="text-sm font-semibold text-stone-800 block">Apenas o Cartão Base (por enquanto)</span>
+                    <span class="text-xs text-stone-500">Adicionarei experiências posteriormente</span>
+                  </div>
+                </div>
+                <span class="text-sm font-bold text-stone-600">R$ 0,00</span>
+              </label>
+
+              <!-- Brinda Bem (3 Cervejarias) - Selecionado por padrão -->
+              <label class="plan-option-card selected flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <input type="radio" name="beer_plan" value="brinda_bem" data-price="130" data-name="Brinda Bem (Degustação em 3 cervejarias)" checked class="sr-only">
+                  <div class="plan-checkbox"><span class="text-white text-xs font-bold">✓</span></div>
+                  <div>
+                    <span class="text-sm font-bold text-brandGreen block">Brinda Bem (Recomendado)</span>
+                    <span class="text-xs text-stone-600">Experiência com degustação em <strong>3 cervejarias</strong> à sua escolha</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-base font-bold text-brandTerracotta">R$ 130,00</span>
+                  <span class="text-[0.65rem] text-stone-500 block">R$ 43,33 / casa</span>
+                </div>
+              </label>
+
+              <!-- Brinda Premium (5 Cervejarias) -->
+              <label class="plan-option-card flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <input type="radio" name="beer_plan" value="brinda_premium" data-price="190" data-name="Brinda Premium (Degustação em 5 cervejarias)" class="sr-only">
+                  <div class="plan-checkbox"><span class="text-white text-xs font-bold">✓</span></div>
+                  <div>
+                    <span class="text-sm font-bold text-brandGreen block">Brinda Premium (Mais Econômico)</span>
+                    <span class="text-xs text-stone-600">Experiência com degustação em <strong>5 cervejarias</strong> à sua escolha</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="text-base font-bold text-brandTerracotta">R$ 190,00</span>
+                  <span class="text-[0.65rem] text-stone-500 block">R$ 38,00 / casa</span>
+                </div>
+              </label>
+
+            </div>
+          </div>
+
+          <!-- Bloco 3: Experiências com Vinícolas (Ocultado temporariamente a pedido do cliente. Snippet completo preservado em: snippets/bloco-vinicolas-brinda-card.html) -->
+          <input type="hidden" name="wine_plan" value="none" data-price="0" data-name="Nenhuma Vinícola" checked>
+
+          <!-- Bloco 4: Forma de Pagamento -->
+          <div class="space-y-3 pt-2 border-t border-stone-200">
+            <span class="block text-xs font-bold uppercase tracking-wider text-brandGreen">Forma de Pagamento Preferida:</span>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="border-2 border-stone-200 hover:border-brandGreen rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer transition-all has-[:checked]:border-brandGreen has-[:checked]:bg-brandGreen/5">
+                <input type="radio" name="payment_method" value="PIX" checked class="text-brandGreen focus:ring-brandGreen">
+                <span class="text-sm font-bold text-stone-800">⚡ PIX</span>
+                <span class="text-[0.65rem] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">Instantâneo</span>
+              </label>
+              
+              <label class="border-2 border-stone-200 hover:border-brandGreen rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer transition-all has-[:checked]:border-brandGreen has-[:checked]:bg-brandGreen/5">
+                <input type="radio" name="payment_method" value="Cartão de Crédito" class="text-brandGreen focus:ring-brandGreen">
+                <span class="text-sm font-bold text-stone-800">💳 Cartão</span>
+                <span class="text-[0.65rem] text-stone-500">Até 12x</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Bloco 5: Resumo e Valor Total Atualizado -->
+          <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200 space-y-3">
+            <span class="text-xs uppercase tracking-wider text-stone-500 font-bold block">Resumo do Pedido</span>
+            <ul id="calcExperiencesList" class="space-y-1">
+              <!-- Preenchido via app.js -->
+            </ul>
+            
+            <div class="pt-3 border-t-2 border-stone-300 flex items-baseline justify-between">
+              <span class="text-base font-bold text-brandGreen">TOTAL A PAGAR:</span>
+              <span class="text-2xl sm:text-3xl font-extrabold text-brandTerracotta" id="calcTotal">R$ 140,00</span>
+            </div>
+          </div>
+
+          <!-- Bloco 6: Aceite dos Termos e Condições -->
+          <div class="space-y-2">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" id="termsCheckbox" checked class="mt-1 w-4 h-4 rounded text-brandTerracotta focus:ring-brandTerracotta border-stone-300">
+              <span class="text-xs sm:text-sm text-stone-600 leading-tight">
+                Declaro que li e concordo com os <a href="#termos" class="open-terms-modal text-brandTerracotta underline font-semibold hover:text-brandGreen">Termos e Condições Gerais de Uso</a> do BRINDA Serra (cartão nominal para maiores de 18 anos).
+              </span>
+            </label>
+          </div>
+
+          <!-- Botão Final de Compra -->
+          <button id="buyBrindaCardBtn" class="btn-primary w-full text-base sm:text-lg !py-4 shadow-lg flex items-center justify-center gap-3">
+            <span>COMPRAR MEU BRINDA CARD</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </button>
+          
+          <div class="flex items-center justify-center gap-4 text-xs text-stone-500">
+            <span>🔒 Ambiente Seguro</span>
+            <span>•</span>
+            <span>⚡ Envio Imediato por E-mail & WhatsApp</span>
+            <span>•</span>
+            <span>📋 Validade de 6 Meses</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- SEÇÃO 4: CERVEJARIAS PARTICIPANTES (Farol Refinado + Terracota) -->
+  <!-- ============================================================== -->
+  <section id="cervejarias" class="py-16 md:py-24 bg-brandCream border-t border-brandGreen/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Cabeçalho -->
+      <div class="max-w-3xl mx-auto text-center space-y-3 mb-12">
+        <span class="badge-pill badge-green">Polo Cervejeiro Serrano</span>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brandGreen">Cervejarias Participantes</h2>
+        <p class="text-base text-stone-600">
+          Aqui você encontra informações das cervejarias participantes onde você pode conhecer e degustar as melhores cervejas artesanais.
+        </p>
+      </div>
+
+      <!-- DESTAQUE ESPECIAL: CERVEJARIA FAROL (Canela) - REORGANIZADO & ELEGANTE -->
+      <div class="bg-white rounded-cozy border border-brandGreen/15 shadow-md overflow-hidden mb-14">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch">
+          
+          <!-- Imagem da Cervejaria Farol -->
+          <div class="lg:col-span-5 relative h-72 sm:h-96 lg:h-auto min-h-[380px]">
+            <img src="assets/cervejaria-farol.jpg" alt="Cervejaria Farol Canela" class="w-full h-full object-cover">
+            <div class="absolute top-4 left-4 bg-brandGreen/90 text-brandCream text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm border border-brandGold/40 shadow-sm">
+              Canela • Tradicional da Serra
+            </div>
+          </div>
+
+          <!-- Conteúdo Organizado e Respirado -->
+          <div class="lg:col-span-7 p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-6">
+            
+            <div class="space-y-3">
+              <span class="text-xs uppercase tracking-widest text-brandTerracotta font-bold block">Primeira Cervejaria Artesanal</span>
+              <h3 class="text-2xl sm:text-3xl font-bold text-brandGreen">Cervejaria Farol</h3>
+              
+              <p class="text-stone-700 text-sm sm:text-base leading-relaxed">
+                A primeira e tradicional Cervejaria Artesanal da Serra Gaúcha. Tudo começou há mais de 250 anos, na Alemanha, e chegou à cidade de Canela pelas mãos da família Bausch, que encontrou na Serra a pureza da água para dar seguimento à nobre tradição cervejeira.
+              </p>
+
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Em 2003, a família ergueu uma réplica em pedra basalto de um farol, em um parque de 4 hectares de mata nativa, com cerca de 18 mil pedras lapidadas e uma torre de 30m com 137 degraus, proporcionando uma vista panorâmica exuberante da região.
+              </p>
+            </div>
+
+            <!-- Fichas de Informação Organizadas (Endereço, Horários, Site) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              
+              <div class="farol-info-chip sm:col-span-2">
+                <div class="farol-icon-badge">📍</div>
+                <div>
+                  <span class="text-xs text-stone-500 uppercase tracking-wider font-semibold block">Endereço Oficial</span>
+                  <span class="text-sm font-bold text-brandGreen">Rua Severino Inocente Zini, 150</span>
+                  <span class="text-xs text-stone-600 block">Distrito Industrial – Canela / RS</span>
+                </div>
+              </div>
+
+              <div class="farol-info-chip">
+                <div class="farol-icon-badge">⏰</div>
+                <div>
+                  <span class="text-xs text-stone-500 uppercase tracking-wider font-semibold block">Horários de Atendimento</span>
+                  <span class="text-xs font-bold text-brandGreen block">Terça a sábado: 11h às 24h</span>
+                  <span class="text-xs text-stone-600 block">Domingos: 11h às 17h</span>
+                </div>
+              </div>
+
+              <div class="farol-info-chip">
+                <div class="farol-icon-badge">🌐</div>
+                <div>
+                  <span class="text-xs text-stone-500 uppercase tracking-wider font-semibold block">Website Oficial</span>
+                  <a href="https://cervejariafarol.com.br/" target="_blank" rel="noopener" class="text-xs sm:text-sm font-bold text-brandTerracotta hover:underline block truncate">
+                    cervejariafarol.com.br &rarr;
+                  </a>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="pt-2">
+              <a href="#brinda-card" class="btn-primary text-sm !py-3 !px-6 w-full sm:w-auto text-center">
+                Degustar na Farol com o BRINDA Card
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Filtros de Cidade Amigáveis -->
+      <div class="flex items-center justify-center flex-wrap gap-2.5 mb-10">
+        <button class="city-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold border transition-all" data-city="all" style="background-color: var(--color-primary-green); color: #FFFFFF;">
+          Todas as Cidades
+        </button>
+        <button class="city-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold border border-stone-200 bg-white text-stone-700 hover:border-brandGreen transition-all" data-city="canela">
+          Canela
+        </button>
+        <button class="city-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold border border-stone-200 bg-white text-stone-700 hover:border-brandGreen transition-all" data-city="gramado">
+          Gramado
+        </button>
+        <button class="city-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold border border-stone-200 bg-white text-stone-700 hover:border-brandGreen transition-all" data-city="nova-petropolis">
+          Nova Petrópolis
+        </button>
+        <button class="city-filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold border border-stone-200 bg-white text-stone-700 hover:border-brandGreen transition-all" data-city="porto-alegre">
+          Porto Alegre
+        </button>
+      </div>
+
+      <!-- CARDS DE CERVEJARIAS: MOLDURA TERRACOTA COM FONTE VERDE NÍTIDA -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="breweriesGrid">
+        
+        <!-- CANELA: Farol -->
+        <div class="brewery-item brewery-card-terracotta" data-city="canela">
+          <div class="brewery-inner-plate">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="brewery-badge-green">Canela</span>
+                <span class="text-xs text-brandTerracotta font-bold uppercase tracking-wider">Tradicional</span>
+              </div>
+              <h4>Cervejaria Farol</h4>
+              <p class="mt-1.5 leading-snug">Rua Severino Inocente Zini, 150 – Distrito Industrial</p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-brandGreen/15 flex items-center justify-between">
+              <span class="text-xs font-semibold text-brandGreen/80">Parceiro Oficial</span>
+              <span class="brewery-status-green">Aceita BRINDA Card</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CANELA: Viking Bier -->
+        <div class="brewery-item brewery-card-terracotta" data-city="canela">
+          <div class="brewery-inner-plate">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="brewery-badge-green">Canela</span>
+                <span class="text-xs text-brandTerracotta font-bold uppercase tracking-wider">Artesanal</span>
+              </div>
+              <h4>Cervejaria Viking Bier</h4>
+              <p class="mt-1.5 leading-snug">Rua Loureiro da Silva, 200 – Bom Jesus</p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-brandGreen/15 flex items-center justify-between">
+              <span class="text-xs font-semibold text-brandGreen/80">Parceiro Oficial</span>
+              <span class="brewery-status-green">Aceita BRINDA Card</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CANELA: Kraustin -->
+        <div class="brewery-item brewery-card-terracotta" data-city="canela">
+          <div class="brewery-inner-plate">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="brewery-badge-green">Canela</span>
+                <span class="text-xs text-brandTerracotta font-bold uppercase tracking-wider">Centro</span>
+              </div>
+              <h4>Cervejaria Kraustin</h4>
+              <p class="mt-1.5 leading-snug">Rua Dona Carlinda, 174 – Centro</p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-brandGreen/15 flex items-center justify-between">
+              <span class="text-xs font-semibold text-brandGreen/80">Parceiro Oficial</span>
+              <span class="brewery-status-green">Aceita BRINDA Card</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRAMADO: Felsen -->
+        <div class="brewery-item brewery-card-terracotta" data-city="gramado">
+          <div class="brewery-inner-plate">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="brewery-badge-green">Gramado</span>
+                <span class="text-xs text-brandTerracotta font-bold uppercase tracking-wider">Carniel</span>
+              </div>
+              <h4>Cervejaria Felsen</h4>
+              <p class="mt-1.5 leading-snug">Rua São Marcos, 555 – Carniel</p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-brandGreen/15 flex items-center justify-between">
+              <span class="text-xs font-semibold text-brandGreen/80">Parceiro Oficial</span>
+              <span class="brewery-status-green">Aceita BRINDA Card</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRAMADO: La Birra -->
+        <div class="brewery-item brewery-card-terracotta" data-city="gramado">
+          <div class="brewery-inner-plate">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="brewery-badge-green">Gramado</span>
+                <span class="text-xs text-brandTerracotta font-bold uppercase tracking-wider">Centro</span>
+              </div>
+              <h4>Cervejaria La Birra</h4>
+              <p class="mt-1.5 leading-snug">Rua Garibaldi, 109 – Centro</p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-brandGreen/15 flex items-center justify-between">
+              <span class="text-xs font-semibold text-brandGreen/80">Parceiro Oficial</span>
+              <span class="brewery-status-green">Aceita BRINDA Card</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRAMADO: Rasen Bier -->
+        <div class="brewery-item brewery-card-terracotta" data-city="gramado">
+          <div class="brewery-inner-plate">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="brewery-badge-green">Gramado</span>
+                <span class="text-xs text-brandTerracotta font-bold uppercase tracking-wider">Pioneira</span>
+              </div>
+              <h4>Cervejaria Rasen Bier</h4>
+              <p class="mt-1.5 leading-snug">Tradição artesanal alemã em Gramado</p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-brandGreen/15 flex items-center justify-between">
+              <span class="text-xs font-semibold text-brandGreen/80">Parceiro Oficial</span>
+              <span class="brewery-status-green">Aceita BRINDA Card</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRAMADO: White Fly -->
+        <div class="brewery-item brewery-card-terracotta" data-city="gramado">
+          <div class="brewery-inner-plate">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="brewery-badge-green">Gramado</span>
+                <span class="text-xs text-brandTerracotta font-bold uppercase tracking-wider">Tap House</span>
+              </div>
+              <h4>Cervejaria White Fly</h4>
+              <p class="mt-1.5 leading-snug">Rótulos modernos e ambiente descontraído</p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-brandGreen/15 flex items-center justify-between">
+              <span class="text-xs font-semibold text-brandGreen/80">Parceiro Oficial</span>
+              <span class="brewery-status-green">Aceita BRINDA Card</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOVA PETRÓPOLIS: Edelbrau -->
+        <div class="brewery-item brewery-card-terracotta" data-city="nova-petropolis">
+          <div class="brewery-inner-plate">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="brewery-badge-green">Nova Petrópolis</span>
+                <span class="text-xs text-brandTerracotta font-bold uppercase tracking-wider">Jardim da Serra</span>
+              </div>
+              <h4>Cervejaria Edelbrau</h4>
+              <p class="mt-1.5 leading-snug">Avenida 15 de Novembro, 4024</p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-brandGreen/15 flex items-center justify-between">
+              <span class="text-xs font-semibold text-brandGreen/80">Parceiro Oficial</span>
+              <span class="brewery-status-green">Aceita BRINDA Card</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOVA PETRÓPOLIS: Traum -->
+        <div class="brewery-item brewery-card-terracotta" data-city="nova-petropolis">
+          <div class="brewery-inner-plate">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="brewery-badge-green">Nova Petrópolis</span>
+                <span class="text-xs text-brandTerracotta font-bold uppercase tracking-wider">Colonial</span>
+              </div>
+              <h4>Cervejaria Traum</h4>
+              <p class="mt-1.5 leading-snug">Av. 15 de Novembro, 6200</p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-brandGreen/15 flex items-center justify-between">
+              <span class="text-xs font-semibold text-brandGreen/80">Parceiro Oficial</span>
+              <span class="brewery-status-green">Aceita BRINDA Card</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PORTO ALEGRE: Fora da Lei -->
+        <div class="brewery-item brewery-card-terracotta" data-city="porto-alegre">
+          <div class="brewery-inner-plate">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="brewery-badge-green">Porto Alegre</span>
+                <span class="text-xs text-brandTerracotta font-bold uppercase tracking-wider">Capital Gaúcha</span>
+              </div>
+              <h4>Cervejaria Fora da Lei</h4>
+              <p class="mt-1.5 leading-snug">Av. Assis Brasil, 1116 – Passo d'Areia</p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-brandGreen/15 flex items-center justify-between">
+              <span class="text-xs font-semibold text-brandGreen/80">Parceiro Oficial</span>
+              <span class="brewery-status-green">Aceita BRINDA Card</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- SEÇÃO 5: VINÍCOLAS COM PARALLAX E CARDS EM TERRACOTA (FONTE VERDE) -->
+  <!-- ============================================================== -->
+  <section id="vinicolas" class="py-16 md:py-24 bg-brandCream-soft border-t border-brandGreen/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="max-w-3xl mx-auto text-center space-y-3 mb-12">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-100 text-rose-800 text-xs font-bold uppercase tracking-wider">
+          Vinícolas • Em Breve
+        </div>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brandGreen">Vinícolas & Terroirs</h2>
+        <p class="text-base text-stone-600">
+          Aqui você encontra informações das vinícolas participantes onde você pode viver experiências exclusivas com passeios e degustações incríveis.
+        </p>
+      </div>
+
+      <!-- FOTO PANORÂMICA COM EFEITO PARALLAX SUAVE -->
+      <div class="parallax-winery-wrapper mb-12">
+        <div class="parallax-winery-bg"></div>
+        <div class="parallax-winery-content">
+          <span class="badge-pill bg-brandPeach/90 text-brandGreen font-bold text-xs w-max mb-2">Passeios Selecionados</span>
+          <h3 class="text-2xl sm:text-3xl font-bold text-brandCream">Vitivinicultura de Altitude e Charme Serrano</h3>
+          <p class="text-stone-200 text-sm sm:text-base max-w-2xl mt-1 leading-relaxed">
+            Escolha se quer viver experiências com visitas guiadas ou lojas de vinho com degustação. Em breve você poderá validar diretamente pelo BRINDA Card.
+          </p>
+        </div>
+      </div>
+
+      <!-- CARDS DE VINÍCOLAS NA COR TERRACOTA COM FONTE VERDE -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Degustações em Lojas -->
+        <div class="winery-card-terracotta space-y-5">
+          <div class="flex items-center justify-between border-b border-white/20 pb-3">
+            <h4 class="text-xl font-bold text-white">Degustações nas Lojas</h4>
+            <span class="text-xs bg-white/20 px-3 py-1 rounded-full text-white font-semibold">Balcão & Loja</span>
+          </div>
+          
+          <div class="space-y-3">
+            <div class="winery-card-item">
+              <div>
+                <span class="item-title block">Jolimont Canela</span>
+                <span class="item-sub">Degustação na loja em Canela</span>
+              </div>
+              <span class="item-price">R$ 35,00</span>
+            </div>
+
+            <div class="winery-card-item">
+              <div>
+                <span class="item-title block">Jolimont Gramado</span>
+                <span class="item-sub">Degustação na loja em Gramado</span>
+              </div>
+              <span class="item-price">R$ 35,00</span>
+            </div>
+
+            <div class="winery-card-item">
+              <div>
+                <span class="item-title block">01 Degustação Simples</span>
+                <span class="item-sub">Vinícolas participantes</span>
+              </div>
+              <span class="item-price">R$ 90,00</span>
+            </div>
+
+            <div class="winery-card-item">
+              <div>
+                <span class="item-title block">03 Degustações Simples</span>
+                <span class="item-sub">Combo 3 vinícolas participantes</span>
+              </div>
+              <span class="item-price">R$ 150,00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tours Guiados e Experiências Especiais -->
+        <div class="winery-card-terracotta space-y-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-white/20 pb-3 mb-5">
+              <h4 class="text-xl font-bold text-white">Passeios & Experiências</h4>
+              <span class="text-xs bg-white/20 px-3 py-1 rounded-full text-white font-semibold">Visita Guiada</span>
+            </div>
+            
+            <div class="space-y-3">
+              <div class="winery-card-item">
+                <div>
+                  <span class="item-title block">Tour Jolimont Vinícola</span>
+                  <span class="item-sub">Passeio guiado e degustação</span>
+                </div>
+                <span class="item-price">R$ 189,00</span>
+              </div>
+
+              <div class="winery-card-item">
+                <div>
+                  <span class="item-title block">Tour Jolimont Premium com Reserva</span>
+                  <span class="item-sub">Visita aos vinhedos com rótulos nobres</span>
+                </div>
+                <span class="item-price">R$ 300,00</span>
+              </div>
+
+              <div class="winery-card-item">
+                <div>
+                  <span class="item-title block">Degustação Harmonizada Especial</span>
+                  <span class="item-sub">Vinhos finos com queijos da serra</span>
+                </div>
+                <span class="item-price">R$ 600,00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4">
+            <a href="#brinda-card" class="btn-winery-white">
+              Adicionar Vinícolas ao meu BRINDA Card &rarr;
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- SEÇÃO 6: CHOCOLATES COM FUNDO TERRACOTA (MÁXIMO CONTRASTE)     -->
+  <!-- ============================================================== -->
+  <section id="chocolates" class="py-16 md:py-20 bg-brandCream border-t border-brandGreen/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Retângulo com Efeito de Fundo Terracota para Contraste Impressionante -->
+      <div class="chocolate-terracotta-card rounded-cozy p-8 sm:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <div class="lg:col-span-7 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/25 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-sm border border-white/30">
+              Chocolates • Em Breve
+            </div>
+            
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+              Fábricas de Chocolate Artesanal
+            </h2>
+
+            <p class="text-base text-[#FAF6EF] leading-relaxed">
+              Aqui você encontra informações das chocolaterias participantes onde você poderá <strong>visitar, aprender e provar</strong> os melhores chocolates da Serra Gaúcha!
+            </p>
+
+            <p class="text-sm text-[#F8E2CE] leading-relaxed">
+              A tradição chocolateira de Gramado e Canela é uma das mais ricas do continente. Com o BRINDA Card você terá acesso a kits de degustação, visitas guiadas aos mestres chocolateiros e descontos especiais nas lojas de fábrica.
+            </p>
+
+            <div class="pt-2 flex flex-wrap items-center gap-3">
+              <span class="chocolate-chip-light">✨ Degustações Puras</span>
+              <span class="chocolate-chip-light">🍫 Rota do Cacau</span>
+              <span class="chocolate-chip-light">🏷️ Benefícios Exclusivos</span>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5">
+            <div class="overflow-hidden rounded-2xl shadow-2xl border-4 border-white aspect-[4/3]">
+              <img src="assets/chocolate.jpg" alt="Chocolate Artesanal Serra Gaúcha" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- SEÇÃO 7: CONTATO & SAC (Card Verde com Fonte Nítida)           -->
+  <!-- ============================================================== -->
+  <section id="contato" class="py-16 md:py-24 bg-brandCream-soft border-t border-brandGreen/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
+        
+        <!-- Formulário de Contato -->
+        <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-cozy border border-brandGreen/15 shadow-sm space-y-6">
+          <div>
+            <span class="badge-pill badge-green text-xs">Fale Conosco</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-brandGreen mt-1">Entre em Contato</h2>
+            <p class="text-sm text-stone-600 mt-1">Tem alguma dúvida sobre o BRINDA Card ou deseja cadastrar seu estabelecimento?</p>
+          </div>
+
+          <form id="contactForm" class="space-y-4">
+            <div>
+              <label for="contactName" class="block text-xs font-bold uppercase tracking-wider text-brandGreen mb-1">Seu Nome</label>
+              <input type="text" id="contactName" required placeholder="Como podemos te chamar?" class="form-input-soft text-sm">
+            </div>
+
+            <div>
+              <label for="contactEmail" class="block text-xs font-bold uppercase tracking-wider text-brandGreen mb-1">Seu E-mail</label>
+              <input type="email" id="contactEmail" required placeholder="exemplo@email.com" class="form-input-soft text-sm">
+            </div>
+
+            <div>
+              <label for="contactMessage" class="block text-xs font-bold uppercase tracking-wider text-brandGreen mb-1">Mensagem</label>
+              <textarea id="contactMessage" rows="4" required placeholder="Escreva sua dúvida ou mensagem..." class="form-input-soft text-sm resize-none"></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary w-full text-sm !py-3.5 shadow-md">
+              Enviar Mensagem
+            </button>
+          </form>
+        </div>
+
+        <!-- SAC & Assistente Virtual + Card Verde com Texto Nítido -->
+        <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
+          
+          <div class="bg-white p-6 sm:p-8 rounded-cozy border border-brandGreen/15 shadow-sm space-y-4">
+            <div class="w-12 h-12 rounded-full bg-brandPeach/30 text-brandTerracotta flex items-center justify-center text-xl">
+              💬
+            </div>
+            <h3 class="text-xl font-bold text-brandGreen">Ficou alguma dúvida sobre nossos serviços?</h3>
+            <p class="text-sm text-stone-600 leading-relaxed">
+              Nossa equipe de suporte e assistente virtual está pronta para te atender e tirar qualquer dúvida sobre a validação do seu cartão ou roteiros da Serra Gaúcha.
+            </p>
+            <div class="pt-2">
+              <a href="https://wa.me/5554999999999?text=Ol%C3%A1!%20Gostaria%20de%20tirar%20d%C3%BAvidas%20sobre%20o%20BRINDA%20Card" target="_blank" rel="noopener" class="btn-secondary w-full text-center text-sm !py-3 flex items-center justify-center gap-2">
+                <span>Assistente Virtual / SAC via WhatsApp</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- CARD VERDE OFICIAL: COM TEXTO 100% NÍTIDO E BRILHANTE (CORRIGIDO) -->
+          <div class="contact-official-card p-6 rounded-cozy space-y-3">
+            <span class="text-xs uppercase tracking-widest text-[#F8E2CE] font-bold block">Atendimento Oficial</span>
+            <div class="space-y-2 text-sm">
+              <p class="flex items-center gap-2">
+                <span>✉️</span>
+                <strong class="text-[#F8E2CE]">E-mail:</strong>
+                <a href="mailto:brindacard@gmail.com" class="text-white underline hover:text-[#F8E2CE] transition-colors">brindacard@gmail.com</a>
+              </p>
+              <p class="flex items-center gap-2">
+                <span>📍</span>
+                <strong class="text-[#F8E2CE]">Localização:</strong>
+                <span class="text-[#FAF6EF]">Serra Gaúcha (Canela / Gramado - RS)</span>
+              </p>
+              <p class="flex items-center gap-2">
+                <span>⚖️</span>
+                <strong class="text-[#F8E2CE]">Foro de Eleição:</strong>
+                <span class="text-[#FAF6EF]">Comarca de Canela - RS</span>
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: TERMOS E CONDIÇÕES GERAIS DE USO (Texto 100% Integral)   -->
+  <!-- ============================================================== -->
+  <div id="termsModal" class="modal-backdrop">
+    <div class="modal-box">
+      
+      <div class="modal-header">
+        <div class="flex items-center gap-3">
+          <img src="assets/logo.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-brandGold/40">
+          <div>
+            <h3 class="text-lg font-bold text-brandGreen leading-none">TERMOS E CONDIÇÕES GERAIS DE USO</h3>
+            <span class="text-xs text-stone-500">BRINDA SERRA • Foro da Comarca de Canela - RS</span>
+          </div>
+        </div>
+        <button class="close-terms-modal p-2 rounded-full text-stone-500 hover:bg-stone-200 focus:outline-none" aria-label="Fechar">
+          ✕
+        </button>
+      </div>
+
+      <div class="modal-body space-y-4 text-xs sm:text-sm text-stone-700">
+        
+        <p class="text-justify font-medium">
+          <strong>TERMOS E CONDIÇÕES DE USO</strong> – Seja bem-vindo ao <strong>BRINDA Card</strong>! Neste termo você terá acesso às informações relevantes para aproveitar os benefícios e vantagens que o cartão virtual oferece. Por favor, leia com atenção. Ao se cadastrar e finalizar a compra, você <strong>ESTÁ DE ACORDO COM AS CONDIÇÕES E TERMOS</strong> deste Website. Note que a recusa destes Termos impedirá que você utilize os serviços e produtos da nossa plataforma. Os serviços são fornecidos com nome fantasia <strong>BRINDA SERRA</strong>, titular da propriedade intelectual sobre o website, conteúdos e demais ativos relacionados à plataforma BRINDA SERRA. Em caso de dúvidas, entre em contato conosco através do e-mail: <a href="mailto:brindacard@gmail.com" class="text-brandTerracotta underline">brindacard@gmail.com</a>.
+        </p>
+
+        <h4 class="text-sm font-bold text-brandGreen pt-2 border-t border-stone-200">1 – QUEM SOMOS, QUE SERVIÇOS OFERECEMOS E COMO FUNCIONA A UTILIZAÇÃO</h4>
+        <p class="text-justify">
+          <strong>1.1 –</strong> O <strong>Brinda Card</strong> é um cartão virtual que proporciona aos seus clientes acesso ao site com login pessoal, conhecimento e escolha de uma rota para os melhores estabelecimentos do nicho cervejeiro, vinícolas e fábricas de chocolate de cada região. O produto dá o direito de acessar, escolher e comprar experiências de estabelecimentos para visitar (de acordo com o ingresso adquirido) e provar, sem custo adicional, a degustação de cervejas, vinhos e chocolates oferecidos pelas empresas cadastradas. Consiste, portanto, em aproximar e informar, através do nosso site, os USUÁRIOS e as empresas parceiras.
+        </p>
+        <p class="text-justify">
+          <strong>1.2 –</strong> O <strong>BRINDA Serra</strong> oferece um Marketing Colaborativo às empresas cadastradas, trazendo a oportunidade de o cliente visitar os estabelecimentos recebendo uma degustação e acesso a descontos exclusivos diferenciados para cada local.
+        </p>
+        <p class="text-justify">
+          <strong>1.3 – Nossos modelos de ofertas e regras de utilização:</strong><br>
+          Na compra do BRINDA Card, o usuário passa a ser logado na plataforma e escolhe livremente quantos estabelecimentos quer visitar dentro da lista de <strong>estabelecimentos cadastrados</strong> para fazer a degustação das cervejas, vinhos ou chocolates da casa. A compra das experiências pode ser feita no ato da compra do BRINDA Card, ou será possível adicionar itens após a geração do cartão. Após a compra, as empresas parceiras podem ser escolhidas livremente, não precisando ser pré-determinadas no ato da compra, somente o tipo de benefício.
+        </p>
+        <ul class="list-disc pl-5 space-y-1.5">
+          <li><strong>1.3.1 –</strong> O valor do Brinda Card é pago uma única vez e já confere o direito de selecionar e comprar ofertas disponíveis no site.</li>
+          <li><strong>1.3.2 – É terminantemente proibida a venda de ingressos a menores de 18 (dezoito) anos.</strong> Os ingressos são <strong>nominais e intransferíveis</strong>, podendo ser utilizados somente pelo comprador cadastrado cujo CPF está vinculado ao QR Code. Caso a compra seja feita para terceiros, o comprador deve indicar o nome completo e o documento de cada portador no momento da compra, limitado a 3 CPFs adicionais, os quais também deverão comprovar a maioridade penal.</li>
+          <li><strong>1.3.3 –</strong> A validade das experiências compradas através do BRINDA Card é de <strong>6 (seis) meses</strong> a contar da data de confirmação do pagamento.</li>
+          <li><strong>1.3.4 –</strong> O valor pago não é revertido em crédito para consumo livre, mas sim no direito específico de visitar e receber gratuitamente o kit degustação de cervejas, vinhos ou chocolates estipulado pelos estabelecimentos parceiros, respeitando estritamente as normas, dias e horários de funcionamento de cada local.</li>
+          <li><strong>1.3.5 –</strong> Para a utilização da experiência comprada, o usuário deverá apresentar o ingresso com o <strong>QR CODE na chegada ao estabelecimento</strong>, acompanhado de <strong>documento oficial com foto</strong>. O código será validado em tempo real, descontando 1 (um) crédito do total contratado. O BRINDA Card <strong>não permite</strong> que seja feita a degustação mais de 1 (uma) vez no mesmo estabelecimento pelo mesmo usuário.</li>
+          <li><strong>1.3.6 –</strong> O consumo da degustação deve ser realizado obrigatoriamente no local da empresa cadastrada. A oferta não é cumulativa com outras promoções ou benefícios vigentes no estabelecimento. Itens como refeições, petiscos, sobremesas, taxas de serviço, gorjetas, couvert artístico ou quaisquer outras bebidas não descritas explicitamente no ingresso correm por conta exclusiva do USUÁRIO.</li>
+        </ul>
+
+        <p class="text-justify">
+          <strong>1.4 –</strong> Desde logo fica esclarecido ao USUÁRIO – o qual se declara ciente – que o serviço oferecido pelo <strong>BRINDA Card</strong> se relaciona apenas à intermediação e ao direito de acesso à degustação promocional. Não abarcamos nenhuma responsabilidade pelos produtos e serviços finais ofertados pelas empresas cadastradas, sendo estes de responsabilidade integral do ESTABELECIMENTO PARCEIRO.
+        </p>
+
+        <p class="text-justify">
+          <strong>1.5 –</strong> Poderão ocorrer substituições de parceiros que eventualmente tenham suas operações encerradas ou que tenham sido descredenciados da plataforma, bem como substituições ou retiradas de ofertas sem aviso prévio. Portanto, a utilização dos ingressos fica estritamente condicionada às ofertas vigentes no dia exato da visitação pelo USUÁRIO.
+        </p>
+
+        <h4 class="text-sm font-bold text-brandGreen pt-2 border-t border-stone-200">2 – CADASTRO</h4>
+        <p class="text-justify">
+          <strong>2.1 –</strong> O USUÁRIO, para utilizar os serviços acima descritos, <strong>deverá ser maior de 18 anos</strong>, gozar de plena capacidade jurídica para atos civis e prestar as informações exigidas no CADASTRO. O usuário assume integralmente a responsabilidade pela exatidão e veracidade das informações fornecidas.
+        </p>
+        <p class="text-justify">
+          <strong>2.2 –</strong> Efetuado o cadastro com sucesso e aprovada a compra, o ingresso estará disponível na tela do usuário e enviado para o e-mail cadastrado. O usuário se compromete a não divulgar o seu QR Code a terceiros.
+        </p>
+
+        <h4 class="text-sm font-bold text-brandGreen pt-2 border-t border-stone-200">3 – OBRIGAÇÕES DO USUÁRIO</h4>
+        <p class="text-justify">
+          <strong>3.1 –</strong> Sendo os ingressos nominais, o USUÁRIO se obriga a zelar pela segurança do seu QR Code, mantendo-o protegido de cópias, prints ou vazamentos a terceiros. A verificação do documento com foto na entrada do estabelecimento é obrigatória.<br>
+          <strong>3.2 –</strong> É obrigação do USUÁRIO agir com urbanidade e respeito nas dependências dos estabelecimentos parceiros, bem como consumir álcool de forma responsável e moderada.
+        </p>
+
+        <h4 class="text-sm font-bold text-brandGreen pt-2 border-t border-stone-200">4 – OBRIGAÇÕES DO BRINDA CARD</h4>
+        <p class="text-justify">
+          <strong>4.1 –</strong> Disponibilizar no site oficial do <strong>BRINDA Serra</strong> o espaço virtual que permita ao USUÁRIO ter acesso ao guia de estabelecimentos parceiros e ofertas sempre atualizados.<br>
+          <strong>4.2 –</strong> Proteger, por meio de criptografia e servidores de alta segurança, a confidencialidade de todos os dados cadastrais e financeiros relativos aos USUÁRIOS, em estrita conformidade com a Lei Geral de Proteção de Dados (LGPD).
+        </p>
+
+        <h4 class="text-sm font-bold text-brandGreen pt-2 border-t border-stone-200">5 – DO DIREITO DE ARREPENDIMENTO E CANCELAMENTO</h4>
+        <p class="text-justify">
+          <strong>5.1 –</strong> O usuário poderá cancelar a compra do cartão, desde que o pedido do cancelamento seja realizado em <strong>até 7 (sete) dias</strong> da data efetiva da compra, e constatada <strong>nenhuma utilização</strong>, em conformidade com o Art. 49 do Código de Defesa do Consumidor.<br>
+          <strong>5.2 – O DIREITO DE ARREPENDIMENTO NÃO É APLICÁVEL</strong> no caso em que o usuário já tenha iniciado a utilização do serviço fornecido através do Brinda Card. Mesmo que esteja no prazo de 7 dias, se o usuário utilizou alguma validação, este abre mão, em pleno acordo, do direito de arrependimento, conforme dispõe o §4° do Artigo 54 do CDC.
+        </p>
+
+        <h4 class="text-sm font-bold text-brandGreen pt-2 border-t border-stone-200">6 – MODIFICAÇÕES DESTE TERMO</h4>
+        <p class="text-justify">
+          <strong>6.1 –</strong> O presente TERMO DE USO poderá, a qualquer tempo, ter seu conteúdo modificado para adequações e inserções visando ao aprimoramento dos serviços.
+        </p>
+
+        <h4 class="text-sm font-bold text-brandGreen pt-2 border-t border-stone-200">7 – CANAL DE COMUNICAÇÃO</h4>
+        <p class="text-justify">
+          <strong>7.1 –</strong> Para estabelecer contato, fica disponibilizado o endereço eletrônico <strong>brindacard@gmail.com</strong>.
+        </p>
+
+        <h4 class="text-sm font-bold text-brandGreen pt-2 border-t border-stone-200">8 – ACEITAÇÃO DO TERMO DE USO</h4>
+        <p class="text-justify">
+          <strong>8.1 –</strong> O USUÁRIO declara ter lido, entendido e que aceita todas as regras, condições e obrigações estabelecidas no presente TERMO.
+        </p>
+
+        <h4 class="text-sm font-bold text-brandGreen pt-2 border-t border-stone-200">9 – FORO DE ELEIÇÃO</h4>
+        <p class="text-justify">
+          <strong>9.1 –</strong> As partes elegem como competente para dirimir eventuais controvérsias que venham a surgir da interpretação e do cumprimento do presente TERMO o <strong>foro da Comarca de Canela - RS</strong>.
+        </p>
+
+      </div>
+
+      <div class="modal-header !py-3 flex justify-end">
+        <button class="close-terms-modal btn-primary text-xs !py-2 !px-5">
+          Entendi e Aceito
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RODAPÉ ACOLHEDOR & ELEGANTE -->
+  <footer class="bg-brandGreen text-brandCream pt-14 pb-10 border-t border-brandGreen-light/30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-brandCream/10">
+        
+        <!-- Logo e Slogan -->
+        <div class="md:col-span-5 space-y-3">
+          <div class="flex items-center gap-3">
+            <img src="assets/logo.jpg" alt="Logo" class="w-10 h-10 rounded-full border border-brandGold">
+            <span class="text-xl font-bold tracking-tight text-brandCream">BRINDA Serra</span>
+          </div>
+          <p class="text-xs sm:text-sm text-stone-300 max-w-sm leading-relaxed">
+            O passaporte gastronômico e de degustações da Serra Gaúcha. Conectando pessoas aos melhores produtores de cervejas, vinhos e chocolates. Conheça, prove, viva!
+          </p>
+        </div>
+
+        <!-- Links Rápidos -->
+        <div class="md:col-span-3 space-y-2">
+          <span class="text-xs uppercase tracking-widest text-brandGold font-bold block mb-1">Navegação</span>
+          <ul class="space-y-1.5 text-xs sm:text-sm text-stone-300">
+            <li><a href="#inicio" class="hover:text-brandPeach">Início</a></li>
+            <li><a href="#brinda-card" class="hover:text-brandPeach font-bold text-brandGold-light">BRINDA Card</a></li>
+            <li><a href="#cervejarias" class="hover:text-brandPeach">Cervejarias Participantes</a></li>
+            <li><a href="#vinicolas" class="hover:text-brandPeach">Vinícolas & Tours</a></li>
+            <li><a href="#chocolates" class="hover:text-brandPeach">Chocolates Artesanais</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal e Atendimento -->
+        <div class="md:col-span-4 space-y-2">
+          <span class="text-xs uppercase tracking-widest text-brandGold font-bold block mb-1">Informações Legais</span>
+          <ul class="space-y-1.5 text-xs sm:text-sm text-stone-300">
+            <li><a href="#termos" class="open-terms-modal hover:text-brandPeach underline">Termos e Condições Gerais de Uso</a></li>
+            <li><span>Foro da Comarca de Canela - RS</span></li>
+            <li><span>Atendimento: <a href="mailto:brindacard@gmail.com" class="hover:text-brandPeach">brindacard@gmail.com</a></span></li>
+            <li><span>Proibida a venda a menores de 18 anos</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Copyright e Assinatura -->
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-400 gap-3">
+        <p>© 2026 BRINDA Serra • Todos os direitos reservados.</p>
+        <p class="flex items-center gap-1.5">
+          <span>Feito com aconchego para a</span>
+          <span class="text-brandPeach font-semibold">Serra Gaúcha</span>
+        </p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Script JS Interativo -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,735 @@
+:root {
+  /* Paleta Oficial Fornecida pelo Usuário */
+  --color-primary-green: #3F4A3E;      /* Verde Pinheiro Serra Gaúcha */
+  --color-primary-green-dark: #2D362C; /* Verde Escuro Acolhedor */
+  --color-bg-cream: #F4EEE4;           /* Fundo Creme Linho Acolhedor */
+  --color-bg-cream-soft: #FAF6EF;      /* Creme Suave */
+  --color-accent-terracotta: #C96C4A;  /* Terracota / Tijolo Serra Gaúcha */
+  --color-accent-terracotta-dark: #B55D3D;
+  --color-accent-peach: #E7B8A0;       /* Pêssego / Nude suave */
+  
+  /* Cores de Apoio e Elegância */
+  --color-bg-card: #FFFFFF;
+  --color-bg-alt: #EFE7DA;
+  --color-border: #E3D9C9;
+  --color-border-subtle: rgba(63, 74, 62, 0.12);
+  --color-text-main: #232722;          /* Grafite Quente (não preto puro) */
+  --color-text-muted: #575E55;
+  --color-text-light: #F4EEE4;
+  --color-gold: #C9A86A;
+  --color-gold-light: #DFCA9B;
+  
+  /* Tipografia Calibri Humanista */
+  --font-family: 'Calibri', 'Carlito', 'Candara', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  
+  /* Raios Orgânicos (Sem cantos pontudos ou caixas quadradas) */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 38px;
+  --radius-full: 9999px;
+  
+  /* Sombras Orgânicas Acolhedoras */
+  --shadow-soft: 0 10px 30px -5px rgba(63, 74, 62, 0.07);
+  --shadow-hover: 0 18px 42px -6px rgba(63, 74, 62, 0.14);
+  --shadow-terracotta: 0 12px 32px -4px rgba(201, 108, 74, 0.32);
+  --shadow-card-elevated: 0 24px 50px -10px rgba(63, 74, 62, 0.22);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg-cream);
+  color: var(--color-text-main);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Tipografia Editorial e Acolhedora */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--color-primary-green);
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: clamp(2rem, 3.8vw, 3rem);
+}
+
+h2 {
+  font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+}
+
+h3 {
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+}
+
+p {
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+}
+
+strong, b {
+  font-weight: 700;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+/* Barra Superior de Boas-Vindas (Nítida e com Alto Contraste) */
+.top-bar-announcement {
+  background-color: var(--color-primary-green);
+  color: #FAF6EF !important;
+  font-size: 0.95rem;
+  padding: 0.65rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  letter-spacing: 0.01em;
+}
+
+.top-bar-announcement p {
+  color: #FAF6EF !important;
+  display: inline-block;
+  font-weight: 500;
+}
+
+.top-bar-announcement strong {
+  color: #F8E2CE !important;
+  font-weight: 700;
+}
+
+/* Header & Nav */
+.header-glass {
+  background: rgba(244, 238, 228, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--color-border-subtle);
+  transition: all 0.3s ease;
+}
+
+.header-glass.scrolled {
+  background: rgba(244, 238, 228, 0.98);
+  box-shadow: 0 4px 20px rgba(63, 74, 62, 0.06);
+}
+
+.nav-link {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--color-primary-green);
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+  background-color: rgba(63, 74, 62, 0.08);
+  color: var(--color-accent-terracotta);
+}
+
+/* Fundo Refinado do Hero (Sem pontos, degradê suave e acolhedor) */
+.hero-clean-bg {
+  background: linear-gradient(180deg, #F4EEE4 0%, #EFE5D5 60%, #F4EEE4 100%);
+  position: relative;
+}
+
+.hero-clean-bg::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(201, 108, 74, 0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-clean-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(63, 74, 62, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Botões Orgânicos & Arredondados */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background-color: var(--color-accent-terracotta);
+  color: #FFFFFF !important;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 0.85rem 1.85rem;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(201, 108, 74, 0.32);
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-terracotta-dark);
+  box-shadow: 0 8px 24px rgba(201, 108, 74, 0.42);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background-color: transparent;
+  color: var(--color-primary-green) !important;
+  font-weight: 600;
+  font-size: 1.02rem;
+  padding: 0.8rem 1.7rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-primary-green);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-primary-green);
+  color: var(--color-bg-cream) !important;
+  transform: translateY(-2px);
+}
+
+.btn-soft {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(201, 108, 74, 0.12);
+  color: var(--color-accent-terracotta);
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(201, 108, 74, 0.2);
+  transition: all 0.2s ease;
+}
+
+.btn-soft:hover {
+  background-color: var(--color-accent-terracotta);
+  color: #FFFFFF;
+}
+
+/* Badges e Etiquetas Acolhedoras */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.badge-green {
+  background-color: rgba(63, 74, 62, 0.12);
+  color: var(--color-primary-green);
+}
+
+.badge-terracotta {
+  background-color: rgba(201, 108, 74, 0.12);
+  color: var(--color-accent-terracotta);
+}
+
+.badge-gold {
+  background-color: rgba(201, 168, 106, 0.18);
+  color: #8C6A2E;
+  border: 1px solid rgba(201, 168, 106, 0.35);
+}
+
+/* ============================================================== */
+/* CARDS DE CERVEJARIAS: TERRACOTA COM FONTE VERDE                */
+/* ============================================================== */
+.brewery-card-terracotta {
+  background: linear-gradient(145deg, #C96C4A 0%, #B85F3D 100%);
+  border-radius: var(--radius-md);
+  padding: 8px; /* Borda/moldura terracota que dá vida */
+  box-shadow: var(--shadow-terracotta);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.brewery-card-terracotta:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px -4px rgba(201, 108, 74, 0.45);
+}
+
+.brewery-inner-plate {
+  background: #FAF6EF;
+  border-radius: calc(var(--radius-md) - 6px);
+  padding: 1.35rem 1.4rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.brewery-inner-plate h4 {
+  color: #2D362C !important; /* FONTE VERDE ESCURO NÍTIDA */
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.brewery-inner-plate p {
+  color: #3F4A3E !important; /* FONTE VERDE */
+  font-size: 0.95rem;
+}
+
+.brewery-badge-green {
+  background: rgba(63, 74, 62, 0.12);
+  color: #2D362C !important; /* FONTE VERDE */
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.brewery-status-green {
+  background: rgba(63, 74, 62, 0.08);
+  color: #2D362C !important; /* FONTE VERDE */
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(63, 74, 62, 0.2);
+}
+
+/* ============================================================== */
+/* CARDS DE VINÍCOLAS: TERRACOTA COM FONTE VERDE                  */
+/* ============================================================== */
+.winery-card-terracotta {
+  background: linear-gradient(150deg, #C96C4A 0%, #B85F3D 100%);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-terracotta);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.winery-card-terracotta h4 {
+  color: #FFFFFF !important;
+}
+
+.winery-card-item {
+  background: #FAF6EF; /* Superfície creme que dá destaque */
+  border: 1px solid rgba(63, 74, 62, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.winery-card-item:hover {
+  background: #FFFFFF;
+  border-color: var(--color-primary-green);
+  transform: translateY(-2px);
+}
+
+.winery-card-item .item-title {
+  color: #2D362C !important; /* FONTE VERDE */
+  font-weight: 700;
+  font-size: 1.02rem;
+}
+
+.winery-card-item .item-sub {
+  color: #3F4A3E !important; /* FONTE VERDE */
+  font-size: 0.88rem;
+}
+
+.winery-card-item .item-price {
+  color: #2D362C !important; /* FONTE VERDE */
+  font-weight: 800;
+  font-size: 1.15rem;
+  background: rgba(63, 74, 62, 0.12);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(63, 74, 62, 0.2);
+}
+
+.btn-winery-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: #FAF6EF;
+  color: #2D362C !important; /* FONTE VERDE */
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.9rem 1.5rem;
+  border-radius: var(--radius-full);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  border: 1.5px solid rgba(63, 74, 62, 0.2);
+}
+
+.btn-winery-white:hover {
+  background-color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================================== */
+/* RETÂNGULO DO CHOCOLATE COM FUNDO TERRACOTA (ALTO CONTRASTE)   */
+/* ============================================================== */
+.chocolate-terracotta-card {
+  background: linear-gradient(135deg, #C96C4A 0%, #B85F3D 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 16px 45px -8px rgba(201, 108, 74, 0.45);
+  color: #FFFFFF;
+}
+
+.chocolate-terracotta-card h2 {
+  color: #FFFFFF !important;
+}
+
+.chocolate-terracotta-card p {
+  color: #FAF6EF !important;
+}
+
+.chocolate-chip-light {
+  background: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF !important;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  backdrop-filter: blur(4px);
+}
+
+/* ============================================================== */
+/* CARD VERDE DE ATENDIMENTO COM FONTE NÍTIDA (SEM FICAR APAGADA) */
+/* ============================================================== */
+.contact-official-card {
+  background-color: var(--color-primary-green) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 12px 35px -5px rgba(63, 74, 62, 0.4);
+}
+
+.contact-official-card p,
+.contact-official-card span,
+.contact-official-card a {
+  color: #FAF6EF !important; /* TEXTO BRILHANTE & NÍTIDO */
+}
+
+.contact-official-card strong {
+  color: #F8E2CE !important; /* Destaque dourado/pêssego vibrante */
+  font-weight: 700;
+}
+
+.contact-official-card a:hover {
+  color: #DFCA9B !important;
+}
+
+/* PARALLAX DA VINÍCOLA */
+.parallax-winery-wrapper {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-hover);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  min-height: 420px;
+}
+
+.parallax-winery-bg {
+  position: absolute;
+  inset: -15% 0;
+  background-image: url('assets/vinicola.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform: translateY(0);
+  will-change: transform;
+}
+
+.parallax-winery-content {
+  position: relative;
+  z-index: 2;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2.5rem;
+  background: linear-gradient(180deg, rgba(35, 39, 34, 0.15) 0%, rgba(35, 39, 34, 0.85) 100%);
+}
+
+/* Card Cervejaria Farol Redesenhado & Organizado */
+.farol-info-chip {
+  background: #FAF6EF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.farol-info-chip:hover {
+  border-color: var(--color-accent-terracotta);
+  background: #FFFFFF;
+}
+
+.farol-icon-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: rgba(201, 108, 74, 0.14);
+  color: var(--color-accent-terracotta);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  shrink: 0;
+  font-size: 1.1rem;
+}
+
+/* Cartões com Curvatura Suave */
+.soft-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.soft-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-4px);
+  border-color: rgba(201, 108, 74, 0.25);
+}
+
+/* Efeito Destaque BRINDA CARD Virtual - Visual Realista & Luxo Acolhedor */
+.brinda-card-3d {
+  background: linear-gradient(135deg, #2D362C 0%, #3F4A3E 60%, #4D5A4C 100%);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -15px rgba(45, 54, 44, 0.45), 0 0 0 1px rgba(201, 168, 106, 0.3);
+  color: #F4EEE4;
+  aspect-ratio: 1.586 / 1;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  user-select: none;
+}
+
+.brinda-card-3d:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 32px 70px -12px rgba(45, 54, 44, 0.55), 0 0 0 1.5px rgba(201, 168, 106, 0.5);
+}
+
+.brinda-card-3d::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(201, 168, 106, 0.18) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.card-foil-border {
+  border: 1px solid rgba(201, 168, 106, 0.35);
+  border-radius: 20px;
+  height: calc(100% - 24px);
+  margin: 12px;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 70%);
+}
+
+.card-emblem {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1.5px solid var(--color-gold);
+}
+
+/* Configurador de Planos */
+.plan-option-card {
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.4rem;
+  background: var(--color-bg-card);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.plan-option-card:hover {
+  border-color: var(--color-accent-terracotta);
+  background-color: #FFFAF5;
+}
+
+.plan-option-card.selected {
+  border-color: var(--color-accent-terracotta);
+  background-color: #FFF6F0;
+  box-shadow: 0 4px 16px rgba(201, 108, 74, 0.15);
+}
+
+.plan-checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.plan-option-card.selected .plan-checkbox {
+  background-color: var(--color-accent-terracotta);
+  border-color: var(--color-accent-terracotta);
+}
+
+/* Form inputs com estilo orgânico */
+.form-input-soft {
+  width: 100%;
+  padding: 0.85rem 1.2rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background-color: #FFFFFF;
+  color: var(--color-text-main);
+  font-family: var(--font-family);
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-input-soft:focus {
+  border-color: var(--color-primary-green);
+  box-shadow: 0 0 0 3px rgba(63, 74, 62, 0.12);
+}
+
+/* Modal Termos de Uso */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(35, 39, 34, 0.65);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: 1.5rem;
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-box {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  max-width: 820px;
+  width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-card-elevated);
+  transform: translateY(20px) scale(0.97);
+  transition: transform 0.3s ease;
+  overflow: hidden;
+}
+
+.modal-backdrop.open .modal-box {
+  transform: translateY(0) scale(1);
+}
+
+.modal-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #FAF6EF;
+}
+
+.modal-body {
+  padding: 2rem;
+  overflow-y: auto;
+  font-size: 0.98rem;
+  color: var(--color-text-main);
+  line-height: 1.7;
+}
+
+/* Scrollbar estilizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: #D8CFBF;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-green);
+}
+
+/* Notificação Toast */
+#toastNotification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--color-primary-green);
+  color: #FFFFFF;
+  padding: 1rem 1.6rem;
+  border-radius: var(--radius-full);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  z-index: 2000;
+  transform: translateY(120%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-weight: 600;
+}
+
+#toastNotification.show {
+  transform: translateY(0);
+}

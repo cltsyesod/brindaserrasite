@@ -1,0 +1,87 @@
+<!-- ============================================================== -->
+<!-- SNIPPET: BLOCO DE VINÍCOLAS PARA O QUADRO DO BRINDA CARD        -->
+<!-- Status: Em Breve (Oculto temporariamente a pedido do cliente)  -->
+<!-- Para reativar: copie este conteúdo para dentro do quadro de    -->
+<!-- configuração no arquivo index.html (logo abaixo do bloco de    -->
+<!-- Cervejarias Artesanais).                                       -->
+<!-- ============================================================== -->
+
+<div class="space-y-3 pt-2 border-t border-stone-200" id="blocoVinicolasCalculadora">
+  <div class="flex items-center justify-between">
+    <h3 class="text-lg font-bold text-brandGreen flex items-center gap-2">
+      <span>🍷 Vinícolas & Degustações</span>
+    </h3>
+    <span class="badge-pill bg-brandPeach/30 text-brandTerracotta text-[0.7rem] font-bold">EM BREVE</span>
+  </div>
+  <p class="text-xs text-stone-500">
+    Escolha se quer viver experiências com visitas guiadas ou lojas de vinho com degustação. Compre quantas quiser!
+  </p>
+
+  <div class="space-y-2.5 pt-1">
+    
+    <!-- Nenhuma Vinícola -->
+    <label class="plan-option-card selected flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <input type="radio" name="wine_plan" value="none" data-price="0" data-name="Nenhuma Vinícola" checked class="sr-only">
+        <div class="plan-checkbox"><span class="text-white text-xs font-bold">✓</span></div>
+        <div>
+          <span class="text-sm font-semibold text-stone-800 block">Não incluir vinícola no momento</span>
+        </div>
+      </div>
+      <span class="text-sm font-bold text-stone-500">R$ 0,00</span>
+    </label>
+
+    <!-- 01 Degustação Simples -->
+    <label class="plan-option-card flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <input type="radio" name="wine_plan" value="wine_1" data-price="90" data-name="01 Degustação em Vinícola Participante" class="sr-only">
+        <div class="plan-checkbox"><span class="text-white text-xs font-bold">✓</span></div>
+        <div>
+          <span class="text-sm font-semibold text-brandGreen block">01 Degustação Simples</span>
+          <span class="text-xs text-stone-500">Em vinícolas participantes cadastradas</span>
+        </div>
+      </div>
+      <span class="text-sm font-bold text-brandGreen">R$ 90,00</span>
+    </label>
+
+    <!-- 03 Degustações Simples -->
+    <label class="plan-option-card flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <input type="radio" name="wine_plan" value="wine_3" data-price="150" data-name="03 Degustações em Vinícolas Participantes" class="sr-only">
+        <div class="plan-checkbox"><span class="text-white text-xs font-bold">✓</span></div>
+        <div>
+          <span class="text-sm font-semibold text-brandGreen block">03 Degustações Simples</span>
+          <span class="text-xs text-stone-500">Em vinícolas participantes cadastradas</span>
+        </div>
+      </div>
+      <span class="text-sm font-bold text-brandGreen">R$ 150,00</span>
+    </label>
+
+    <!-- Tour Jolimont -->
+    <label class="plan-option-card flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <input type="radio" name="wine_plan" value="jolimont_tour" data-price="189" data-name="Tour Jolimont Vinícola" class="sr-only">
+        <div class="plan-checkbox"><span class="text-white text-xs font-bold">✓</span></div>
+        <div>
+          <span class="text-sm font-semibold text-brandGreen block">Tour Jolimont Vinícola</span>
+          <span class="text-xs text-stone-500">Passeio guiado e degustação nos vinhedos</span>
+        </div>
+      </div>
+      <span class="text-sm font-bold text-brandGreen">R$ 189,00</span>
+    </label>
+
+    <!-- Tour Jolimont Premium com Reserva -->
+    <label class="plan-option-card flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <input type="radio" name="wine_plan" value="jolimont_premium" data-price="300" data-name="Tour Jolimont Premium com Reserva" class="sr-only">
+        <div class="plan-checkbox"><span class="text-white text-xs font-bold">✓</span></div>
+        <div>
+          <span class="text-sm font-semibold text-brandGreen block">Tour Jolimont Premium com Reserva</span>
+          <span class="text-xs text-stone-500">Experiência VIP completa com rótulos especiais</span>
+        </div>
+      </div>
+      <span class="text-sm font-bold text-brandGreen">R$ 300,00</span>
+    </label>
+
+  </div>
+</div>

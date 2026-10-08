@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRINDA Serra | Página Oficial de Homologação & Aprovação</title>
+  <meta name="description" content="Dossiê oficial de homologação e aprovação do projeto web BRINDA Serra e BRINDA Card.">
+  
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+  
+  <!-- Fonte Calibri / Carlito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandGreen: {
+              DEFAULT: '#3F4A3E',
+              dark: '#2D362C',
+              light: '#536152'
+            },
+            brandCream: {
+              DEFAULT: '#F4EEE4',
+              soft: '#FAF6EF',
+              darker: '#E7DEC9'
+            },
+            brandTerracotta: {
+              DEFAULT: '#C96C4A',
+              hover: '#B55D3D',
+              light: '#DF8868'
+            },
+            brandPeach: {
+              DEFAULT: '#E7B8A0',
+              soft: '#F4D4C3'
+            },
+            brandGold: '#C9A86A',
+          },
+          fontFamily: {
+            calibri: ['Calibri', 'Carlito', 'Candara', 'Plus Jakarta Sans', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --color-primary-green: #3F4A3E;
+      --color-primary-green-dark: #2D362C;
+      --color-bg-cream: #F4EEE4;
+      --color-bg-cream-soft: #FAF6EF;
+      --color-accent-terracotta: #C96C4A;
+      --color-accent-peach: #E7B8A0;
+      --color-gold: #C9A86A;
+      --font-family: 'Calibri', 'Carlito', 'Candara', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: #F8F5EE;
+      color: #232722;
+      line-height: 1.6;
+    }
+
+    .badge-approved {
+      background-color: #E8F5E9;
+      color: #2E7D32;
+      border: 1px solid #A5D6A7;
+    }
+
+    .preview-frame {
+      transition: width 0.3s ease, height 0.3s ease;
+      box-shadow: 0 20px 50px -10px rgba(63, 74, 62, 0.25);
+    }
+  </style>
+</head>
+<body class="selection:bg-brandTerracotta selection:text-white">
+
+  <!-- Topo Institucional de Homologação -->
+  <header class="bg-brandGreen text-white border-b border-brandGold/30 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <div class="flex items-center gap-3.5">
+        <img src="assets/logo.jpg" alt="Logo BRINDA Serra" class="w-12 h-12 rounded-full border border-brandGold object-cover shadow-sm">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-bold tracking-tight text-white">BRINDA Serra</span>
+            <span class="text-[0.65rem] bg-brandTerracotta text-white uppercase px-2 py-0.5 rounded-full font-bold tracking-wider">Homologação</span>
+          </div>
+          <p class="text-xs text-brandCream-soft">Painel Oficial de Avaliação e Aprovação de Projeto</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="index.html" target="_blank" class="hidden sm:inline-flex items-center gap-2 bg-brandCream text-brandGreen font-bold px-4 py-2 rounded-full text-xs hover:bg-white transition-all shadow-sm">
+          <span>Abrir Site em Nova Aba</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <a href="#termo-aprovacao" class="bg-brandTerracotta text-white font-bold px-4 py-2 rounded-full text-xs hover:bg-brandTerracotta-hover transition-all shadow-sm">
+          Assinar / Aprovar
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Banner de Apresentação da Versão -->
+  <div class="bg-gradient-to-r from-brandGreen-dark via-brandGreen to-[#4A5749] text-white py-10 px-4 sm:px-6 lg:px-8 border-b border-brandGold/20">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      
+      <div class="space-y-2 max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-brandPeach text-xs font-semibold uppercase tracking-wider backdrop-blur-sm">
+          <span>📋 Dossiê Executivo</span>
+          <span>•</span>
+          <span>Versão 1.0 (Release Candidate)</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight">
+          Página Oficial de Homologação: BRINDA Serra & BRINDA Card
+        </h1>
+        <p class="text-sm sm:text-base text-stone-200 leading-relaxed">
+          Este ambiente reúne a auditoria visual, especificações técnicas, conformidade de textos e o formulário formal de aprovação da plataforma desenvolvida para a <strong>Serra Gaúcha</strong>.
+        </p>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-xs space-y-1.5 shrink-0 w-full md:w-auto">
+        <div class="flex items-center justify-between gap-4 text-stone-300">
+          <span>Data de Emissão:</span>
+          <strong class="text-white" id="currentDate">08 de Outubro de 2026</strong>
+        </div>
+        <div class="flex items-center justify-between gap-4 text-stone-300">
+          <span>Status do Projeto:</span>
+          <span class="text-emerald-300 font-bold flex items-center gap-1">● Pronto para Aprovação</span>
+        </div>
+        <div class="flex items-center justify-between gap-4 text-stone-300">
+          <span>Ambiente de Testes:</span>
+          <strong class="text-brandPeach">Localhost 5500</strong>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+    
+    <!-- 1. Ficha Técnica e Diretrizes Atendidas -->
+    <section class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-stone-200 pb-4">
+        <div>
+          <span class="text-xs uppercase tracking-wider font-bold text-brandTerracotta">01. Especificações</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-brandGreen">Ficha Técnica e Conformidade do Design</h2>
+        </div>
+        <span class="badge-approved px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+          ✓ 100% dos Requisitos Atendidos
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <div class="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-1.5">
+          <span class="text-xs text-stone-500 uppercase tracking-wider font-semibold block">Identidade da Marca</span>
+          <span class="text-base font-bold text-brandGreen block">BRINDA Serra</span>
+          <p class="text-xs text-stone-600">Empresa de turismo, experiências e marketing colaborativo na Serra Gaúcha.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-1.5">
+          <span class="text-xs text-stone-500 uppercase tracking-wider font-semibold block">Produto Central</span>
+          <span class="text-base font-bold text-brandTerracotta block">BRINDA CARD</span>
+          <p class="text-xs text-stone-600">Cartão virtual com QR Code nominal, validade de 6 meses e login pessoal.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-1.5">
+          <span class="text-xs text-stone-500 uppercase tracking-wider font-semibold block">Tipografia Humanista</span>
+          <span class="text-base font-bold text-brandGreen block">Família Calibri</span>
+          <p class="text-xs text-stone-600">Design acolhedor, leitura editorial e fluida, sem caixas pontudas ou nomes berrantes.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-1.5">
+          <span class="text-xs text-stone-500 uppercase tracking-wider font-semibold block">Paleta Cromática</span>
+          <span class="text-base font-bold text-brandGreen block">Tons Oficiais da Serra</span>
+          <div class="flex items-center gap-1.5 pt-1">
+            <span class="w-5 h-5 rounded-full border border-black/10" style="background-color: #3F4A3E;" title="Verde Pinheiro #3F4A3E"></span>
+            <span class="w-5 h-5 rounded-full border border-black/10" style="background-color: #C96C4A;" title="Terracota #C96C4A"></span>
+            <span class="w-5 h-5 rounded-full border border-black/10" style="background-color: #F4EEE4;" title="Creme Linho #F4EEE4"></span>
+            <span class="w-5 h-5 rounded-full border border-black/10" style="background-color: #E7B8A0;" title="Pêssego #E7B8A0"></span>
+            <span class="w-5 h-5 rounded-full border border-black/10" style="background-color: #C9A86A;" title="Dourado #C9A86A"></span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. Checklist de Validação das Diretrizes -->
+    <section class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 shadow-sm space-y-6">
+      <div class="border-b border-stone-200 pb-4">
+        <span class="text-xs uppercase tracking-wider font-bold text-brandTerracotta">02. Validação de Escopo</span>
+        <h2 class="text-xl sm:text-2xl font-bold text-brandGreen">Checklist de Itens e Ajustes Solicitados</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-stone-700">
+        
+        <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">✓</span>
+          <div>
+            <strong class="text-stone-900 block">BRINDA CARD em Destaque Absoluto</strong>
+            <p class="text-xs text-stone-600 mt-0.5">Mockup 3D realista com personalização do nome do titular em tempo real, QR Code nominal e chip virtual.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">✓</span>
+          <div>
+            <strong class="text-stone-900 block">Diferenciação Empresa vs. Cartão</strong>
+            <p class="text-xs text-stone-600 mt-0.5">O cartão impresso exibe "BRINDA CARD" e a empresa oficial é apresentada como "BRINDA Serra".</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">✓</span>
+          <div>
+            <strong class="text-stone-900 block">Calculadora Inteligente de Pacotes</strong>
+            <p class="text-xs text-stone-600 mt-0.5">Adesão obrigatória R$ 10,00 + opções de cervejaria (Brinda Bem e Premium), sem vinícolas visíveis por enquanto (snippet salvo para futura ativação).</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">✓</span>
+          <div>
+            <strong class="text-stone-900 block">Cervejaria Farol & Catálogo por Cidades</strong>
+            <p class="text-xs text-stone-600 mt-0.5">História preservada com fichas nítidas de endereço, horários e site oficial. Filtros interativos para Canela, Gramado, Nova Petrópolis e Porto Alegre.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">✓</span>
+          <div>
+            <strong class="text-stone-900 block">Harmonia Terracota + Fonte Verde</strong>
+            <p class="text-xs text-stone-600 mt-0.5">Cards de cervejarias e vinícolas com moldura acolhedora em Terracota e tipografia interna em verde institucional de alta legibilidade.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">✓</span>
+          <div>
+            <strong class="text-stone-900 block">Foto Clássica de Gramado em "Nosso Objetivo"</strong>
+            <p class="text-xs text-stone-600 mt-0.5">A foto noturna iluminada da Av. Borges de Medeiros inserida em composição editorial com etiqueta de localização e bordas arredondadas.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">✓</span>
+          <div>
+            <strong class="text-stone-900 block">Efeito Parallax nas Vinícolas & Contraste nos Chocolates</strong>
+            <p class="text-xs text-stone-600 mt-0.5">Rolo suave e imersivo na foto dos vinhedos e bloco de chocolate com fundo terracota contrastante.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/40 flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">✓</span>
+          <div>
+            <strong class="text-stone-900 block">Termos de Uso 100% Integrais & Canais Oficiais</strong>
+            <p class="text-xs text-stone-600 mt-0.5">Todas as 9 cláusulas do site original preservadas no modal de termos, com foro em Canela/RS e card verde oficial com tipografia brilhante.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. Visualizador Responsivo Interativo da Landing Page -->
+    <section class="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200 shadow-sm space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-stone-200 pb-4">
+        <div>
+          <span class="text-xs uppercase tracking-wider font-bold text-brandTerracotta">03. Demonstração Interativa</span>
+          <h2 class="text-xl sm:text-2xl font-bold text-brandGreen">Simulador do Site ao Vivo</h2>
+          <p class="text-xs text-stone-500">Navegue diretamente pelo site ou alterne entre resoluções para simular dispositivos móveis.</p>
+        </div>
+
+        <!-- Controles de Visualização -->
+        <div class="flex items-center gap-2 bg-stone-100 p-1.5 rounded-full border border-stone-200 text-xs font-semibold">
+          <button id="viewDesktop" class="px-3 py-1.5 rounded-full bg-white text-brandGreen shadow-xs transition-all">
+            🖥️ Desktop
+          </button>
+          <button id="viewTablet" class="px-3 py-1.5 rounded-full text-stone-600 hover:text-brandGreen transition-all">
+            📱 Tablet
+          </button>
+          <button id="viewMobile" class="px-3 py-1.5 rounded-full text-stone-600 hover:text-brandGreen transition-all">
+            📲 Mobile
+          </button>
+        </div>
+      </div>
+
+      <!-- Container do iFrame -->
+      <div class="w-full flex justify-center bg-stone-100 p-4 sm:p-8 rounded-2xl overflow-hidden min-h-[650px]">
+        <div id="previewContainer" class="w-full h-[650px] transition-all duration-300">
+          <iframe id="siteIframe" src="index.html" class="w-full h-full rounded-xl border border-stone-300 bg-white preview-frame" title="Visualização ao Vivo do BRINDA Serra"></iframe>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center text-xs text-stone-500 pt-2">
+        <span>O simulador acima executa o arquivo <code>index.html</code> em tempo real.</span>
+        <a href="index.html" target="_blank" class="text-brandTerracotta font-bold hover:underline flex items-center gap-1">
+          Abrir em tela cheia &rarr;
+        </a>
+      </div>
+    </section>
+
+    <!-- 4. Termo Formal de Homologação e Assinatura Digital -->
+    <section id="termo-aprovacao" class="bg-gradient-to-br from-brandGreen-dark to-brandGreen text-white rounded-3xl p-6 sm:p-10 shadow-xl space-y-8 border-2 border-brandGold/40">
+      
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-brandGold/30 pb-6">
+        <div>
+          <span class="text-xs uppercase tracking-widest text-brandPeach font-bold">04. Aprovação Oficial</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Termo de Homologação do Projeto</h2>
+          <p class="text-xs sm:text-sm text-stone-300 mt-1">Preencha seus dados para registrar a aprovação da versão ou exportar o comprovante formal.</p>
+        </div>
+        <div class="bg-brandGold/20 border border-brandGold px-3.5 py-1.5 rounded-full text-xs font-bold text-brandGold-light">
+          Protocolo: BRINDA-HOMOLOG-2026-V1
+        </div>
+      </div>
+
+      <form id="approvalForm" class="space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          
+          <div>
+            <label for="approverName" class="block text-xs font-bold uppercase tracking-wider text-brandPeach mb-1.5">
+              Nome do Responsável / Solicitante:
+            </label>
+            <input type="text" id="approverName" required placeholder="Digite seu nome completo..." class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-brandGold text-sm">
+          </div>
+
+          <div>
+            <label for="approverRole" class="block text-xs font-bold uppercase tracking-wider text-brandPeach mb-1.5">
+              Função / Titularidade:
+            </label>
+            <input type="text" id="approverRole" placeholder="Ex: Diretor de Marketing, Proprietário, Gestor..." class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-brandGold text-sm">
+          </div>
+
+        </div>
+
+        <div>
+          <label for="approvalStatus" class="block text-xs font-bold uppercase tracking-wider text-brandPeach mb-1.5">
+            Parecer de Homologação:
+          </label>
+          <select id="approvalStatus" class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-brandGold text-sm">
+            <option value="aprovado_total" class="text-stone-900" selected>✅ Aprovado Integralmente sem Ressalvas (Pronto para Publicação)</option>
+            <option value="aprovado_ressalvas" class="text-stone-900">⚠️ Aprovado com Pequenas Observações</option>
+            <option value="ajustes_adicionais" class="text-stone-900">🔄 Solicitar Novos Ajustes Adicionais</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="approverComments" class="block text-xs font-bold uppercase tracking-wider text-brandPeach mb-1.5">
+            Observações ou Instruções de Publicação (Opcional):
+          </label>
+          <textarea id="approverComments" rows="3" placeholder="Insira qualquer comentário, canal de publicação preferido ou nota de aprovação..." class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-brandGold text-sm resize-none"></textarea>
+        </div>
+
+        <!-- Declaração de Aceite -->
+        <label class="flex items-start gap-3 cursor-pointer select-none">
+          <input type="checkbox" id="confirmCheckbox" required class="mt-1 w-4 h-4 rounded text-brandTerracotta focus:ring-brandGold bg-white/20 border-white/30">
+          <span class="text-xs text-stone-300 leading-snug">
+            Declaro que revisei a versão de homologação do site <strong>BRINDA Serra</strong>, incluindo a identidade do <strong>BRINDA CARD</strong>, o catálogo de parceiros da Serra Gaúcha e os termos legais de contratação.
+          </span>
+        </label>
+
+        <!-- Botões de Ação do Termo -->
+        <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+          
+          <button type="submit" class="w-full sm:w-auto bg-brandTerracotta hover:bg-brandTerracotta-hover text-white font-bold px-8 py-3.5 rounded-full text-sm shadow-lg transition-all flex items-center justify-center gap-2">
+            <span>Emitir Comprovante de Aprovação</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </button>
+
+          <button type="button" id="printDocBtn" class="w-full sm:w-auto bg-white/15 hover:bg-white/25 text-white font-semibold px-6 py-3.5 rounded-full text-sm border border-white/20 transition-all flex items-center justify-center gap-2">
+            <span>Imprimir / Salvar em PDF</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          </button>
+
+        </div>
+      </form>
+
+      <!-- Mensagem de Sucesso (Inicialmente Oculta) -->
+      <div id="approvalSuccessBox" class="hidden bg-emerald-950/80 border-2 border-emerald-400 p-6 rounded-2xl text-emerald-100 space-y-3">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🎉</span>
+          <h3 class="text-lg font-bold text-white">Projeto Homologado com Sucesso!</h3>
+        </div>
+        <p class="text-sm text-emerald-200" id="approvalSummaryText">
+          O registro de aprovação foi gerado com sucesso.
+        </p>
+        <div class="pt-2 flex flex-wrap gap-3">
+          <button id="sendApprovalWhatsappBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-sm">
+            Enviar Parecer via WhatsApp &rarr;
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Rodapé Institucional da Homologação -->
+  <footer class="bg-brandCream-soft border-t border-stone-200 py-8 text-center text-xs text-stone-500 space-y-2">
+    <div class="flex items-center justify-center gap-2">
+      <img src="assets/logo.jpg" alt="Logo" class="w-6 h-6 rounded-full object-cover">
+      <span class="font-bold text-brandGreen">BRINDA Serra</span>
+      <span>•</span>
+      <span>Serra Gaúcha (Gramado / Canela - RS)</span>
+    </div>
+    <p>Documento e ambiente oficial para homologação de projeto web. Todos os direitos reservados.</p>
+  </footer>
+
+  <!-- Script de Interatividade da Página de Homologação -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Data atual formatada em português
+      const dateEl = document.getElementById('currentDate');
+      if (dateEl) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        dateEl.textContent = new Date().toLocaleDateString('pt-BR', options);
+      }
+
+      // Controles do Simulador de Resoluções
+      const container = document.getElementById('previewContainer');
+      const btnDesktop = document.getElementById('viewDesktop');
+      const btnTablet = document.getElementById('viewTablet');
+      const btnMobile = document.getElementById('viewMobile');
+
+      const resetBtns = () => {
+        [btnDesktop, btnTablet, btnMobile].forEach(b => {
+          b.className = 'px-3 py-1.5 rounded-full text-stone-600 hover:text-brandGreen transition-all';
+        });
+      };
+
+      btnDesktop?.addEventListener('click', () => {
+        resetBtns();
+        btnDesktop.className = 'px-3 py-1.5 rounded-full bg-white text-brandGreen shadow-xs transition-all font-bold';
+        container.style.width = '100%';
+      });
+
+      btnTablet?.addEventListener('click', () => {
+        resetBtns();
+        btnTablet.className = 'px-3 py-1.5 rounded-full bg-white text-brandGreen shadow-xs transition-all font-bold';
+        container.style.width = '768px';
+      });
+
+      btnMobile?.addEventListener('click', () => {
+        resetBtns();
+        btnMobile.className = 'px-3 py-1.5 rounded-full bg-white text-brandGreen shadow-xs transition-all font-bold';
+        container.style.width = '390px';
+      });
+
+      // Impressão / Salvar em PDF
+      document.getElementById('printDocBtn')?.addEventListener('click', () => {
+        window.print();
+      });
+
+      // Formulário de Aprovação
+      const approvalForm = document.getElementById('approvalForm');
+      const successBox = document.getElementById('approvalSuccessBox');
+      const summaryText = document.getElementById('approvalSummaryText');
+      const whatsappBtn = document.getElementById('sendApprovalWhatsappBtn');
+
+      if (approvalForm) {
+        approvalForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+
+          const name = document.getElementById('approverName').value.trim();
+          const role = document.getElementById('approverRole').value.trim() || 'Responsável';
+          const statusText = document.getElementById('approvalStatus').options[document.getElementById('approvalStatus').selectedIndex].text;
+          const comments = document.getElementById('approverComments').value.trim();
+          const dateStr = new Date().toLocaleDateString('pt-BR') + ' às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+          const summary = `Homologado por ${name} (${role}) em ${dateStr}. Parecer: ${statusText}.`;
+          if (summaryText) summaryText.textContent = summary;
+
+          successBox.classList.remove('hidden');
+          successBox.scrollIntoView({ behavior: 'smooth' });
+
+          // Configura envio de WhatsApp com o comprovante
+          let msg = `*PARECER OFICIAL DE APROVAÇÃO - BRINDA SERRA*\n\n`;
+          msg += `📋 *Projeto:* Landing Page BRINDA Serra & BRINDA CARD\n`;
+          msg += `👤 *Responsável:* ${name} (${role})\n`;
+          msg += `📅 *Data:* ${dateStr}\n`;
+          msg += `⚖️ *Status:* ${statusText}\n`;
+          if (comments) {
+            msg += `💬 *Observações:* ${comments}\n`;
+          }
+          msg += `\n✔️ Documento registrado através da Página Oficial de Homologação.`;
+
+          if (whatsappBtn) {
+            whatsappBtn.onclick = () => {
+              window.open(`https://wa.me/5554999999999?text=${encodeURIComponent(msg)}`, '_blank');
+            };
+          }
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
