@@ -489,13 +489,13 @@ a {
   flex-direction: column;
   justify-content: flex-end;
   padding: 2.5rem;
-  background: linear-gradient(180deg, rgba(35, 39, 34, 0.15) 0%, rgba(35, 39, 34, 0.85) 100%);
+  background: linear-gradient(180deg, transparent 50%, rgba(35, 39, 34, 0.85) 100%);
 }
 
 /* Card Cervejaria Farol Redesenhado & Organizado */
 .farol-info-chip {
   background: #FAF6EF;
-  border: 1.5px solid var(--color-wine-border);
+  border: 2px solid var(--color-wine-border);
   border-radius: var(--radius-sm);
   padding: 0.85rem 1rem;
   display: flex;
@@ -524,7 +524,7 @@ a {
 
 /* Cartões com Curvatura Suave & Borda Vinho Suave (#4E0303) */
 .card-white-wine-border {
-  border: 1.5px solid var(--color-wine-border) !important;
+  border: 2.5px solid var(--color-wine-border) !important;
   transition: all 0.25s ease;
 }
 
@@ -534,7 +534,7 @@ a {
 
 .soft-card {
   background-color: var(--color-bg-card);
-  border: 1.5px solid var(--color-wine-border) !important;
+  border: 2.5px solid var(--color-wine-border) !important;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -658,7 +658,7 @@ a {
 
 /* Botões de Filtro por Cidade com Borda Vinho Suave */
 .city-filter-btn {
-  border: 1.5px solid var(--color-wine-border) !important;
+  border: 2.5px solid var(--color-wine-border) !important;
   transition: all 0.2s ease;
 }
 
@@ -714,7 +714,7 @@ a {
 
 .modal-box {
   background-color: var(--color-bg-card);
-  border: 1.5px solid var(--color-wine-border);
+  border: 2.5px solid var(--color-wine-border);
   border-radius: var(--radius-xl);
   max-width: 820px;
   width: 100%;
