@@ -675,6 +675,9 @@ function initCheckoutModal() {
         const data = await resp.json();
         if (data.cards && data.cards.length > 0) {
           cardsResult = data.cards;
+          if (data.origem_armazenamento === 'supabase') {
+            console.log('✅ Pedido e passes gravados com sucesso no Supabase PostgreSQL!');
+          }
         }
       }
     } catch (err) {
