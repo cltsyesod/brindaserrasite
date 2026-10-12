@@ -1077,45 +1077,61 @@ function initClientModal() {
       return;
     }
 
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
+    const originalText = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Verificando...</span>';
+    }
+
     let customerData = null;
+    let apiStatus = null;
 
     // 1. Tenta API do Backend Serverless / Supabase
     try {
       const resp = await fetch(`/api/cliente?cpf=${cleanCpf}`);
+      apiStatus = resp.status;
       if (resp.ok) {
         const json = await resp.json();
-        if (json.sucesso && json.cliente) {
+        if (json.sucesso && json.cliente && json.cliente.nome && json.cards && json.cards.length > 0) {
           customerData = {
             pagador: json.cliente,
-            cards: json.cards || [],
+            cards: json.cards,
             historico: json.validacoes || []
           };
         }
       }
-    } catch (err) {}
+    } catch (err) {
+      console.warn('Erro ao consultar /api/cliente:', err);
+    }
 
-    // 2. Fallback na Base Local
-    if (!customerData) {
+    // 2. Fallback local apenas se a API estiver inacessível (ex: sem internet) E o registro local for 100% válido
+    if (!customerData && apiStatus !== 404) {
       try {
         const store = JSON.parse(localStorage.getItem('brinda_clientes_store') || '{}');
-        if (store[cleanCpf]) {
-          customerData = store[cleanCpf];
+        const localEntry = store[cleanCpf];
+        if (localEntry && localEntry.pagador && localEntry.pagador.nome && localEntry.pagador.nome.trim().length > 2 && localEntry.cards && localEntry.cards.length > 0) {
+          customerData = localEntry;
         }
       } catch (err) {}
     }
 
-    // 3. Fallback de Demonstração / Boas-vindas para clientes recém-cadastrados
-    if (!customerData) {
-      // Se não encontrou compras para o CPF informado
-      showToast('⚠️ Nenhum BRINDA CARD ativo encontrado para este CPF. Adquira seu passe para ativar seu acesso!');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
+    }
+
+    // BLOQUEIO TOTAL: Se o CPF não foi localizado ou não tem nome e passe ativo
+    if (!customerData || !customerData.pagador || !customerData.pagador.nome || !customerData.cards || customerData.cards.length === 0) {
+      showToast('⚠️ CPF não cadastrado! Nenhum BRINDA CARD ativo encontrado para este documento. Adquira seu passe para ativar seu acesso.');
       return;
     }
 
-    // Renderiza Dashboard do Cliente
+    // Renderiza Dashboard do Cliente SOMENTE com cadastro legítimo e validado
     loginView?.classList.add('hidden');
     dashView?.classList.remove('hidden');
 
-    if (dashNome) dashNome.textContent = (customerData.pagador.nome || 'CLIENTE VIP').toUpperCase();
+    if (dashNome) dashNome.textContent = customerData.pagador.nome.toUpperCase();
     if (dashCpf) dashCpf.textContent = `CPF: ${rawCpf}`;
 
     const cards = customerData.cards || [];

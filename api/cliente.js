@@ -27,16 +27,17 @@ module.exports = async function handler(req, res) {
 
     if (supabase && isSupabaseConfigured()) {
       // 1. Busca Cliente
-      const { data: cliente } = await supabase
+      const { data: cliente, error: errCliente } = await supabase
         .from('clientes')
         .select('*')
         .eq('cpf', cleanCpf)
         .maybeSingle();
 
-      if (!cliente) {
+      if (errCliente || !cliente) {
         return res.status(404).json({
           sucesso: false,
-          error: 'Nenhum cadastro ou passe encontrado para este CPF.'
+          error: 'CPF_NAO_ENCONTRADO',
+          mensagem: 'Nenhum cadastro ou passe encontrado para este CPF no BRINDA SERRA.'
         });
       }
 
@@ -46,6 +47,14 @@ module.exports = async function handler(req, res) {
         .select('*')
         .or(`pagador_cpf.eq.${cleanCpf},titular_cpf.eq.${cleanCpf}`)
         .order('is_pagador', { ascending: false });
+
+      if (!cards || cards.length === 0) {
+        return res.status(404).json({
+          sucesso: false,
+          error: 'SEM_CARDS',
+          mensagem: 'Cliente localizado, mas nenhum BRINDA CARD ativo encontrado.'
+        });
+      }
 
       // 3. Busca Histórico de Validações realizadas
       const { data: validacoes } = await supabase
@@ -67,29 +76,12 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Modo Fallback Local / Demonstração
-    return res.json({
-      sucesso: true,
-      origem: 'preview',
-      cliente: {
-        nome: 'CLIENTE VIP DA SERRA',
-        cpf: cleanCpf,
-        email: 'cliente@exemplo.com'
-      },
-      cards: [
-        {
-          id: `CARD-${cleanCpf}-0`,
-          titular_nome: 'CLIENTE VIP DA SERRA',
-          codigo_passe: `BS-VIP-${cleanCpf.slice(-4)}`,
-          modalidade: 'brinda_bem',
-          saldo_restante: 3,
-          saldo_total: 3,
-          data_validade_formatada: '12/10/2026',
-          qr_token: `BS-${cleanCpf}-DEMO`,
-          is_pagador: true
-        }
-      ],
-      validacoes: []
+    // Se o Supabase não estiver configurado ou CPF não existir:
+    // NUNCA retorna cliente fictício ou anônimo! Retorna 404 estrito!
+    return res.status(404).json({
+      sucesso: false,
+      error: 'CPF_NAO_ENCONTRADO',
+      mensagem: 'Nenhum BRINDA CARD encontrado para este CPF.'
     });
 
   } catch (err) {
