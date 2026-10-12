@@ -1,0 +1,73 @@
+{
+  "clientes": [],
+  "pedidos": [],
+  "cards": [],
+  "cervejarias": [
+    {
+      "id": 1,
+      "nome": "Cervejaria Farol",
+      "cidade": "Canela",
+      "slug": "farol",
+      "tour_guiado": true,
+      "status": "ativo"
+    },
+    {
+      "id": 2,
+      "nome": "Cervejaria Gramado Bier",
+      "cidade": "Gramado",
+      "slug": "gramado-bier",
+      "tour_guiado": false,
+      "status": "ativo"
+    },
+    {
+      "id": 3,
+      "nome": "Cervejaria Rasen Bier",
+      "cidade": "Gramado",
+      "slug": "rasen-bier",
+      "tour_guiado": true,
+      "status": "ativo"
+    },
+    {
+      "id": 4,
+      "nome": "Cervejaria Edelbrau",
+      "cidade": "Nova Petrópolis",
+      "slug": "edelbrau",
+      "tour_guiado": true,
+      "status": "ativo"
+    },
+    {
+      "id": 5,
+      "nome": "Cervejaria Kraustin Bier",
+      "cidade": "Canela",
+      "slug": "kraustin",
+      "tour_guiado": false,
+      "status": "ativo"
+    }
+  ],
+  "vendedores": [
+    {
+      "id": 1,
+      "nome": "Pedro da Silva (Motorista Uber)",
+      "codigo": "PEDRO01",
+      "tipo": "uber",
+      "status": "ativo"
+    },
+    {
+      "id": 2,
+      "nome": "Concierge Hotel Casa da Montanha",
+      "codigo": "HOTEL01",
+      "tipo": "hotel",
+      "hotel_nome": "Hotel Casa da Montanha",
+      "status": "ativo"
+    },
+    {
+      "id": 3,
+      "nome": "Lucas Promotor Autônomo",
+      "codigo": "LUCASPROMO",
+      "tipo": "autonomo",
+      "status": "ativo"
+    }
+  ],
+  "validacoes": [],
+  "comissoes": []
+}

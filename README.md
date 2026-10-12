@@ -14,6 +14,7 @@ Plataforma oficial de apresentação e venda de experiências na Serra Gaúcha (
 
 ## 📁 Estrutura de Arquivos
 
+- `ESPECIFICACAO_FUNCIONAL_BRINDA_CARD.md`: Documento oficial de especificação funcional do sistema, regras de negócio, matriz de decisão e fluxogramas.
 - `index.html`: Página principal (Landing Page).
 - `aprovacao.html`: Página oficial de homologação e aprovação do projeto.
 - `styles.css`: Estilização customizada, paleta oficial da serra e efeitos.

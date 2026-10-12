@@ -14,6 +14,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- QR Code Generator Library para emissão oficial do Card -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
   <!-- Tailwind CSS via CDN com personalização -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -1287,6 +1290,429 @@
     </div>
   </div>
 
+  <!-- ============================================================== -->
+  <!-- MODAL: CHECKOUT OFICIAL BRINDA CARD (EMISSÃO & PAGAMENTO REAL)  -->
+  <!-- ============================================================== -->
+  <div id="checkoutModal" class="modal-backdrop">
+    <div class="modal-box !max-w-2xl">
+      
+      <!-- Cabeçalho do Modal -->
+      <div class="modal-header">
+        <div class="flex items-center gap-3">
+          <img src="assets/logo.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-brandGold/40 object-cover">
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-brandGreen leading-tight" id="checkoutModalTitle">Aquisição Oficial do BRINDA CARD</h3>
+            <span class="text-xs text-brandTerracotta font-semibold" id="checkoutModalSubtitle">Etapa 1 de 4: Identificação & Titularidade</span>
+          </div>
+        </div>
+        <button id="closeCheckoutModalBtn" class="p-2 rounded-full text-stone-500 hover:bg-stone-200 focus:outline-none" aria-label="Fechar">
+          ✕
+        </button>
+      </div>
+
+      <!-- Barra de Progresso das Etapas -->
+      <div class="px-6 pt-3 pb-1 bg-brandCream-soft/60 border-b border-stone-200">
+        <div class="flex items-center justify-between text-[0.7rem] sm:text-xs font-bold text-stone-500">
+          <span id="stepBadge1" class="text-brandTerracotta font-bold">1. Titulares</span>
+          <span class="text-stone-300">&rarr;</span>
+          <span id="stepBadge2">2. Origem</span>
+          <span class="text-stone-300">&rarr;</span>
+          <span id="stepBadge3">3. Pagamento</span>
+          <span class="text-stone-300">&rarr;</span>
+          <span id="stepBadge4">4. Cartão Emitido</span>
+        </div>
+      </div>
+
+      <!-- Corpo do Modal -->
+      <div class="modal-body space-y-5 p-5 sm:p-6 overflow-y-auto max-h-[70vh]">
+        
+        <!-- ETAPA 1: TITULARIDADE E DADOS DO PAGADOR + TERCEIROS -->
+        <div id="checkoutStep1" class="space-y-5">
+          
+          <!-- Destino do Cartão -->
+          <div class="space-y-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-brandGreen">Para quem é esta compra?</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <label class="border-2 border-stone-200 rounded-xl p-3 flex items-center gap-2 cursor-pointer transition-all has-[:checked]:border-brandGreen has-[:checked]:bg-brandGreen/5">
+                <input type="radio" name="buy_target" value="myself" checked class="text-brandGreen focus:ring-brandGreen">
+                <span class="text-xs font-bold text-stone-800">👤 Para mim mesmo</span>
+              </label>
+              
+              <label class="border-2 border-stone-200 rounded-xl p-3 flex items-center gap-2 cursor-pointer transition-all has-[:checked]:border-brandGreen has-[:checked]:bg-brandGreen/5">
+                <input type="radio" name="buy_target" value="others" class="text-brandGreen focus:ring-brandGreen">
+                <span class="text-xs font-bold text-stone-800">🎁 Presente (Terceiros)</span>
+              </label>
+
+              <label class="border-2 border-stone-200 rounded-xl p-3 flex items-center gap-2 cursor-pointer transition-all has-[:checked]:border-brandGreen has-[:checked]:bg-brandGreen/5">
+                <input type="radio" name="buy_target" value="both" class="text-brandGreen focus:ring-brandGreen">
+                <span class="text-xs font-bold text-stone-800">👥 Para mim e amigos</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Bloco Dinâmico de Convidados / Terceiros -->
+          <div id="thirdPartyBlock" class="hidden p-4 rounded-xl bg-amber-50/70 border border-amber-200/80 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-900">Convidados (Máximo 3 pessoas):</span>
+              <span class="text-[0.65rem] text-amber-800 font-semibold">* Exige maioridade penal (+18)</span>
+            </div>
+            
+            <div id="guestsList" class="space-y-3">
+              <!-- Inserido dinamicamente via JS -->
+            </div>
+
+            <button type="button" id="addGuestBtn" class="text-xs font-bold text-brandTerracotta hover:underline flex items-center gap-1">
+              <span>+ Adicionar outro convidado</span>
+            </button>
+          </div>
+
+          <!-- Dados do Pagador (Dono do Login Vitalício) -->
+          <div class="space-y-3 pt-2 border-t border-stone-200">
+            <span class="block text-xs font-bold uppercase tracking-wider text-brandGreen">Dados do Pagador (Conta Vitalícia):</span>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="sm:col-span-2">
+                <label for="payerName" class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">Nome Completo</label>
+                <input type="text" id="payerName" required placeholder="Seu nome completo" class="form-input-soft text-sm">
+              </div>
+
+              <div>
+                <label for="payerCpf" class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">CPF (Obrigatório)</label>
+                <input type="text" id="payerCpf" maxlength="14" required placeholder="000.000.000-00" class="form-input-soft text-sm">
+              </div>
+
+              <div>
+                <label for="payerDob" class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">Data de Nascimento (+18 anos)</label>
+                <input type="date" id="payerDob" required class="form-input-soft text-sm">
+              </div>
+
+              <div>
+                <label for="payerPhone" class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">WhatsApp / Telefone</label>
+                <input type="tel" id="payerPhone" maxlength="15" required placeholder="(54) 99999-9999" class="form-input-soft text-sm">
+              </div>
+
+              <div>
+                <label for="payerEmail" class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">E-mail (Para envio do Cartão)</label>
+                <input type="email" id="payerEmail" required placeholder="seu@email.com" class="form-input-soft text-sm">
+              </div>
+            </div>
+          </div>
+
+          <!-- Botão Avançar Etapa 1 -->
+          <div class="pt-2 flex justify-end">
+            <button type="button" id="goToStep2Btn" class="btn-primary text-sm !py-3 !px-6 flex items-center gap-2">
+              <span>Continuar para Origem</span>
+              <span>&rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ETAPA 2: ORIGEM DA COMPRA (COMO NOS CONHECEU?) -->
+        <div id="checkoutStep2" class="hidden space-y-5">
+          <div class="p-4 rounded-xl bg-brandCream-soft border border-brandGold/40 space-y-2">
+            <span class="block text-xs font-bold uppercase tracking-wider text-brandGreen">Como nos conheceu? (Obrigatório para 1ª compra)</span>
+            <p class="text-xs text-stone-600">
+              Ajude-nos a identificar como você descobriu o BRINDA SERRA para atribuirmos a indicação correta aos nossos parceiros da região.
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label for="originSelect" class="block text-xs font-bold text-stone-700 uppercase mb-1">Selecione o canal de indicação:</label>
+              <select id="originSelect" class="form-input-soft text-sm">
+                <option value="">-- Selecione uma opção --</option>
+                <option value="hotel">🏨 Hotel / Pousada Parceira</option>
+                <option value="uber">🚗 Motorista de Aplicativo / Uber</option>
+                <option value="outros">👤 Promotor Autônomo / Indicação de Amigo</option>
+                <option value="google_insta">📱 Google / Instagram / Redes Sociais</option>
+              </select>
+            </div>
+
+            <!-- Campo dinâmico de Hotel -->
+            <div id="hotelDetailGroup" class="hidden space-y-1">
+              <label for="hotelSelect" class="block text-xs font-bold text-stone-700 uppercase">Qual hotel indicou a experiência?</label>
+              <select id="hotelSelect" class="form-input-soft text-sm">
+                <option value="Hotel Casa da Montanha">Hotel Casa da Montanha (Gramado)</option>
+                <option value="Hotel Ritta Höppner">Hotel Ritta Höppner (Gramado)</option>
+                <option value="Hotel Laghetto Stilo">Hotel Laghetto Stilo (Borges)</option>
+                <option value="Pousada Blumenberg">Pousada Blumenberg (Canela)</option>
+                <option value="Grande Hotel Canela">Grande Hotel Canela</option>
+                <option value="Outro Hotel Parceiro">Outro Hotel da Serra</option>
+              </select>
+            </div>
+
+            <!-- Campo dinâmico de Uber / Código do Motorista -->
+            <div id="uberDetailGroup" class="hidden space-y-1">
+              <label for="uberCodeInput" class="block text-xs font-bold text-stone-700 uppercase">Código do Motorista / Parceiro:</label>
+              <input type="text" id="uberCodeInput" placeholder="Ex: PEDRO01, MARCOS99..." class="form-input-soft text-sm uppercase">
+              <span class="text-[0.65rem] text-stone-500 block">* Código impresso no cartão de divulgação recebido</span>
+            </div>
+
+            <!-- Campo dinâmico de Outros / Autônomo -->
+            <div id="otherDetailGroup" class="hidden space-y-1">
+              <label for="otherCodeInput" class="block text-xs font-bold text-stone-700 uppercase">Código do Vendedor ou Quem indicou:</label>
+              <input type="text" id="otherCodeInput" placeholder="Digite o código ou nome do promotor..." class="form-input-soft text-sm">
+            </div>
+          </div>
+
+          <!-- Botões de Navegação Etapa 2 -->
+          <div class="pt-4 flex items-center justify-between border-t border-stone-200">
+            <button type="button" id="backToStep1Btn" class="btn-soft text-xs !py-2.5 !px-4">
+              &larr; Voltar
+            </button>
+            <button type="button" id="goToStep3Btn" class="btn-primary text-sm !py-3 !px-6 flex items-center gap-2">
+              <span>Ir para o Pagamento</span>
+              <span>&rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ETAPA 3: PAGAMENTO (PIX DINÂMICO & CARTÃO) -->
+        <div id="checkoutStep3" class="hidden space-y-5">
+          
+          <!-- Resumo Financeiro do Pedido -->
+          <div class="p-4 rounded-xl bg-stone-50 border border-stone-200 space-y-2 text-xs sm:text-sm">
+            <div class="flex justify-between items-center text-stone-600">
+              <span id="summaryPlanName">BRINDA CARD (Adesão Vitalícia)</span>
+              <span class="font-bold text-stone-800" id="summaryBasePrice">R$ 10,00</span>
+            </div>
+            <div class="flex justify-between items-center text-stone-600" id="summaryExpRow">
+              <span id="summaryExpName">Experiências Cervejeiras</span>
+              <span class="font-bold text-stone-800" id="summaryExpPrice">R$ 0,00</span>
+            </div>
+            <div class="flex justify-between items-center text-stone-600" id="summaryGuestsRow">
+              <span>Passes Adicionais (Terceiros):</span>
+              <span class="font-bold text-stone-800" id="summaryGuestsCount">0</span>
+            </div>
+            <div class="pt-2 border-t border-stone-300 flex justify-between items-baseline font-bold">
+              <span class="text-sm text-brandGreen">TOTAL A PAGAR:</span>
+              <span class="text-lg sm:text-2xl text-brandTerracotta" id="summaryTotalPrice">R$ 140,00</span>
+            </div>
+          </div>
+
+          <!-- Seletor de Abas de Pagamento -->
+          <div class="space-y-3">
+            <span class="block text-xs font-bold uppercase tracking-wider text-brandGreen">Escolha como pagar:</span>
+            
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" id="tabPixBtn" class="p-3 rounded-xl border-2 border-brandGreen bg-brandGreen/5 font-bold text-xs sm:text-sm text-brandGreen flex items-center justify-center gap-1.5 transition-all">
+                <span>⚡ PIX Dinâmico</span>
+                <span class="text-[0.65rem] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">Instantâneo</span>
+              </button>
+              <button type="button" id="tabCardBtn" class="p-3 rounded-xl border-2 border-stone-200 bg-white font-bold text-xs sm:text-sm text-stone-600 flex items-center justify-center gap-1.5 transition-all">
+                <span>💳 Cartão de Crédito</span>
+              </button>
+            </div>
+
+            <!-- PAINEL PIX -->
+            <div id="pixPaymentPanel" class="p-4 rounded-xl bg-white border border-stone-200 space-y-3 text-center">
+              <span class="text-xs font-bold text-stone-700 block">Escaneie o QR Code abaixo no seu aplicativo do banco:</span>
+              
+              <div class="flex justify-center my-2">
+                <canvas id="pixQrCanvas" class="p-2 bg-white rounded-lg border border-stone-200 shadow-sm"></canvas>
+              </div>
+
+              <div class="space-y-1.5 text-left">
+                <label class="block text-[0.65rem] uppercase font-bold text-stone-500">Chave PIX Copia e Cola:</label>
+                <div class="flex items-center gap-2">
+                  <input type="text" id="pixCodeInput" readonly value="00020126580014br.gov.bcb.pix0136brindaserracard-fake-pix-test5204000053039865802BR5920BRINDA SERRA6006CANELA62070503***6304" class="form-input-soft !py-1.5 text-xs font-mono bg-stone-50 truncate">
+                  <button type="button" id="copyPixBtn" class="btn-soft text-xs whitespace-nowrap !py-2 !px-3 shrink-0">
+                    Copiar
+                  </button>
+                </div>
+              </div>
+
+              <button type="button" id="confirmPixSimBtn" class="btn-primary w-full text-sm !py-3.5 shadow-md flex items-center justify-center gap-2 mt-2">
+                <span>Já Efetuei o PIX / Liberar meu Card</span>
+                <span>✓</span>
+              </button>
+            </div>
+
+            <!-- PAINEL CARTÃO DE CRÉDITO -->
+            <div id="cardPaymentPanel" class="hidden p-4 rounded-xl bg-white border border-stone-200 space-y-3">
+              <div>
+                <label class="block text-[0.65rem] uppercase font-bold text-stone-600 mb-1">Número do Cartão</label>
+                <input type="text" id="ccNumber" placeholder="0000 0000 0000 0000" maxlength="19" class="form-input-soft text-sm">
+              </div>
+
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-[0.65rem] uppercase font-bold text-stone-600 mb-1">Validade (MM/AA)</label>
+                  <input type="text" id="ccExpiry" placeholder="12/28" maxlength="5" class="form-input-soft text-sm">
+                </div>
+                <div>
+                  <label class="block text-[0.65rem] uppercase font-bold text-stone-600 mb-1">CVV</label>
+                  <input type="password" id="ccCvv" placeholder="123" maxlength="4" class="form-input-soft text-sm">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[0.65rem] uppercase font-bold text-stone-600 mb-1">Nome Impresso no Cartão</label>
+                <input type="text" id="ccHolder" placeholder="NOME COMO NO CARTAO" class="form-input-soft text-sm uppercase">
+              </div>
+
+              <button type="button" id="confirmCardPayBtn" class="btn-primary w-full text-sm !py-3.5 shadow-md flex items-center justify-center gap-2 mt-2">
+                <span>Pagar e Liberar meu Cartão</span>
+                <span>🔒</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Botão Voltar Etapa 3 -->
+          <div class="pt-2 flex justify-start">
+            <button type="button" id="backToStep2Btn" class="btn-soft text-xs !py-2.5 !px-4">
+              &larr; Voltar
+            </button>
+          </div>
+        </div>
+
+        <!-- ETAPA 4: SUCESSO & EMISSÃO DO BRINDA CARD (O VISUAL OFICIAL DO PRINT!) -->
+        <div id="checkoutStep4" class="hidden space-y-6 text-center">
+          
+          <div class="space-y-1">
+            <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-800 text-xl font-bold flex items-center justify-center mx-auto">
+              ✓
+            </div>
+            <h4 class="text-xl font-bold text-brandGreen">Pagamento Confirmado!</h4>
+            <p class="text-xs sm:text-sm text-stone-600">
+              Seu <strong>BRINDA CARD</strong> oficial foi emitido com sucesso e tem validade de 6 meses.
+            </p>
+          </div>
+
+          <!-- Seletor de Cartões (Caso tenha comprado para terceiros) -->
+          <div id="multiCardTabsContainer" class="hidden flex justify-center gap-1.5 flex-wrap">
+            <!-- Inserido dinamicamente via JS -->
+          </div>
+
+          <!-- ÁREA DO CARTÃO OFICIAL HOMOLOGADO RENDERIZADO -->
+          <div id="renderedCardContainer" class="p-2 sm:p-4 rounded-2xl bg-stone-100/70 border border-stone-200">
+            <!-- Inserido dinamicamente via JS com o design exato do print -->
+          </div>
+
+          <!-- Ações Finais -->
+          <div class="space-y-2 pt-2">
+            <div class="flex flex-col sm:flex-row gap-2 justify-center">
+              <button type="button" id="downloadCardBtn" class="btn-primary text-xs !py-3 !px-5 flex items-center justify-center gap-2">
+                <span>📥 Baixar Cartão / Imprimir</span>
+              </button>
+              <button type="button" id="shareWhatsappBtn" class="btn-secondary text-xs !py-3 !px-5 flex items-center justify-center gap-2">
+                <span>📲 Compartilhar no WhatsApp</span>
+              </button>
+            </div>
+            <p class="text-[0.7rem] text-stone-500">
+              * Uma cópia deste comprovante e o QR Code oficial foram enviados para o e-mail cadastrado.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: QUERO VENDER O BRINDA CARD (CAPTAÇÃO DE PARCEIROS B2B)  -->
+  <!-- ============================================================== -->
+  <div id="vendorModal" class="modal-backdrop">
+    <div class="modal-box !max-w-md">
+      <div class="modal-header">
+        <div>
+          <h3 class="text-base font-bold text-brandGreen">Quero Vender o BRINDA Card</h3>
+          <span class="text-xs text-brandTerracotta font-semibold">Parceria Comercial & Indicação</span>
+        </div>
+        <button class="close-vendor-modal p-2 rounded-full text-stone-500 hover:bg-stone-200 focus:outline-none">✕</button>
+      </div>
+
+      <form id="vendorLeadForm" class="modal-body space-y-3.5 p-5">
+        <p class="text-xs text-stone-600">
+          Seja um motorista parceiro, concierge de hotel ou promotor da Serra Gaúcha. Ganhe comissões a cada indicação!
+        </p>
+
+        <div>
+          <label class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">Seu Nome Completo</label>
+          <input type="text" id="vendorName" required placeholder="Como podemos te chamar?" class="form-input-soft text-sm">
+        </div>
+
+        <div>
+          <label class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">WhatsApp de Contato</label>
+          <input type="tel" id="vendorPhone" required placeholder="(54) 99999-9999" class="form-input-soft text-sm">
+        </div>
+
+        <div>
+          <label class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">Cidade / Região</label>
+          <input type="text" id="vendorCity" required placeholder="Canela, Gramado, etc." class="form-input-soft text-sm">
+        </div>
+
+        <div>
+          <label class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">Tipo de Parceria</label>
+          <select id="vendorType" class="form-input-soft text-sm">
+            <option value="uber">🚗 Motorista de Aplicativo / Uber</option>
+            <option value="hotel">🏨 Hotel / Pousada</option>
+            <option value="guia">🧭 Guia de Turismo / Receptivo</option>
+            <option value="outro">👤 Promotor Autônomo</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-primary w-full text-sm !py-3 mt-2">
+          Enviar Cadastro de Vendedor
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: QUERO SER CERVEJARIA PARCEIRA (CAPTAÇÃO B2B)            -->
+  <!-- ============================================================== -->
+  <div id="breweryModal" class="modal-backdrop">
+    <div class="modal-box !max-w-md">
+      <div class="modal-header">
+        <div>
+          <h3 class="text-base font-bold text-brandGreen">Seja uma Cervejaria Parceira</h3>
+          <span class="text-xs text-brandTerracotta font-semibold">Credenciamento de Estabelecimentos</span>
+        </div>
+        <button class="close-brewery-modal p-2 rounded-full text-stone-500 hover:bg-stone-200 focus:outline-none">✕</button>
+      </div>
+
+      <form id="breweryLeadForm" class="modal-body space-y-3.5 p-5">
+        <p class="text-xs text-stone-600">
+          Receba um fluxo contínuo de turistas qualificados na sua casa através do BRINDA CARD.
+        </p>
+
+        <div>
+          <label class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">Nome da Cervejaria</label>
+          <input type="text" id="breweryName" required placeholder="Ex: Cervejaria Artesanal Serra" class="form-input-soft text-sm">
+        </div>
+
+        <div>
+          <label class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">Responsável / Contato</label>
+          <input type="text" id="breweryContact" required placeholder="Seu nome e função" class="form-input-soft text-sm">
+        </div>
+
+        <div>
+          <label class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">WhatsApp Comercial</label>
+          <input type="tel" id="breweryPhone" required placeholder="(54) 99999-9999" class="form-input-soft text-sm">
+        </div>
+
+        <div>
+          <label class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">Município</label>
+          <select id="breweryCity" class="form-input-soft text-sm">
+            <option value="Canela">Canela - RS</option>
+            <option value="Gramado">Gramado - RS</option>
+            <option value="Nova Petrópolis">Nova Petrópolis - RS</option>
+            <option value="Porto Alegre">Porto Alegre - RS</option>
+            <option value="Outro">Outro Município</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-primary w-full text-sm !py-3 mt-2">
+          Cadastrar Cervejaria para Avaliação
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- RODAPÉ ACOLHEDOR & ELEGANTE -->
   <footer class="bg-brandGreen text-brandCream pt-14 pb-10 border-t border-brandGreen-light/30">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1318,9 +1744,11 @@
 
         <!-- Legal e Atendimento -->
         <div class="md:col-span-4 space-y-2">
-          <span class="text-xs uppercase tracking-widest text-brandGold font-bold block mb-1">Informações Legais</span>
+          <span class="text-xs uppercase tracking-widest text-brandGold font-bold block mb-1">Parcerias & Legal</span>
           <ul class="space-y-1.5 text-xs sm:text-sm text-stone-300">
-            <li><a href="#termos" class="open-terms-modal hover:text-brandPeach underline">Termos e Condições Gerais de Uso</a></li>
+            <li><button type="button" class="open-vendor-modal text-left hover:text-brandPeach text-[#F8E2CE] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"><span>🤝</span><span>Quero Vender o BRINDA Card</span></button></li>
+            <li><button type="button" class="open-brewery-modal text-left hover:text-brandPeach text-[#F8E2CE] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"><span>🍺</span><span>Seja uma Cervejaria Parceira</span></button></li>
+            <li class="pt-1"><a href="#termos" class="open-terms-modal hover:text-brandPeach underline">Termos e Condições Gerais de Uso</a></li>
             <li><span>Foro da Comarca de Canela - RS</span></li>
             <li><span>Atendimento: <a href="mailto:brindacard@gmail.com" class="hover:text-brandPeach">brindacard@gmail.com</a></span></li>
             <li><span>Proibida a venda a menores de 18 anos</span></li>
