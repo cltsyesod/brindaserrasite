@@ -65,15 +65,39 @@ function addHotel(hotel) {
   store.hoteis.unshift(hotel);
 }
 
-module.exports = {
-  store,
-  normalizeKey,
-  isExcluido,
-  getEffectiveStatus,
-  setOverride,
-  addExclusao,
-  addLead,
-  addVendedor,
-  addCervejaria,
-  addHotel
-};
+// Handler de rota para Vercel Serverless Function (exigido para compilação na Vercel)
+async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  return res.json({ sucesso: true, store });
+}
+
+// Exporta tanto o handler de rota quanto as funções utilitárias
+handler.store = store;
+handler.normalizeKey = normalizeKey;
+handler.isExcluido = isExcluido;
+handler.getEffectiveStatus = getEffectiveStatus;
+handler.setOverride = setOverride;
+handler.addExclusao = addExclusao;
+handler.addLead = addLead;
+handler.addVendedor = addVendedor;
+handler.addCervejaria = addCervejaria;
+handler.addHotel = addHotel;
+
+module.exports = handler;
+module.exports.store = store;
+module.exports.normalizeKey = normalizeKey;
+module.exports.isExcluido = isExcluido;
+module.exports.getEffectiveStatus = getEffectiveStatus;
+module.exports.setOverride = setOverride;
+module.exports.addExclusao = addExclusao;
+module.exports.addLead = addLead;
+module.exports.addVendedor = addVendedor;
+module.exports.addCervejaria = addCervejaria;
+module.exports.addHotel = addHotel;

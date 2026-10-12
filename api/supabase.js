@@ -32,8 +32,28 @@ function isSupabaseConfigured() {
   return Boolean(SUPABASE_KEY && SUPABASE_KEY.length > 10);
 }
 
-module.exports = {
-  getSupabaseClient,
-  isSupabaseConfigured,
-  SUPABASE_URL
-};
+// Handler de status para Vercel Serverless Function
+async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  return res.json({
+    sucesso: true,
+    conectado: isSupabaseConfigured(),
+    url: SUPABASE_URL
+  });
+}
+
+handler.getSupabaseClient = getSupabaseClient;
+handler.isSupabaseConfigured = isSupabaseConfigured;
+handler.SUPABASE_URL = SUPABASE_URL;
+
+module.exports = handler;
+module.exports.getSupabaseClient = getSupabaseClient;
+module.exports.isSupabaseConfigured = isSupabaseConfigured;
+module.exports.SUPABASE_URL = SUPABASE_URL;
