@@ -1523,6 +1523,20 @@ function initLeadModals() {
           created_at: new Date().toISOString()
         });
         localStorage.setItem('brinda_leads_historico', JSON.stringify(localLeads));
+
+        const localCerv = JSON.parse(localStorage.getItem('brinda_cervejarias_cadastradas') || '[]');
+        localCerv.unshift({
+          id: Date.now(),
+          nome: bName,
+          cidade: bCity || 'Serra Gaúcha',
+          endereco: `Contato: ${bContact}`,
+          telefone: bPhoneVal,
+          tour_guiado: false,
+          pin_acesso: '1234',
+          status: 'ativo',
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('brinda_cervejarias_cadastradas', JSON.stringify(localCerv));
       } catch (e) {}
 
       if (submitBtn) {

@@ -145,7 +145,7 @@
               <span class="text-xl font-extrabold tracking-tight text-brandCream">BRINDA Serra</span>
               <span class="text-[0.62rem] bg-brandGold text-brandGreen-dark uppercase px-2 py-0.5 rounded-full font-bold tracking-wider">Gestão Geral</span>
             </div>
-            <p class="text-xs text-brandCream-soft">Painel de Controle e Auditoria da Proprietária</p>
+            <p class="text-xs text-brandCream-soft">Painel Administrativo de Controle e Auditoria</p>
           </div>
         </div>
 
@@ -414,7 +414,7 @@
           </button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-3" id="cervejariasSummaryGrid">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="cervejariasSummaryGrid">
           <!-- Resumo das cervejarias -->
         </div>
 
@@ -535,7 +535,7 @@
                   <th class="py-3 px-4">WhatsApp / Telefone</th>
                   <th class="py-3 px-4">Cidade</th>
                   <th class="py-3 px-4">Status do Lead</th>
-                  <th class="py-3 px-4 text-center">Contato</th>
+                  <th class="py-3 px-4 text-center">Ações</th>
                 </tr>
               </thead>
               <tbody id="leadsTableBody" class="divide-y divide-stone-100">
@@ -551,7 +551,7 @@
 
     <!-- RODAPÉ DA ADMINISTRAÇÃO -->
     <footer class="bg-white border-t border-stone-200 py-4 text-center text-xs text-stone-500">
-      <p>BRINDA SERRA • Painel Administrativo Oficial da Proprietária • Todos os direitos reservados © 2026</p>
+      <p>BRINDA SERRA • Painel Administrativo Oficial • Todos os direitos reservados © 2026</p>
     </footer>
 
   </div>
@@ -855,46 +855,215 @@
         }
       }
 
+      // Gestão de Exclusões e Alterações de Status com Persistência Local e na API
+      function getExclusoes() {
+        try {
+          return JSON.parse(localStorage.getItem('brinda_exclusoes_admin') || '{"vendedores":[],"cervejarias":[],"hoteis":[],"leads":[],"cards":[]}');
+        } catch (e) {
+          return { vendedores: [], cervejarias: [], hoteis: [], leads: [], cards: [] };
+        }
+      }
+
+      function salvarExclusao(tipo, idOuNome) {
+        if (!idOuNome) return;
+        const excl = getExclusoes();
+        if (!excl[tipo]) excl[tipo] = [];
+        const norm = String(idOuNome).trim().toLowerCase();
+        if (!excl[tipo].includes(norm)) excl[tipo].push(norm);
+        localStorage.setItem('brinda_exclusoes_admin', JSON.stringify(excl));
+      }
+
+      function isExcluido(tipo, idOuNome) {
+        if (!idOuNome) return false;
+        const excl = getExclusoes();
+        const list = excl[tipo] || [];
+        const norm = String(idOuNome).trim().toLowerCase();
+        return list.includes(norm);
+      }
+
+      function getStatusOverrides() {
+        try {
+          return JSON.parse(localStorage.getItem('brinda_status_overrides') || '{}');
+        } catch (e) {
+          return {};
+        }
+      }
+
+      function salvarStatusOverride(chave, status) {
+        if (!chave) return;
+        const ov = getStatusOverrides();
+        ov[String(chave).trim().toLowerCase()] = status;
+        localStorage.setItem('brinda_status_overrides', JSON.stringify(ov));
+      }
+
+      function getStatusEfetivo(chave, statusPadrao) {
+        const ov = getStatusOverrides();
+        const chaveNorm = String(chave || '').trim().toLowerCase();
+        return ov[chaveNorm] || statusPadrao || 'ativo';
+      }
+
       // Mescla com dados que a usuária acabou de criar no navegador para que NUNCA desapareçam
       function mergeWithLocalData(apiData) {
-        // 1. Leads locais
+        // 1. LEADS B2B
         const localLeads = JSON.parse(localStorage.getItem('brinda_leads_historico') || '[]');
         const existingLeads = apiData.leads || [];
         const leadsMap = new Map();
-        localLeads.forEach(l => leadsMap.set(l.telefone || l.nome, l));
-        existingLeads.forEach(l => leadsMap.set(l.telefone || l.nome, l));
+
+        localLeads.forEach(l => {
+          const key = String(l.id || l.telefone || l.nome).toLowerCase();
+          if (!isExcluido('leads', key) && !isExcluido('leads', l.id) && !isExcluido('leads', l.nome)) {
+            leadsMap.set(key, l);
+          }
+        });
+
+        existingLeads.forEach(l => {
+          const key = String(l.id || l.telefone || l.nome).toLowerCase();
+          if (!isExcluido('leads', key) && !isExcluido('leads', l.id) && !isExcluido('leads', l.nome)) {
+            leadsMap.set(key, l);
+          }
+        });
+
         apiData.leads = Array.from(leadsMap.values());
 
-        // 2. Vendedores locais
+        // 2. VENDEDORES
         const localVend = JSON.parse(localStorage.getItem('brinda_vendedores_cadastrados') || '[]');
         const existingVend = apiData.vendedores || [];
         const vendMap = new Map();
-        localVend.forEach(v => vendMap.set(v.codigo?.toUpperCase(), v));
-        existingVend.forEach(v => vendMap.set(v.codigo?.toUpperCase(), v));
+
+        localVend.forEach(v => {
+          const key = String(v.codigo || v.nome).trim().toUpperCase();
+          if (!isExcluido('vendedores', key) && !isExcluido('vendedores', v.nome)) {
+            v.status = getStatusEfetivo(v.codigo, v.status);
+            vendMap.set(key, v);
+          }
+        });
+
+        existingVend.forEach(v => {
+          const key = String(v.codigo || v.nome).trim().toUpperCase();
+          if (!isExcluido('vendedores', key) && !isExcluido('vendedores', v.nome)) {
+            v.status = getStatusEfetivo(v.codigo, v.status);
+            vendMap.set(key, v);
+          }
+        });
 
         // Se houver algum lead de vendedor, garante que apareça também na tabela de Vendedores!
         apiData.leads.forEach(l => {
           if (l.tipo === 'vendedor') {
             const first = (l.nome?.split(' ')[0] || 'VEND').replace(/[^a-zA-Z]/g, '').toUpperCase();
             const code = `${first}01`;
-            if (!vendMap.has(code) && !Array.from(vendMap.values()).some(v => v.telefone === l.telefone)) {
-              vendMap.set(code, {
-                nome: l.nome,
-                codigo: code,
-                tipo: l.categoria || 'autonomo',
-                hotel_nome: l.empresa_nome || (l.cidade ? `Região: ${l.cidade}` : 'Autônomo'),
+            if (!isExcluido('vendedores', code) && !isExcluido('vendedores', l.nome)) {
+              if (!vendMap.has(code) && !Array.from(vendMap.values()).some(v => v.telefone === l.telefone)) {
+                vendMap.set(code, {
+                  id: l.id || Date.now(),
+                  nome: l.nome,
+                  codigo: code,
+                  tipo: l.categoria || 'autonomo',
+                  hotel_nome: l.empresa_nome || (l.cidade ? `Região: ${l.cidade}` : 'Autônomo'),
+                  telefone: l.telefone,
+                  status: getStatusEfetivo(code, 'ativo'),
+                  total_vendas: 0,
+                  total_comissao: 0,
+                  total_a_receber: 0,
+                  total_pendente: 0
+                });
+              }
+            }
+          }
+        });
+        apiData.vendedores = Array.from(vendMap.values());
+
+        // 3. CERVEJARIAS
+        const localCerv = JSON.parse(localStorage.getItem('brinda_cervejarias_cadastradas') || '[]');
+        const existingCerv = apiData.cervejarias || [];
+        const cervMap = new Map();
+
+        const defaultCervs = [
+          { id: 1, nome: 'Cervejaria Farol', cidade: 'Canela', status: 'ativo', endereco: 'R. Severino Inocente Zini, 150', telefone: '(54) 3282-7007' },
+          { id: 2, nome: 'Cervejaria Gramado Bier', cidade: 'Gramado', status: 'ativo', endereco: 'Av. das Hortênsias, 5000', telefone: '(54) 3286-1234' },
+          { id: 3, nome: 'Cervejaria Rasen Bier', cidade: 'Gramado', status: 'ativo', endereco: 'Rua Caxias do Sul, 356', telefone: '(54) 3286-6888' },
+          { id: 4, nome: 'Cervejaria Edelbrau', cidade: 'Nova Petrópolis', status: 'ativo', endereco: 'Av. 15 de Novembro, 4024', telefone: '(54) 3281-4555' },
+          { id: 5, nome: 'Cervejaria Kraustin Bier', cidade: 'Canela', status: 'ativo', endereco: 'Rua Borges de Medeiros, 800', telefone: '(54) 3282-9900' }
+        ];
+
+        defaultCervs.forEach(c => {
+          const key = c.nome.trim().toLowerCase();
+          if (!isExcluido('cervejarias', key)) {
+            c.status = getStatusEfetivo(c.nome, c.status);
+            cervMap.set(key, c);
+          }
+        });
+
+        existingCerv.forEach(c => {
+          const key = c.nome.trim().toLowerCase();
+          if (!isExcluido('cervejarias', key)) {
+            c.status = getStatusEfetivo(c.nome, c.status);
+            cervMap.set(key, c);
+          }
+        });
+
+        localCerv.forEach(c => {
+          const key = c.nome.trim().toLowerCase();
+          if (!isExcluido('cervejarias', key)) {
+            c.status = getStatusEfetivo(c.nome, c.status);
+            cervMap.set(key, c);
+          }
+        });
+
+        // Leads de Cervejaria: garante inclusão imediata nas Cervejarias Parceiras
+        apiData.leads.forEach(l => {
+          if (l.tipo === 'cervejaria') {
+            const bName = l.empresa_nome ? l.empresa_nome.trim() : (l.nome.includes('Cervejaria') ? l.nome.trim() : `Cervejaria ${l.nome.trim()}`);
+            const key = bName.toLowerCase();
+            if (!isExcluido('cervejarias', key) && !cervMap.has(key)) {
+              cervMap.set(key, {
+                id: l.id || Date.now(),
+                nome: bName,
+                cidade: l.cidade || 'Serra Gaúcha',
+                endereco: `Contato: ${l.nome}`,
                 telefone: l.telefone,
-                status: 'ativo',
-                total_vendas: 0,
-                total_comissao: 0,
-                total_a_receber: 0,
-                total_pendente: 0
+                tour_guiado: false,
+                pin_acesso: '1234',
+                status: getStatusEfetivo(bName, 'ativo'),
+                created_at: l.created_at
               });
             }
           }
         });
+        apiData.cervejarias = Array.from(cervMap.values());
 
-        apiData.vendedores = Array.from(vendMap.values());
+        // 4. HOTÉIS
+        const localHoteis = JSON.parse(localStorage.getItem('brinda_hoteis_cadastrados') || '[]');
+        const defaultHoteis = [
+          { nome: 'Hotel Casa da Montanha', endereco: 'Av. Borges de Medeiros, 3166 - Gramado', tel: '(54) 3286-5000', resp: 'Concierge Chefe', status: 'ativo' },
+          { nome: 'Hotel Alpestre', endereco: 'Rua Ceará, 94 - Bairro Planalto - Gramado', tel: '(54) 3286-3555', resp: 'Recepção Executiva', status: 'ativo' },
+          { nome: 'Grande Hotel Canela', endereco: 'Rua Getúlio Vargas, 300 - Canela', tel: '(54) 3282-1285', resp: 'Gerência de Atendimento', status: 'ativo' },
+          { nome: 'Villa Bella Hotel & Spa', endereco: 'Rua Villa Bella, 125 - Gramado', tel: '(54) 3295-8100', resp: 'Equipe de Hospedagem', status: 'ativo' },
+        ];
+        const hotelMap = new Map();
+        defaultHoteis.forEach(h => {
+          const key = h.nome.trim().toLowerCase();
+          if (!isExcluido('hoteis', key)) {
+            h.status = getStatusEfetivo(h.nome, h.status);
+            hotelMap.set(key, h);
+          }
+        });
+        localHoteis.forEach(h => {
+          const key = h.nome.trim().toLowerCase();
+          if (!isExcluido('hoteis', key)) {
+            h.status = getStatusEfetivo(h.nome, h.status || 'ativo');
+            hotelMap.set(key, { ...hotelMap.get(key), ...h });
+          }
+        });
+        apiData.hoteis = Array.from(hotelMap.values());
+
+        // 5. CARDS
+        if (apiData.cards) {
+          apiData.cards = apiData.cards.filter(c => !isExcluido('cards', c.codigo_passe) && !isExcluido('cards', c.id)).map(c => {
+            c.status = getStatusEfetivo(c.codigo_passe, c.status);
+            return c;
+          });
+        }
+
         return apiData;
       }
 
@@ -922,7 +1091,7 @@
         renderCervejarias(data.cervejarias, data.validacoes);
         renderValidacoes(data.validacoes);
         renderVendedores(data.vendedores);
-        renderHoteis(data.vendedores);
+        renderHoteis(data.hoteis || []);
         renderLeads(data.leads);
       }
 
@@ -986,51 +1155,169 @@
       // Tabela de Cards
       function renderCards(cards) {
         if (!cardsTableBody) return;
-        cardsTableBody.innerHTML = (cards || []).map(c => `
-          <tr class="hover:bg-stone-50 transition-colors">
-            <td class="py-3 px-4 font-mono font-bold text-brandGold">${c.codigo_passe}</td>
-            <td class="py-3 px-4 font-bold text-stone-900">${c.titular_nome}</td>
-            <td class="py-3 px-4 text-stone-500 font-mono">${c.titular_cpf || '-'}</td>
-            <td class="py-3 px-4 font-semibold capitalize">${c.modalidade?.replace('_', ' ') || 'Brinda Bem'}</td>
-            <td class="py-3 px-4">
-              <span class="font-black text-sm ${c.saldo_restante > 0 ? 'text-emerald-700' : 'text-stone-400'}">
-                ${c.saldo_restante} de ${c.saldo_total}
-              </span>
-            </td>
-            <td class="py-3 px-4 text-stone-600">${c.data_validade_formatada || '31/12/2026'}</td>
-            <td class="py-3 px-4">
-              <span class="px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold ${c.status === 'ativo' ? 'badge-approved' : 'badge-pending'}">
-                ${c.status === 'ativo' ? 'Ativo' : 'Esgotado'}
-              </span>
-            </td>
-            <td class="py-3 px-4 text-center">
-              <a href="/passe?token=${encodeURIComponent(c.qr_token || c.codigo_passe)}" target="_blank" class="px-2 py-1 bg-stone-100 hover:bg-stone-200 text-brandGreen font-bold rounded-lg text-[0.65rem] border border-stone-300">
-                Ver Passe
-              </a>
-            </td>
-          </tr>
-        `).join('');
+        cardsTableBody.innerHTML = (cards || []).map(c => {
+          const isAtivo = c.status === 'ativo';
+          const isBloqueado = c.status === 'bloqueado' || c.status === 'inativo';
+
+          return `
+            <tr class="hover:bg-stone-50 transition-colors ${isBloqueado ? 'opacity-70 bg-stone-50/50' : ''}">
+              <td class="py-3 px-4 font-mono font-bold text-brandGold">${c.codigo_passe}</td>
+              <td class="py-3 px-4 font-bold text-stone-900">${c.titular_nome}</td>
+              <td class="py-3 px-4 text-stone-500 font-mono">${c.titular_cpf || '-'}</td>
+              <td class="py-3 px-4 font-semibold capitalize">${c.modalidade?.replace('_', ' ') || 'Brinda Bem'}</td>
+              <td class="py-3 px-4">
+                <span class="font-black text-sm ${c.saldo_restante > 0 ? 'text-emerald-700' : 'text-stone-400'}">
+                  ${c.saldo_restante} de ${c.saldo_total}
+                </span>
+              </td>
+              <td class="py-3 px-4 text-stone-600">${c.data_validade_formatada || '31/12/2026'}</td>
+              <td class="py-3 px-4">
+                <span class="px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold ${isAtivo ? 'badge-approved' : 'bg-rose-100 text-rose-800 border border-rose-300'}">
+                  ${isAtivo ? '● Ativo' : (isBloqueado ? '○ Bloqueado' : 'Esgotado')}
+                </span>
+              </td>
+              <td class="py-3 px-4 text-center">
+                <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                  <a href="/passe?token=${encodeURIComponent(c.qr_token || c.codigo_passe)}" target="_blank" class="px-2 py-1 bg-stone-100 hover:bg-stone-200 text-brandGreen font-bold rounded-lg text-[0.65rem] border border-stone-300">
+                    Ver Passe
+                  </a>
+                  ${isAtivo ? `
+                    <button type="button" class="btn-toggle-card px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-[0.65rem] shadow-xs" data-codigo="${c.codigo_passe}" data-status="bloqueado" title="Bloquear / Desativar Card">
+                      Bloquear
+                    </button>
+                  ` : `
+                    <button type="button" class="btn-toggle-card px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-[0.65rem] shadow-xs" data-codigo="${c.codigo_passe}" data-status="ativo" title="Reativar Card">
+                      Reativar
+                    </button>
+                  `}
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Eventos dos Cards
+        document.querySelectorAll('.btn-toggle-card').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const codigo = btn.dataset.codigo;
+            const newStatus = btn.dataset.status;
+            if (confirm(`Confirmar ${newStatus === 'ativo' ? 'reativação' : 'bloqueio'} do Card ${codigo}?`)) {
+              salvarStatusOverride(codigo, newStatus);
+              if (adminData && adminData.cards) {
+                const card = adminData.cards.find(c => c.codigo_passe === codigo);
+                if (card) card.status = newStatus;
+                renderCards(adminData.cards);
+              }
+              try {
+                await fetch('/api/admin', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'toggle_card', payload: { codigo_passe: codigo, status: newStatus } })
+                });
+              } catch (e) {}
+            }
+          });
+        });
       }
 
-      // Cervejarias
+      // Cervejarias Parceiras (com Desativar, Reativar, Excluir)
       function renderCervejarias(cervejarias, validacoes) {
         if (!cervejariasSummaryGrid) return;
-        const localCerv = JSON.parse(localStorage.getItem('brinda_cervejarias_cadastradas') || '[]');
-        const allCerv = [...(cervejarias || []), ...localCerv.filter(lc => !(cervejarias || []).some(c => c.nome === lc.nome))];
+        const allCerv = cervejarias || [];
 
         cervejariasSummaryGrid.innerHTML = allCerv.map(c => {
-          const totalVisitas = (validacoes || []).filter(v => v.cervejaria_id === c.id || v.cervejaria_nome === c.nome).length;
+          const totalVisitas = (validacoes || []).filter(v => v.cervejaria_id === c.id || (v.cervejaria_nome && v.cervejaria_nome.toLowerCase() === c.nome.toLowerCase())).length;
+          const isAtivo = c.status === 'ativo';
+
           return `
-            <div class="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm space-y-1">
-              <span class="text-[0.65rem] uppercase font-bold text-stone-400 block">${c.cidade} - RS</span>
-              <h4 class="text-sm font-bold text-brandGreen">${c.nome}</h4>
-              <div class="pt-2 flex items-center justify-between">
-                <span class="text-xs text-stone-600">Visitas:</span>
-                <span class="text-base font-extrabold text-brandTerracotta">${totalVisitas}</span>
+            <div class="bg-white p-4 rounded-2xl border ${isAtivo ? 'border-stone-200' : 'border-stone-300 opacity-80 bg-stone-50/80'} shadow-sm space-y-2 flex flex-col justify-between">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[0.65rem] uppercase font-bold text-stone-400 block">${c.cidade || 'Serra Gaúcha'} - RS</span>
+                  <span class="px-2 py-0.5 rounded-full text-[0.62rem] font-bold ${isAtivo ? 'badge-approved' : 'bg-rose-100 text-rose-800 border border-rose-300'}">
+                    ${isAtivo ? '● Ativa' : '○ Inativa'}
+                  </span>
+                </div>
+                <h4 class="text-sm font-bold text-brandGreen">${c.nome}</h4>
+                ${c.telefone ? `<p class="text-[0.7rem] text-stone-500 font-mono">Tel: ${c.telefone}</p>` : ''}
+                ${c.endereco ? `<p class="text-[0.68rem] text-stone-500 line-clamp-1">${c.endereco}</p>` : ''}
+                <div class="pt-2 flex items-center justify-between border-t border-stone-100">
+                  <span class="text-xs text-stone-600 font-medium">Degustações:</span>
+                  <span class="text-sm font-extrabold text-brandTerracotta">${totalVisitas}</span>
+                </div>
+              </div>
+              <div class="pt-2 border-t border-stone-100 flex items-center justify-end gap-1.5 flex-wrap">
+                ${isAtivo ? `
+                  <button type="button" class="btn-toggle-cervejaria px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-[0.65rem] shadow-xs transition-colors" data-nome="${c.nome}" data-status="inativo" title="Desativar cervejaria">
+                    Desativar
+                  </button>
+                ` : `
+                  <button type="button" class="btn-toggle-cervejaria px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-[0.65rem] shadow-xs transition-colors" data-nome="${c.nome}" data-status="ativo" title="Reativar cervejaria">
+                    Reativar
+                  </button>
+                `}
+                <button type="button" class="btn-excluir-cervejaria px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-[0.65rem] shadow-xs transition-colors" data-nome="${c.nome}" title="Excluir cervejaria">
+                  Excluir
+                </button>
               </div>
             </div>
           `;
         }).join('');
+
+        // Eventos Cervejarias: Desativar / Reativar
+        document.querySelectorAll('.btn-toggle-cervejaria').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const nome = btn.dataset.nome;
+            const newStatus = btn.dataset.status;
+            if (confirm(`Confirmar ${newStatus === 'ativo' ? 'reativação' : 'desativação'} da cervejaria "${nome}"?`)) {
+              salvarStatusOverride(nome, newStatus);
+              const localCerv = JSON.parse(localStorage.getItem('brinda_cervejarias_cadastradas') || '[]');
+              const item = localCerv.find(c => c.nome.toLowerCase() === nome.toLowerCase());
+              if (item) item.status = newStatus;
+              localStorage.setItem('brinda_cervejarias_cadastradas', JSON.stringify(localCerv));
+
+              if (adminData && adminData.cervejarias) {
+                const target = adminData.cervejarias.find(c => c.nome.toLowerCase() === nome.toLowerCase());
+                if (target) target.status = newStatus;
+                renderCervejarias(adminData.cervejarias, adminData.validacoes);
+              }
+
+              try {
+                await fetch('/api/admin', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'toggle_cervejaria', payload: { nome, status: newStatus } })
+                });
+              } catch (e) {}
+            }
+          });
+        });
+
+        // Eventos Cervejarias: Excluir
+        document.querySelectorAll('.btn-excluir-cervejaria').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const nome = btn.dataset.nome;
+            if (confirm(`Tem certeza absoluta que deseja EXCLUIR a cervejaria "${nome}"?`)) {
+              salvarExclusao('cervejarias', nome);
+              const localCerv = JSON.parse(localStorage.getItem('brinda_cervejarias_cadastradas') || '[]');
+              const filtered = localCerv.filter(c => c.nome.toLowerCase() !== nome.toLowerCase());
+              localStorage.setItem('brinda_cervejarias_cadastradas', JSON.stringify(filtered));
+
+              if (adminData && adminData.cervejarias) {
+                adminData.cervejarias = adminData.cervejarias.filter(c => c.nome.toLowerCase() !== nome.toLowerCase());
+                renderCervejarias(adminData.cervejarias, adminData.validacoes);
+              }
+
+              try {
+                await fetch('/api/admin', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'excluir_cervejaria', payload: { nome } })
+                });
+              } catch (e) {}
+            }
+          });
+        });
       }
 
       // Tabela de Validações
@@ -1053,43 +1340,120 @@
         `).join('');
       }
 
-      // Tabela de Vendedores
+      // Tabela de Vendedores (com Desativar, Reativar, Excluir)
       function renderVendedores(vendedores) {
         if (!vendedoresTableBody) return;
-        vendedoresTableBody.innerHTML = (vendedores || []).map(v => `
-          <tr class="hover:bg-stone-50 transition-colors">
-            <td class="py-3 px-4 font-mono font-bold text-brandTerracotta">${v.codigo}</td>
-            <td class="py-3 px-4">
-              <strong class="text-stone-900 block">${v.nome}</strong>
-              ${v.hotel_nome ? `<span class="text-[0.65rem] text-stone-500">${v.hotel_nome}</span>` : ''}
-              ${v.telefone ? `<span class="text-[0.65rem] text-brandGreen font-mono block">${v.telefone}</span>` : ''}
-            </td>
-            <td class="py-3 px-4 uppercase text-[0.68rem] font-bold text-stone-600">${v.tipo}</td>
-            <td class="py-3 px-4 font-extrabold text-center text-sm">${v.total_vendas || 0}</td>
-            <td class="py-3 px-4">
-              ${v.atingiu_bonus ? 
-                '<span class="px-2 py-0.5 rounded-full text-[0.65rem] font-bold bg-amber-100 text-amber-800">🎉 Atingiu Meta (+R$ 200)</span>' : 
-                `<span class="text-stone-500">${v.total_vendas || 0} / 20 vendas</span>`}
-            </td>
-            <td class="py-3 px-4 font-bold text-emerald-700">${fmtBRL(v.total_comissao)}</td>
-            <td class="py-3 px-4 font-bold text-amber-800">${fmtBRL(v.valor_bonus)}</td>
-            <td class="py-3 px-4 font-black text-brandGreen text-sm">${fmtBRL(v.total_a_receber)}</td>
-            <td class="py-3 px-4">
-              <span class="px-2 py-0.5 rounded-full text-[0.65rem] font-bold ${v.status === 'ativo' ? 'badge-approved' : 'badge-pending'}">
-                ${v.status === 'ativo' ? 'Ativo' : 'Inativo'}
-              </span>
-            </td>
-            <td class="py-3 px-4 text-center">
-              ${(v.total_pendente > 0) ? `
-                <button type="button" class="btn-pagar-comissao px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-[0.65rem]" data-codigo="${v.codigo}">
-                  Pagar PIX
-                </button>
-              ` : '<span class="text-[0.68rem] text-stone-400">Em dia</span>'}
-            </td>
-          </tr>
-        `).join('');
+        const allVend = vendedores || [];
 
-        // Eventos de Pagar Comissão
+        vendedoresTableBody.innerHTML = allVend.map(v => {
+          const isAtivo = v.status === 'ativo';
+
+          return `
+            <tr class="hover:bg-stone-50 transition-colors ${!isAtivo ? 'opacity-70 bg-stone-50/50' : ''}">
+              <td class="py-3 px-4 font-mono font-bold text-brandTerracotta">${v.codigo}</td>
+              <td class="py-3 px-4">
+                <strong class="text-stone-900 block">${v.nome}</strong>
+                ${v.hotel_nome ? `<span class="text-[0.65rem] text-stone-500">${v.hotel_nome}</span>` : ''}
+                ${v.telefone ? `<span class="text-[0.65rem] text-brandGreen font-mono block">${v.telefone}</span>` : ''}
+              </td>
+              <td class="py-3 px-4 uppercase text-[0.68rem] font-bold text-stone-600">${v.tipo}</td>
+              <td class="py-3 px-4 font-extrabold text-center text-sm">${v.total_vendas || 0}</td>
+              <td class="py-3 px-4">
+                ${v.atingiu_bonus ? 
+                  '<span class="px-2 py-0.5 rounded-full text-[0.65rem] font-bold bg-amber-100 text-amber-800">🎉 Meta Atingida (+R$ 200)</span>' : 
+                  `<span class="text-stone-500">${v.total_vendas || 0} / 20 vendas</span>`}
+              </td>
+              <td class="py-3 px-4 font-bold text-emerald-700">${fmtBRL(v.total_comissao)}</td>
+              <td class="py-3 px-4 font-bold text-amber-800">${fmtBRL(v.valor_bonus)}</td>
+              <td class="py-3 px-4 font-black text-brandGreen text-sm">${fmtBRL(v.total_a_receber)}</td>
+              <td class="py-3 px-4">
+                <span class="px-2 py-0.5 rounded-full text-[0.65rem] font-bold ${isAtivo ? 'badge-approved' : 'bg-rose-100 text-rose-800 border border-rose-300'}">
+                  ${isAtivo ? '● Ativo' : '○ Inativo'}
+                </span>
+              </td>
+              <td class="py-3 px-4 text-center">
+                <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                  ${isAtivo ? `
+                    <button type="button" class="btn-toggle-vendedor px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-[0.65rem] shadow-xs" data-codigo="${v.codigo}" data-status="inativo" title="Desativar vendedor">
+                      Desativar
+                    </button>
+                  ` : `
+                    <button type="button" class="btn-toggle-vendedor px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-[0.65rem] shadow-xs" data-codigo="${v.codigo}" data-status="ativo" title="Reativar vendedor">
+                      Reativar
+                    </button>
+                  `}
+                  <button type="button" class="btn-excluir-vendedor px-2 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-[0.65rem] shadow-xs" data-codigo="${v.codigo}" data-nome="${v.nome}" title="Excluir vendedor">
+                    Excluir
+                  </button>
+                  ${(v.total_pendente > 0) ? `
+                    <button type="button" class="btn-pagar-comissao px-2 py-1 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg text-[0.65rem] shadow-xs" data-codigo="${v.codigo}">
+                      Pagar PIX
+                    </button>
+                  ` : ''}
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Eventos Vendedores: Desativar / Reativar
+        document.querySelectorAll('.btn-toggle-vendedor').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const codigo = btn.dataset.codigo;
+            const newStatus = btn.dataset.status;
+            if (confirm(`Confirmar ${newStatus === 'ativo' ? 'reativação' : 'desativação'} do vendedor ${codigo}?`)) {
+              salvarStatusOverride(codigo, newStatus);
+              const localVend = JSON.parse(localStorage.getItem('brinda_vendedores_cadastrados') || '[]');
+              const item = localVend.find(v => v.codigo?.toUpperCase() === codigo.toUpperCase());
+              if (item) item.status = newStatus;
+              localStorage.setItem('brinda_vendedores_cadastrados', JSON.stringify(localVend));
+
+              if (adminData && adminData.vendedores) {
+                const target = adminData.vendedores.find(v => v.codigo?.toUpperCase() === codigo.toUpperCase());
+                if (target) target.status = newStatus;
+                renderVendedores(adminData.vendedores);
+              }
+
+              try {
+                await fetch('/api/admin', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'toggle_vendedor', payload: { codigo, status: newStatus } })
+                });
+              } catch (e) {}
+            }
+          });
+        });
+
+        // Eventos Vendedores: Excluir
+        document.querySelectorAll('.btn-excluir-vendedor').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const codigo = btn.dataset.codigo;
+            const nome = btn.dataset.nome;
+            if (confirm(`Tem certeza absoluta que deseja EXCLUIR o vendedor ${nome} (${codigo})?`)) {
+              salvarExclusao('vendedores', codigo);
+              salvarExclusao('vendedores', nome);
+              const localVend = JSON.parse(localStorage.getItem('brinda_vendedores_cadastrados') || '[]');
+              const filtered = localVend.filter(v => v.codigo?.toUpperCase() !== codigo.toUpperCase());
+              localStorage.setItem('brinda_vendedores_cadastrados', JSON.stringify(filtered));
+
+              if (adminData && adminData.vendedores) {
+                adminData.vendedores = adminData.vendedores.filter(v => v.codigo?.toUpperCase() !== codigo.toUpperCase());
+                renderVendedores(adminData.vendedores);
+              }
+
+              try {
+                await fetch('/api/admin', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'excluir_vendedor', payload: { codigo } })
+                });
+              } catch (e) {}
+            }
+          });
+        });
+
+        // Eventos Vendedores: Pagar Comissão
         document.querySelectorAll('.btn-pagar-comissao').forEach(btn => {
           btn.addEventListener('click', async () => {
             const codigo = btn.dataset.codigo;
@@ -1105,38 +1469,113 @@
         });
       }
 
-      // Hotéis
-      function renderHoteis(vendedores) {
+      // Hotéis Parceiros (com Desativar, Reativar, Excluir)
+      function renderHoteis(hoteis) {
         if (!hoteisGrid) return;
-        const localHoteis = JSON.parse(localStorage.getItem('brinda_hoteis_cadastrados') || '[]');
-        const defaultHoteis = [
-          { nome: 'Hotel Casa da Montanha', endereco: 'Av. Borges de Medeiros, 3166 - Gramado', tel: '(54) 3286-5000', resp: 'Concierge Chefe' },
-          { nome: 'Hotel Alpestre', endereco: 'Rua Ceará, 94 - Bairro Planalto - Gramado', tel: '(54) 3286-3555', resp: 'Recepção Executiva' },
-          { nome: 'Grande Hotel Canela', endereco: 'Rua Getúlio Vargas, 300 - Canela', tel: '(54) 3282-1285', resp: 'Gerência de Atendimento' },
-          { nome: 'Villa Bella Hotel & Spa', endereco: 'Rua Villa Bella, 125 - Gramado', tel: '(54) 3295-8100', resp: 'Equipe de Hospedagem' },
-        ];
+        const allHoteis = hoteis || [];
 
-        const allHoteis = [...localHoteis, ...defaultHoteis.filter(dh => !localHoteis.some(lh => lh.nome === dh.nome))];
+        hoteisGrid.innerHTML = allHoteis.map(h => {
+          const isAtivo = h.status === 'ativo';
 
-        hoteisGrid.innerHTML = allHoteis.map(h => `
-          <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 space-y-2 hover:border-brandGold transition-all">
-            <span class="text-xs uppercase font-bold text-brandTerracotta block">Parceiro Oficial</span>
-            <h4 class="text-sm font-bold text-brandGreen">${h.nome}</h4>
-            <p class="text-[0.7rem] text-stone-600">${h.endereco}</p>
-            <div class="pt-2 border-t border-stone-200 text-[0.68rem] text-stone-500 space-y-0.5">
-              <p><strong>Contato:</strong> ${h.resp || h.contato || 'Recepção'}</p>
-              <p><strong>Telefone:</strong> ${h.tel || h.telefone || '-'}</p>
+          return `
+            <div class="bg-stone-50 p-4 rounded-2xl border ${isAtivo ? 'border-stone-200' : 'border-stone-300 opacity-75'} space-y-2 hover:border-brandGold transition-all flex flex-col justify-between">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs uppercase font-bold text-brandTerracotta block">Parceiro Oficial</span>
+                  <span class="px-2 py-0.5 rounded-full text-[0.62rem] font-bold ${isAtivo ? 'badge-approved' : 'bg-rose-100 text-rose-800 border border-rose-300'}">
+                    ${isAtivo ? '● Ativo' : '○ Inativo'}
+                  </span>
+                </div>
+                <h4 class="text-sm font-bold text-brandGreen">${h.nome}</h4>
+                <p class="text-[0.72rem] text-stone-600">${h.endereco}</p>
+                <div class="pt-2 border-t border-stone-200 text-[0.7rem] text-stone-500 space-y-0.5">
+                  <p><strong>Contato:</strong> ${h.resp || h.contato || 'Recepção'}</p>
+                  <p><strong>Telefone:</strong> ${h.tel || h.telefone || '-'}</p>
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-stone-200 flex items-center justify-end gap-1.5 flex-wrap">
+                ${isAtivo ? `
+                  <button type="button" class="btn-toggle-hotel px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-[0.65rem] shadow-xs transition-colors" data-nome="${h.nome}" data-status="inativo" title="Desativar hotel">
+                    Desativar
+                  </button>
+                ` : `
+                  <button type="button" class="btn-toggle-hotel px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-[0.65rem] shadow-xs transition-colors" data-nome="${h.nome}" data-status="ativo" title="Reativar hotel">
+                    Reativar
+                  </button>
+                `}
+                <button type="button" class="btn-excluir-hotel px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-[0.65rem] shadow-xs transition-colors" data-nome="${h.nome}" title="Excluir hotel">
+                  Excluir
+                </button>
+              </div>
             </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
+
+        // Eventos Hotéis: Desativar / Reativar
+        document.querySelectorAll('.btn-toggle-hotel').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const nome = btn.dataset.nome;
+            const newStatus = btn.dataset.status;
+            if (confirm(`Confirmar ${newStatus === 'ativo' ? 'reativação' : 'desativação'} do hotel "${nome}"?`)) {
+              salvarStatusOverride(nome, newStatus);
+              const localHoteis = JSON.parse(localStorage.getItem('brinda_hoteis_cadastrados') || '[]');
+              const item = localHoteis.find(h => h.nome.toLowerCase() === nome.toLowerCase());
+              if (item) item.status = newStatus;
+              localStorage.setItem('brinda_hoteis_cadastrados', JSON.stringify(localHoteis));
+
+              if (adminData && adminData.hoteis) {
+                const target = adminData.hoteis.find(h => h.nome.toLowerCase() === nome.toLowerCase());
+                if (target) target.status = newStatus;
+                renderHoteis(adminData.hoteis);
+              }
+
+              try {
+                await fetch('/api/admin', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'toggle_hotel', payload: { nome, status: newStatus } })
+                });
+              } catch (e) {}
+            }
+          });
+        });
+
+        // Eventos Hotéis: Excluir
+        document.querySelectorAll('.btn-excluir-hotel').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const nome = btn.dataset.nome;
+            if (confirm(`Tem certeza que deseja EXCLUIR o hotel "${nome}"?`)) {
+              salvarExclusao('hoteis', nome);
+              const localHoteis = JSON.parse(localStorage.getItem('brinda_hoteis_cadastrados') || '[]');
+              const filtered = localHoteis.filter(h => h.nome.toLowerCase() !== nome.toLowerCase());
+              localStorage.setItem('brinda_hoteis_cadastrados', JSON.stringify(filtered));
+
+              if (adminData && adminData.hoteis) {
+                adminData.hoteis = adminData.hoteis.filter(h => h.nome.toLowerCase() !== nome.toLowerCase());
+                renderHoteis(adminData.hoteis);
+              }
+
+              try {
+                await fetch('/api/admin', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'excluir_hotel', payload: { nome } })
+                });
+              } catch (e) {}
+            }
+          });
+        });
       }
 
-      // Leads B2B
+      // Leads B2B (com Atualização de Status, WhatsApp e Excluir)
       function renderLeads(leads) {
         if (!leadsTableBody) return;
-        leadsTableBody.innerHTML = (leads || []).map(l => `
+        const allLeads = leads || [];
+
+        leadsTableBody.innerHTML = allLeads.map(l => `
           <tr class="hover:bg-stone-50 transition-colors">
-            <td class="py-3 px-4 text-stone-500">${new Date(l.created_at).toLocaleDateString('pt-BR')}</td>
+            <td class="py-3 px-4 text-stone-500">${l.created_at ? new Date(l.created_at).toLocaleDateString('pt-BR') : 'Hoje'}</td>
             <td class="py-3 px-4">
               <span class="px-2 py-0.5 rounded-full text-[0.65rem] font-bold ${l.tipo === 'vendedor' ? 'bg-amber-100 text-amber-800' : 'bg-purple-100 text-purple-800'}">
                 ${l.tipo === 'vendedor' ? '🤝 Quero Vender' : '🍺 Cervejaria Parceira'}
@@ -1147,17 +1586,23 @@
             <td class="py-3 px-4 font-mono font-semibold text-brandGreen">${l.telefone}</td>
             <td class="py-3 px-4 text-stone-600">${l.cidade || 'Serra Gaúcha'}</td>
             <td class="py-3 px-4">
-              <select class="lead-status-select bg-stone-100 rounded-lg p-1 text-[0.65rem] font-bold outline-none border border-stone-300" data-id="${l.id}">
+              <select class="lead-status-select bg-stone-100 rounded-lg p-1.5 text-[0.68rem] font-bold outline-none border border-stone-300" data-id="${l.id || l.telefone || l.nome}">
                 <option value="novo" ${l.status === 'novo' ? 'selected' : ''}>Novo Contato</option>
                 <option value="em_contato" ${l.status === 'em_contato' ? 'selected' : ''}>Em Contato</option>
-                <option value="aprovado" ${l.status === 'aprovado' ? 'selected' : ''}>Aprovado / Parceiro</option>
+                <option value="aprovado" ${l.status === 'aprovado' ? 'selected' : ''}>Aprovado / Ativo</option>
+                <option value="desativado" ${l.status === 'desativado' ? 'selected' : ''}>Desativado</option>
                 <option value="nao_interessado" ${l.status === 'nao_interessado' ? 'selected' : ''}>Não Interessado</option>
               </select>
             </td>
             <td class="py-3 px-4 text-center">
-              <a href="https://wa.me/55${(l.telefone || '').replace(/\\D/g, '')}?text=Ol%C3%A1%20${encodeURIComponent(l.nome)}%2C%20somos%20da%20BRINDA%20Serra!" target="_blank" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-[0.65rem] inline-flex items-center gap-1 shadow-xs">
-                <span>WhatsApp</span>
-              </a>
+              <div class="flex items-center justify-center gap-1.5">
+                <a href="https://wa.me/55${(l.telefone || '').replace(/\D/g, '')}?text=Ol%C3%A1%20${encodeURIComponent(l.nome)}%2C%20somos%20da%20BRINDA%20Serra!" target="_blank" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-[0.65rem] inline-flex items-center gap-1 shadow-xs" title="Abrir conversa no WhatsApp">
+                  <span>WhatsApp</span>
+                </a>
+                <button type="button" class="btn-excluir-lead px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-[0.65rem] shadow-xs" data-id="${l.id || l.telefone || l.nome}" data-nome="${l.nome}" title="Excluir Lead">
+                  Excluir
+                </button>
+              </div>
             </td>
           </tr>
         `).join('');
@@ -1167,11 +1612,51 @@
           sel.addEventListener('change', async () => {
             const leadId = sel.dataset.id;
             const newStatus = sel.value;
-            await fetch('/api/admin', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ action: 'atualizar_lead', payload: { id: leadId, status: newStatus } })
-            });
+            const localLeads = JSON.parse(localStorage.getItem('brinda_leads_historico') || '[]');
+            const item = localLeads.find(l => (l.id === leadId || l.telefone === leadId || l.nome === leadId));
+            if (item) {
+              item.status = newStatus;
+              localStorage.setItem('brinda_leads_historico', JSON.stringify(localLeads));
+            }
+            if (adminData && adminData.leads) {
+              const target = adminData.leads.find(l => (l.id === leadId || l.telefone === leadId || l.nome === leadId));
+              if (target) target.status = newStatus;
+            }
+            try {
+              await fetch('/api/admin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'atualizar_lead', payload: { id: leadId, status: newStatus } })
+              });
+            } catch (e) {}
+          });
+        });
+
+        // Excluir Lead
+        document.querySelectorAll('.btn-excluir-lead').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const leadId = btn.dataset.id;
+            const leadNome = btn.dataset.nome;
+            if (confirm(`Tem certeza que deseja EXCLUIR o lead de "${leadNome}"?`)) {
+              salvarExclusao('leads', leadId);
+              salvarExclusao('leads', leadNome);
+              const localLeads = JSON.parse(localStorage.getItem('brinda_leads_historico') || '[]');
+              const filtered = localLeads.filter(l => (l.id !== leadId && l.telefone !== leadId && l.nome !== leadNome));
+              localStorage.setItem('brinda_leads_historico', JSON.stringify(filtered));
+
+              if (adminData && adminData.leads) {
+                adminData.leads = adminData.leads.filter(l => (l.id !== leadId && l.telefone !== leadId && l.nome !== leadNome));
+                renderLeads(adminData.leads);
+              }
+
+              try {
+                await fetch('/api/admin', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'excluir_lead', payload: { id: leadId } })
+                });
+              } catch (e) {}
+            }
           });
         });
       }

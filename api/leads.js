@@ -54,6 +54,24 @@ module.exports = async function handler(req, res) {
       };
     }
 
+    // Se for cervejaria, cadastra também em cervejarias para que apareça automaticamente na gestão de cervejarias
+    let novaCervejaria = null;
+    if (tipo === 'cervejaria') {
+      const breweryTitle = empresa_nome ? empresa_nome.trim() : (nome.trim().includes('Cervejaria') ? nome.trim() : `Cervejaria ${nome.trim()}`);
+      const slug = breweryTitle.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Math.floor(10 + Math.random() * 89);
+      novaCervejaria = {
+        nome: breweryTitle,
+        cidade: cidade ? cidade.trim() : 'Serra Gaúcha',
+        slug: slug,
+        endereco: `Contato: ${leadData.nome}`,
+        telefone: leadData.telefone,
+        tour_guiado: false,
+        pin_acesso: '1234',
+        status: 'ativo',
+        created_at: leadData.created_at
+      };
+    }
+
     if (supabase && isSupabaseConfigured()) {
       // 1. Salva em leads
       const { error: errLead } = await supabase.from('leads').insert(leadData);
@@ -66,6 +84,14 @@ module.exports = async function handler(req, res) {
         const { error: errVend } = await supabase.from('vendedores').insert(novoVendedor);
         if (errVend) {
           console.warn('Erro ao cadastrar vendedor na tabela vendedores do Supabase:', errVend.message);
+        }
+      }
+
+      // 3. Se for cervejaria, cadastra também em cervejarias
+      if (novaCervejaria) {
+        const { error: errCerv } = await supabase.from('cervejarias').insert(novaCervejaria);
+        if (errCerv) {
+          console.warn('Erro ao cadastrar cervejaria na tabela cervejarias do Supabase:', errCerv.message);
         }
       }
     }
