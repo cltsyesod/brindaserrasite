@@ -1,6 +1,7 @@
 // api/leads.js
 // Endpoint Serverless Vercel: Captação de Leads B2B (Promotores, Motoristas e Cervejarias)
 const { getSupabaseClient, isSupabaseConfigured } = require('./supabase');
+const { addLead, addVendedor, addCervejaria } = require('./store');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -23,6 +24,7 @@ module.exports = async function handler(req, res) {
     }
 
     const leadData = {
+      id: `LEAD-${Date.now()}`,
       tipo: tipo || 'geral', // 'vendedor' ou 'cervejaria'
       nome: nome.trim(),
       empresa_nome: empresa_nome ? empresa_nome.trim() : null,
@@ -34,6 +36,9 @@ module.exports = async function handler(req, res) {
       created_at: new Date().toISOString()
     };
 
+    // Registra na memória compartilhada
+    addLead(leadData);
+
     const supabase = getSupabaseClient();
 
     // Se for vendedor, gera código único para que apareça automaticamente na gestão de vendedores
@@ -44,14 +49,16 @@ module.exports = async function handler(req, res) {
       const codigoVendedor = `${primeiroNome}${randomNum}`;
 
       novoVendedor = {
+        id: Date.now(),
         nome: leadData.nome,
         codigo: codigoVendedor,
         tipo: categoria || 'autonomo',
-        hotel_nome: empresa_nome || null,
+        hotel_nome: empresa_nome || (cidade ? `Região: ${cidade}` : null),
         telefone: leadData.telefone,
         status: 'ativo',
         created_at: leadData.created_at
       };
+      addVendedor(novoVendedor);
     }
 
     // Se for cervejaria, cadastra também em cervejarias para que apareça automaticamente na gestão de cervejarias
@@ -60,6 +67,7 @@ module.exports = async function handler(req, res) {
       const breweryTitle = empresa_nome ? empresa_nome.trim() : (nome.trim().includes('Cervejaria') ? nome.trim() : `Cervejaria ${nome.trim()}`);
       const slug = breweryTitle.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Math.floor(10 + Math.random() * 89);
       novaCervejaria = {
+        id: Date.now(),
         nome: breweryTitle,
         cidade: cidade ? cidade.trim() : 'Serra Gaúcha',
         slug: slug,
@@ -70,6 +78,7 @@ module.exports = async function handler(req, res) {
         status: 'ativo',
         created_at: leadData.created_at
       };
+      addCervejaria(novaCervejaria);
     }
 
     if (supabase && isSupabaseConfigured()) {

@@ -1559,6 +1559,14 @@
                   body: JSON.stringify({ action: 'toggle_hotel', payload: { nome, status: newStatus } })
                 });
               } catch (e) {}
+
+              try {
+                await fetch('/api/hoteis', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'toggle', payload: { nome, status: newStatus } })
+                });
+              } catch (e) {}
             }
           });
         });
@@ -1583,6 +1591,14 @@
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ action: 'excluir_hotel', payload: { nome } })
+                });
+              } catch (e) {}
+
+              try {
+                await fetch('/api/hoteis', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ action: 'excluir', payload: { nome } })
                 });
               } catch (e) {}
             }
@@ -1754,6 +1770,14 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'criar_hotel', payload: novoHotelObj })
+          });
+        } catch(e) {}
+
+        try {
+          await fetch('/api/hoteis', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(novoHotelObj)
           });
         } catch(e) {}
 

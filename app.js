@@ -315,6 +315,7 @@ function initCheckoutModal() {
 
   window.openCheckoutModal = function() {
     setCheckoutStep(1);
+    loadActiveHotels();
     modal?.classList.add('open');
     document.body.style.overflow = 'hidden';
   };
@@ -492,6 +493,89 @@ function initCheckoutModal() {
     setCheckoutStep(2);
   });
 
+  // --- Carregamento Dinâmico de Hotéis Ativos no Checkout ---
+  async function loadActiveHotels() {
+    const hotelSelect = document.getElementById('hotelSelect');
+    if (!hotelSelect) return;
+    const currentSelected = hotelSelect.value;
+
+    const baseHoteis = [
+      { nome: 'Hotel Casa da Montanha', cidade: 'Gramado' },
+      { nome: 'Hotel Alpestre', cidade: 'Gramado' },
+      { nome: 'Grande Hotel Canela', cidade: 'Canela' },
+      { nome: 'Villa Bella Hotel & Spa', cidade: 'Gramado' },
+      { nome: 'Hotel Ritta Höppner', cidade: 'Gramado' },
+      { nome: 'Hotel Laghetto Stilo', cidade: 'Gramado' },
+      { nome: 'Pousada Blumenberg', cidade: 'Canela' }
+    ];
+
+    let apiHoteis = [];
+    try {
+      const res = await fetch('/api/hoteis');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.hoteis)) {
+          apiHoteis = data.hoteis;
+        }
+      }
+    } catch (e) {}
+
+    let localHoteis = [];
+    let overrides = {};
+    let exclusoes = {};
+    try {
+      localHoteis = JSON.parse(localStorage.getItem('brinda_hoteis_cadastrados') || '[]');
+      overrides = JSON.parse(localStorage.getItem('brinda_status_overrides') || '{}');
+      exclusoes = JSON.parse(localStorage.getItem('brinda_exclusoes_admin') || '{}');
+    } catch (e) {}
+
+    const excluidosList = (exclusoes.hoteis || []).map(x => String(x).toLowerCase().trim());
+
+    const hotelMap = new Map();
+    baseHoteis.forEach(h => {
+      hotelMap.set(h.nome.toLowerCase().trim(), { ...h, status: 'ativo' });
+    });
+    apiHoteis.forEach(h => {
+      const key = h.nome.toLowerCase().trim();
+      hotelMap.set(key, { ...(hotelMap.get(key) || {}), ...h });
+    });
+    localHoteis.forEach(h => {
+      const key = h.nome.toLowerCase().trim();
+      hotelMap.set(key, { ...(hotelMap.get(key) || {}), ...h });
+    });
+
+    const activeList = [];
+    for (const [key, h] of hotelMap.entries()) {
+      if (excluidosList.includes(key)) continue;
+      const effectiveStatus = overrides[key] || h.status || 'ativo';
+      if (effectiveStatus === 'ativo') {
+        activeList.push(h);
+      }
+    }
+
+    let html = activeList.map(h => {
+      const label = h.cidade ? `${h.nome} (${h.cidade})` : h.nome;
+      return `<option value="${h.nome}">${label}</option>`;
+    }).join('');
+
+    html += '<option value="Outro Hotel Parceiro">Outro Hotel da Serra</option>';
+    hotelSelect.innerHTML = html;
+
+    if (currentSelected && activeList.some(h => h.nome === currentSelected)) {
+      hotelSelect.value = currentSelected;
+    }
+  }
+
+  // Sincronização em tempo real caso o administrador altere o status em outra aba
+  window.addEventListener('storage', (e) => {
+    if (!e.key || e.key.startsWith('brinda_')) {
+      loadActiveHotels();
+    }
+  });
+
+  // Executa na inicialização do script
+  loadActiveHotels();
+
   // --- Etapa 2: Alternância de Canais de Origem ---
   originSelect?.addEventListener('change', (e) => {
     const val = e.target.value;
@@ -499,7 +583,10 @@ function initCheckoutModal() {
     uberGroup?.classList.add('hidden');
     otherGroup?.classList.add('hidden');
 
-    if (val === 'hotel') hotelGroup?.classList.remove('hidden');
+    if (val === 'hotel') {
+      hotelGroup?.classList.remove('hidden');
+      loadActiveHotels();
+    }
     else if (val === 'uber') uberGroup?.classList.remove('hidden');
     else if (val === 'outros') otherGroup?.classList.remove('hidden');
   });
