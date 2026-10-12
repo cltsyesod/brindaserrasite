@@ -66,9 +66,9 @@
     }
   </style>
 </head>
-<body class="p-4 sm:p-6 flex flex-col justify-between max-w-xl mx-auto">
+<body class="p-4 sm:p-6 flex flex-col justify-between max-w-xl mx-auto min-h-screen">
 
-  <!-- CABEÇALHO DO ESTABELECIMENTO -->
+  <!-- CABEÇALHO GERAL -->
   <header class="space-y-4 text-center pb-4 border-b border-brandGreen-light/40">
     <div class="flex items-center justify-center gap-3">
       <img src="assets/logo.jpg" alt="Logo" class="w-12 h-12 rounded-full border-2 border-brandGold object-cover shadow-md">
@@ -77,11 +77,112 @@
         <span class="text-xs uppercase tracking-widest text-brandGold font-bold block">Validador de Experiências</span>
       </div>
     </div>
+  </header>
 
-    <!-- Seletor do Estabelecimento / Cervejaria Ativa -->
-    <div class="bg-brandGreen-dark/80 p-3 rounded-2xl border border-brandGold/40 space-y-1.5 text-left">
+  <!-- TELA 1: LOGIN DA CERVEJARIA (EXIBIDA SE NÃO AUTENTICADO) -->
+  <section id="loginSection" class="py-6 space-y-6">
+    <div class="bg-brandGreen-dark/95 border-2 border-brandGold/40 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5">
+      <div class="text-center space-y-1">
+        <div class="w-12 h-12 mx-auto mb-2 rounded-2xl bg-brandGold/20 border border-brandGold flex items-center justify-center text-2xl">
+          🔐
+        </div>
+        <h2 class="text-xl font-extrabold text-brandCream">Acesso da Cervejaria</h2>
+        <p class="text-xs text-stone-300">Entre com as credenciais do seu estabelecimento para liberar o validador.</p>
+      </div>
+
+      <form id="breweryLoginForm" class="space-y-4">
+        <div>
+          <label for="loginUser" class="block text-xs uppercase font-bold text-brandGold mb-1.5 tracking-wider">
+            Usuário:
+          </label>
+          <input type="text" id="loginUser" required autocomplete="username" placeholder="Ex: farol" 
+            class="w-full bg-stone-900/90 text-white font-semibold text-sm rounded-xl px-4 py-3 border border-stone-600 focus:border-brandGold focus:ring-1 focus:ring-brandGold outline-none transition-all placeholder:text-stone-500">
+        </div>
+
+        <div>
+          <label for="loginPass" class="block text-xs uppercase font-bold text-brandGold mb-1.5 tracking-wider">
+            Senha:
+          </label>
+          <input type="password" id="loginPass" required autocomplete="current-password" placeholder="Ex: 123" 
+            class="w-full bg-stone-900/90 text-white font-semibold text-sm rounded-xl px-4 py-3 border border-stone-600 focus:border-brandGold focus:ring-1 focus:ring-brandGold outline-none transition-all placeholder:text-stone-500">
+        </div>
+
+        <div id="loginErrorMsg" class="hidden p-3 bg-red-950/80 border border-red-700/60 rounded-xl text-xs text-red-200 font-semibold text-center">
+          ⚠️ Usuário ou senha incorretos. Verifique os dados abaixo.
+        </div>
+
+        <button type="submit" id="btnSubmitLogin" class="w-full py-3.5 bg-brandGold hover:bg-amber-400 text-brandGreen-dark font-extrabold text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+          <span>Acessar Validador</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </form>
+
+      <!-- Caixa de Credenciais Simples para Teste -->
+      <div class="pt-4 border-t border-brandGreen-light/30 space-y-3">
+        <div class="flex items-center justify-between text-xs text-brandGold font-bold">
+          <span class="flex items-center gap-1.5"><span>🔑</span><span>Credenciais de Acesso (Simples):</span></span>
+          <span class="text-[0.65rem] text-stone-400 uppercase tracking-wider">Homologação</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <button type="button" class="btn-fill-cred text-left bg-brandGreen/60 hover:bg-brandGreen p-2.5 rounded-xl border border-brandGreen-light transition-all" data-user="farol" data-pass="123">
+            <span class="text-brandGold font-bold block text-[0.72rem]">🍺 Farol (Canela)</span>
+            <span class="text-stone-300 text-[0.7rem] block">Usuário: <strong class="text-white">farol</strong></span>
+            <span class="text-stone-300 text-[0.7rem] block">Senha: <strong class="text-white">123</strong></span>
+          </button>
+
+          <button type="button" class="btn-fill-cred text-left bg-brandGreen/60 hover:bg-brandGreen p-2.5 rounded-xl border border-brandGreen-light transition-all" data-user="rasen" data-pass="123">
+            <span class="text-brandGold font-bold block text-[0.72rem]">🍺 Rasen (Gramado)</span>
+            <span class="text-stone-300 text-[0.7rem] block">Usuário: <strong class="text-white">rasen</strong></span>
+            <span class="text-stone-300 text-[0.7rem] block">Senha: <strong class="text-white">123</strong></span>
+          </button>
+
+          <button type="button" class="btn-fill-cred text-left bg-brandGreen/60 hover:bg-brandGreen p-2.5 rounded-xl border border-brandGreen-light transition-all" data-user="edelbrau" data-pass="123">
+            <span class="text-brandGold font-bold block text-[0.72rem]">🍺 Edelbrau (N. Petrópolis)</span>
+            <span class="text-stone-300 text-[0.7rem] block">Usuário: <strong class="text-white">edelbrau</strong></span>
+            <span class="text-stone-300 text-[0.7rem] block">Senha: <strong class="text-white">123</strong></span>
+          </button>
+
+          <button type="button" class="btn-fill-cred text-left bg-brandGreen/60 hover:bg-brandGreen p-2.5 rounded-xl border border-brandGreen-light transition-all" data-user="admin" data-pass="123">
+            <span class="text-brandGold font-bold block text-[0.72rem]">⚙️ Admin Geral</span>
+            <span class="text-stone-300 text-[0.7rem] block">Usuário: <strong class="text-white">admin</strong></span>
+            <span class="text-stone-300 text-[0.7rem] block">Senha: <strong class="text-white">123</strong></span>
+          </button>
+        </div>
+
+        <button type="button" id="quickLoginFarolBtn" class="w-full py-2.5 bg-brandGold/20 hover:bg-brandGold/30 text-brandGold border border-brandGold/40 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5">
+          <span>⚡</span>
+          <span>Entrar como Cervejaria Farol (1 Clique)</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TELA 2: ÁREA OPERACIONAL DO VALIDADOR (LIBERADA APÓS LOGIN) -->
+  <main id="validatorAppSection" class="hidden space-y-5 py-4">
+
+    <!-- Bar de Sessão Conectada -->
+    <div class="bg-brandGreen-dark/95 p-3.5 rounded-2xl border border-brandGold/40 flex items-center justify-between shadow-md">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-brandGold/20 border border-brandGold text-brandGold flex items-center justify-center text-xl shrink-0">
+          🍺
+        </div>
+        <div>
+          <span class="text-[0.62rem] uppercase font-bold text-brandGold tracking-wider block">Estabelecimento Autenticado:</span>
+          <h2 id="sessionBreweryTitle" class="text-sm sm:text-base font-extrabold text-white leading-tight">Cervejaria Farol</h2>
+          <span id="sessionOperatorBadge" class="text-[0.68rem] text-stone-300">Operador: <strong class="text-brandGold font-mono">farol</strong> • Canela - RS</span>
+        </div>
+      </div>
+
+      <button type="button" id="logoutBreweryBtn" class="px-3 py-1.5 rounded-xl bg-red-950/70 hover:bg-red-900 border border-red-700/50 text-red-200 text-xs font-bold flex items-center gap-1 transition-all">
+        <span>🚪 Sair</span>
+      </button>
+    </div>
+
+    <!-- Seletor exclusivo para Admin (se logado como admin) -->
+    <div id="adminBrewerySelectorWrap" class="hidden bg-brandGreen/60 p-3 rounded-2xl border border-brandGold/40 space-y-1.5 text-left">
       <label for="brewerySelect" class="block text-[0.68rem] uppercase font-bold text-brandGold tracking-wider">
-        Identificação da Cervejaria Parceira:
+        ⚙️ Modo Administrador: Alternar Cervejaria Ativa:
       </label>
       <select id="brewerySelect" class="w-full bg-brandCream text-brandGreen font-bold text-sm rounded-xl p-2.5 outline-none border border-stone-300">
         <option value="1" data-nome="Cervejaria Farol" data-cidade="Canela">🍺 Cervejaria Farol (Canela - RS)</option>
@@ -91,10 +192,18 @@
         <option value="5" data-nome="Cervejaria Kraustin Bier" data-cidade="Canela">🍺 Cervejaria Kraustin Bier (Canela - RS)</option>
       </select>
     </div>
-  </header>
 
-  <!-- ÁREA CENTRAL: SCANNER OU ENTRADA MANUAL -->
-  <main class="py-5 space-y-5">
+    <!-- Card de Atalho para Teste Imediato -->
+    <div class="bg-brandGreen-dark/70 p-3 rounded-xl border border-brandGold/30 flex items-center justify-between text-xs">
+      <div>
+        <span class="text-brandGold font-bold">🧪 Passe VIP de Teste:</span>
+        <span class="font-mono text-white font-bold ml-1">BS-VIP-12345</span>
+        <span class="text-[0.68rem] text-stone-400 block sm:inline sm:ml-2">(3 degustações disponíveis)</span>
+      </div>
+      <button type="button" id="btnFillQuickTestPass" class="px-3 py-1.5 bg-brandGold hover:bg-amber-300 text-brandGreen-dark font-extrabold rounded-lg text-xs transition-all whitespace-nowrap shadow-sm">
+        Testar Agora
+      </button>
+    </div>
 
     <!-- Modo de Leitura: Abas -->
     <div class="grid grid-cols-2 gap-2 bg-brandGreen/60 p-1.5 rounded-xl border border-brandGreen-light">
@@ -121,7 +230,7 @@
     <div id="manualSection" class="hidden space-y-3 bg-brandGreen/40 p-4 rounded-2xl border border-brandGreen-light">
       <label class="block text-xs uppercase font-bold text-brandGold">Código do Passe ou Token QR:</label>
       <div class="flex gap-2">
-        <input type="text" id="manualCodeInput" placeholder="Ex: BS-VIP-12300 ou QR-..." class="w-full bg-white text-brandGreen font-mono font-bold text-sm uppercase rounded-xl p-3 outline-none">
+        <input type="text" id="manualCodeInput" placeholder="Ex: BS-VIP-12345 ou QR-..." class="w-full bg-white text-brandGreen font-mono font-bold text-sm uppercase rounded-xl p-3 outline-none">
         <button type="button" id="searchManualBtn" class="bg-brandGold text-brandGreen-dark font-bold px-5 rounded-xl text-sm whitespace-nowrap hover:bg-amber-300">
           Consultar
         </button>
@@ -145,12 +254,76 @@
     <a href="index.html" class="inline-block text-brandGold underline text-xs mt-2">&larr; Voltar ao Portal Principal</a>
   </footer>
 
-  <!-- SCRIPT OPERACIONAL DO VALIDADOR -->
+  <!-- SCRIPT OPERACIONAL DO VALIDADOR COM LOGIN E AUDITORIA -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // BASE DE CONTAS DAS CERVEJARIAS (SIMPLES: usuário e senha "123" ou "brinda123")
+      const BREWERY_ACCOUNTS = {
+        'farol': {
+          user: 'farol',
+          pass: ['123', 'brinda123', 'farol123'],
+          cervejariaId: 1,
+          nome: 'Cervejaria Farol',
+          cidade: 'Canela - RS'
+        },
+        'gramado': {
+          user: 'gramado',
+          pass: ['123', 'brinda123', 'gramado123'],
+          cervejariaId: 2,
+          nome: 'Cervejaria Gramado Bier',
+          cidade: 'Gramado - RS'
+        },
+        'rasen': {
+          user: 'rasen',
+          pass: ['123', 'brinda123', 'rasen123'],
+          cervejariaId: 3,
+          nome: 'Cervejaria Rasen Bier',
+          cidade: 'Gramado - RS'
+        },
+        'edelbrau': {
+          user: 'edelbrau',
+          pass: ['123', 'brinda123', 'edelbrau123'],
+          cervejariaId: 4,
+          nome: 'Cervejaria Edelbrau',
+          cidade: 'Nova Petrópolis - RS'
+        },
+        'kraustin': {
+          user: 'kraustin',
+          pass: ['123', 'brinda123', 'kraustin123'],
+          cervejariaId: 5,
+          nome: 'Cervejaria Kraustin Bier',
+          cidade: 'Canela - RS'
+        },
+        'admin': {
+          user: 'admin',
+          pass: ['123', 'brinda123', 'admin123'],
+          cervejariaId: 1,
+          isAdmin: true,
+          nome: 'Administrador Geral',
+          cidade: 'Serra Gaúcha'
+        }
+      };
+
+      // Elementos de Login
+      const loginSection = document.getElementById('loginSection');
+      const validatorAppSection = document.getElementById('validatorAppSection');
+      const breweryLoginForm = document.getElementById('breweryLoginForm');
+      const loginUser = document.getElementById('loginUser');
+      const loginPass = document.getElementById('loginPass');
+      const loginErrorMsg = document.getElementById('loginErrorMsg');
+      const quickLoginFarolBtn = document.getElementById('quickLoginFarolBtn');
+
+      // Elementos de Sessão Conectada
+      const sessionBreweryTitle = document.getElementById('sessionBreweryTitle');
+      const sessionOperatorBadge = document.getElementById('sessionOperatorBadge');
+      const logoutBreweryBtn = document.getElementById('logoutBreweryBtn');
+      const adminBrewerySelectorWrap = document.getElementById('adminBrewerySelectorWrap');
+      const brewerySelect = document.getElementById('brewerySelect');
+      const btnFillQuickTestPass = document.getElementById('btnFillQuickTestPass');
+
+      // Elementos do Validador
       let html5QrcodeScanner = null;
       let cameraRunning = false;
-
       const tabScanner = document.getElementById('tabScannerBtn');
       const tabManual = document.getElementById('tabManualBtn');
       const scannerSection = document.getElementById('scannerSection');
@@ -159,9 +332,102 @@
       const manualInput = document.getElementById('manualCodeInput');
       const searchManualBtn = document.getElementById('searchManualBtn');
       const resultCard = document.getElementById('resultCard');
-      const brewerySelect = document.getElementById('brewerySelect');
 
-      // Alternância de Abas
+      // Sessão Ativa
+      let currentSession = null;
+
+      // 1. CHECAGEM INICIAL DE SESSÃO
+      function checkAuth() {
+        const stored = sessionStorage.getItem('brinda_brewery_auth') || localStorage.getItem('brinda_brewery_auth');
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            if (parsed && parsed.user && BREWERY_ACCOUNTS[parsed.user.toLowerCase()]) {
+              activateSession(parsed);
+              return;
+            }
+          } catch(e) {}
+        }
+        showLoginScreen();
+      }
+
+      function showLoginScreen() {
+        stopScanner();
+        currentSession = null;
+        loginSection.classList.remove('hidden');
+        validatorAppSection.classList.add('hidden');
+      }
+
+      function activateSession(accountData) {
+        currentSession = accountData;
+        sessionStorage.setItem('brinda_brewery_auth', JSON.stringify(accountData));
+        localStorage.setItem('brinda_brewery_auth', JSON.stringify(accountData));
+
+        sessionBreweryTitle.textContent = accountData.nome;
+        sessionOperatorBadge.innerHTML = `Operador: <strong class="text-brandGold font-mono">${accountData.user}</strong> • ${accountData.cidade}`;
+
+        if (accountData.isAdmin) {
+          adminBrewerySelectorWrap.classList.remove('hidden');
+          brewerySelect.value = String(accountData.cervejariaId || 1);
+        } else {
+          adminBrewerySelectorWrap.classList.add('hidden');
+          if (brewerySelect) brewerySelect.value = String(accountData.cervejariaId);
+        }
+
+        loginSection.classList.add('hidden');
+        validatorAppSection.classList.remove('hidden');
+      }
+
+      // 2. SUBMIT LOGIN
+      breweryLoginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        loginErrorMsg.classList.add('hidden');
+
+        const u = loginUser.value.trim().toLowerCase();
+        const p = loginPass.value.trim();
+
+        const account = BREWERY_ACCOUNTS[u];
+        if (account && account.pass.includes(p)) {
+          activateSession(account);
+        } else {
+          loginErrorMsg.classList.remove('hidden');
+          loginPass.value = '';
+          loginPass.focus();
+        }
+      });
+
+      // Atalhos de clique para preencher credenciais
+      document.querySelectorAll('.btn-fill-cred').forEach(btn => {
+        btn.addEventListener('click', () => {
+          loginUser.value = btn.dataset.user;
+          loginPass.value = btn.dataset.pass;
+          loginErrorMsg.classList.add('hidden');
+          loginPass.focus();
+        });
+      });
+
+      // Botão de 1 clique para Cervejaria Farol
+      quickLoginFarolBtn?.addEventListener('click', () => {
+        loginUser.value = 'farol';
+        loginPass.value = '123';
+        activateSession(BREWERY_ACCOUNTS['farol']);
+      });
+
+      // Logout
+      logoutBreweryBtn?.addEventListener('click', () => {
+        sessionStorage.removeItem('brinda_brewery_auth');
+        localStorage.removeItem('brinda_brewery_auth');
+        showLoginScreen();
+      });
+
+      // Botão de preenchimento rápido do passe de teste VIP
+      btnFillQuickTestPass?.addEventListener('click', () => {
+        tabManual.click();
+        manualInput.value = 'BS-VIP-12345';
+        consultarPasse('BS-VIP-12345');
+      });
+
+      // 3. ALTERNÂNCIA DE ABAS
       tabScanner.addEventListener('click', () => {
         tabScanner.className = 'py-2 text-xs sm:text-sm font-bold rounded-lg bg-brandGold text-brandGreen-dark transition-all shadow-sm';
         tabManual.className = 'py-2 text-xs sm:text-sm font-bold rounded-lg text-brandCream hover:bg-brandGreen/50 transition-all';
@@ -174,14 +440,10 @@
         tabScanner.className = 'py-2 text-xs sm:text-sm font-bold rounded-lg text-brandCream hover:bg-brandGreen/50 transition-all';
         manualSection.classList.remove('hidden');
         scannerSection.classList.add('hidden');
-        if (cameraRunning && html5QrcodeScanner) {
-          html5QrcodeScanner.stop();
-          cameraRunning = false;
-          toggleCameraBtn.textContent = 'Iniciar Câmera';
-        }
+        stopScanner();
       });
 
-      // Inicialização da Câmera
+      // 4. CONTROLE DA CÂMERA
       toggleCameraBtn.addEventListener('click', () => {
         if (!cameraRunning) {
           startScanner();
@@ -212,12 +474,14 @@
           html5QrcodeScanner.stop().then(() => {
             cameraRunning = false;
             toggleCameraBtn.textContent = 'Iniciar Câmera';
+          }).catch(() => {
+            cameraRunning = false;
+            toggleCameraBtn.textContent = 'Iniciar Câmera';
           });
         }
       }
 
       function onScanSuccess(decodedText) {
-        // Extrai token do link se escaneou URL completa (ex: https://brindaserra.com.br/validar?token=QR-XXXX)
         let token = decodedText;
         if (decodedText.includes('token=')) {
           const match = decodedText.match(/token=([^&]+)/);
@@ -236,60 +500,71 @@
         consultarPasse(val);
       });
 
-      // Consulta de Validação com Aplicação Rigorosa das Regras de Negócio
+      // 5. MOTOR DE CONSULTA & VALIDAÇÃO COM REGRA ANTI-REPETIÇÃO
       async function consultarPasse(tokenOuCodigo) {
-        const breweryId = parseInt(brewerySelect.value, 10);
-        const breweryName = brewerySelect.options[brewerySelect.selectedIndex].dataset.nome || 'Cervejaria Farol';
+        let breweryId = currentSession ? currentSession.cervejariaId : 1;
+        let breweryName = currentSession ? currentSession.nome : 'Cervejaria Farol';
+
+        if (currentSession && currentSession.isAdmin && brewerySelect) {
+          breweryId = parseInt(brewerySelect.value, 10);
+          breweryName = brewerySelect.options[brewerySelect.selectedIndex]?.dataset.nome || breweryName;
+        }
 
         resultCard.classList.remove('hidden');
         resultCard.className = 'rounded-2xl p-5 border border-brandGold/40 bg-brandGreen-dark/90 text-center space-y-3';
-        resultCard.innerHTML = `<span class="animate-pulse text-brandGold font-bold text-sm">🔍 Consultando base de dados oficial...</span>`;
+        resultCard.innerHTML = `<span class="animate-pulse text-brandGold font-bold text-sm">🔍 Consultando base oficial com regras de segurança...</span>`;
 
         try {
-          // Tenta API do Backend Serverless / Supabase
-          const resp = await fetch(`/api/validador/consultar?token=${encodeURIComponent(tokenOuCodigo)}&cervejaria_id=${breweryId}`);
+          // Consulta API Serverless / Supabase
+          const resp = await fetch(`/api/validador?token=${encodeURIComponent(tokenOuCodigo)}&cervejaria_id=${breweryId}&operador=${encodeURIComponent(currentSession?.user || 'operador')}`);
           const data = await resp.json();
-          if (resp.ok || resp.status === 403) {
+          if (resp.ok || resp.status === 403 || resp.status === 404) {
             renderValidationResult(data, tokenOuCodigo, breweryId, breweryName);
             return;
           }
         } catch (e) {
-          console.warn('API backend offline. Utilizando motor de validação local integrado.');
+          console.warn('API backend em modo resiliente local:', e);
         }
 
-        // Simulação / Validação Local (Totalmente Resiliente)
+        // Validação Resiliente Local Integrada
         renderLocalValidation(tokenOuCodigo, breweryId, breweryName);
       }
 
       function renderValidationResult(apiData, token, breweryId, breweryName) {
         if (apiData.erro === 'CERVEJARIA_JA_UTILIZADA' || apiData.pode_utilizar === false) {
-          showBlockedResult(apiData.titular || 'CLIENTE', breweryName, apiData.saldo_restante || 0, apiData.mensagem);
+          showBlockedResult(apiData.titular || 'CLIENTE VIP', breweryName, apiData.saldo_restante || 0, apiData.mensagem);
           return;
         }
 
-        showSuccessResult(apiData.titular, apiData.card, breweryName, token, breweryId);
+        if (apiData.erro === 'CARD_NAO_ENCONTRADO' || apiData.erro === 'CARD_EXPIRADO' || apiData.erro === 'SALDO_ESGOTADO') {
+          showErrorResult(apiData.mensagem || 'Cartão inválido ou não localizado.');
+          return;
+        }
+
+        showSuccessResult(apiData.titular || 'CLIENTE VIP', apiData.card || { saldo_restante: 3, codigo_passe: token }, breweryName, token, breweryId);
       }
 
-      // Motor de Validação Local para Demonstração e Preview
+      // Validação Local Resiliente
       function renderLocalValidation(token, breweryId, breweryName) {
-        // Histórico de visitas armazenado no navegador do atendente para demonstração interativa
         const localVisited = JSON.parse(localStorage.getItem('brinda_validacoes_historico') || '[]');
+        const cleanToken = token.trim().toUpperCase();
         
-        // Verifica trava anti-repetição por Estabelecimento + Token/Código
-        const jaUtilizou = localVisited.some(v => (v.token === token || v.codigo === token) && v.cervejariaId === breweryId);
+        // Regra Anti-Repetição por Cervejaria + Código
+        const jaUtilizou = localVisited.some(v => (v.token?.toUpperCase() === cleanToken || v.codigo?.toUpperCase() === cleanToken) && v.cervejariaId === breweryId);
 
         if (jaUtilizou) {
-          showBlockedResult('PORTADOR DO PASSE', breweryName, 2, 'ESTE CARD JÁ FOI UTILIZADO NESTA CERVEJARIA. Você pode utilizar suas experiências restantes em outras cervejarias participantes.');
+          showBlockedResult('PORTADOR DO PASSE', breweryName, 2, `ESTE CARD JÁ FOI UTILIZADO NESTA CERVEJARIA (${breweryName}). Conforme o regulamento, cada parceiro pode ser visitado uma única vez por CPF.`);
           return;
         }
 
-        // Card Válido
+        // Dados de Demonstração / Teste
         const mockCard = {
-          titular_nome: 'VISITANTE VIP DA SERRA',
-          codigo_passe: token.toUpperCase(),
+          titular_nome: 'TURISTA VIP DE TESTE',
+          codigo_passe: cleanToken.includes('BS-') ? cleanToken : 'BS-VIP-12345',
           modalidade: 'brinda_bem',
           saldo_restante: 3,
-          data_validade_formatada: '12/10/2026'
+          saldo_total: 3,
+          data_validade_formatada: '31/12/2026'
         };
 
         showSuccessResult(mockCard.titular_nome, mockCard, breweryName, token, breweryId);
@@ -297,7 +572,7 @@
 
       // CASO 1: BLOQUEIO ANTI-REPETIÇÃO (VERMELHO ALERTA - REGRA DE OURO)
       function showBlockedResult(titular, breweryName, saldoRestante, mensagem) {
-        resultCard.className = 'rounded-2xl p-5 border-2 border-red-500 bg-red-950/70 text-left space-y-3';
+        resultCard.className = 'rounded-2xl p-5 border-2 border-red-500 bg-red-950/80 text-left space-y-3 shadow-xl';
         resultCard.innerHTML = `
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-red-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
@@ -310,32 +585,32 @@
           </div>
 
           <div class="p-3 bg-red-900/50 rounded-xl border border-red-700/50 text-xs text-red-100 leading-relaxed font-semibold">
-            🚫 ${mensagem || 'ESTE CARD JÁ FOI UTILIZADO NESTA CERVEJARIA. Você pode utilizar suas experiências restantes em outras cervejarias participantes.'}
+            🚫 ${mensagem || `ESTE CARD JÁ FOI UTILIZADO NESTA CERVEJARIA (${breweryName}). Você pode utilizar suas experiências restantes em outras cervejarias participantes.`}
           </div>
 
           <div class="text-xs text-stone-300 space-y-1 pt-1 border-t border-red-800">
-            <p><strong>Cervejaria Atual:</strong> ${breweryName}</p>
+            <p><strong>Cervejaria Atual:</strong> <span class="text-white">${breweryName}</span></p>
             <p><strong>Status do Débito:</strong> <span class="text-emerald-400 font-bold">Nenhum crédito foi descontado</span> do cliente.</p>
           </div>
 
-          <button type="button" onclick="location.reload()" class="w-full mt-2 py-2.5 rounded-xl bg-stone-700 hover:bg-stone-600 text-white text-xs font-bold">
-            Nova Leitura de QR Code
+          <button type="button" onclick="location.reload()" class="w-full mt-2 py-2.5 rounded-xl bg-stone-700 hover:bg-stone-600 text-white text-xs font-bold transition-all">
+            Nova Consulta / Leitura de QR Code
           </button>
         `;
       }
 
       // CASO 2: SUCESSO E BAIXA DE SALDO (VERDE / DOURADO)
       function showSuccessResult(titular, card, breweryName, token, breweryId) {
-        resultCard.className = 'rounded-2xl p-5 border-2 border-emerald-500 bg-emerald-950/70 text-left space-y-4';
+        resultCard.className = 'rounded-2xl p-5 border-2 border-emerald-500 bg-emerald-950/80 text-left space-y-4 shadow-xl';
         resultCard.innerHTML = `
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-sm">
+              <div class="w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-sm shadow-md">
                 ✓
               </div>
               <h3 class="text-sm sm:text-base font-bold text-emerald-200">PASSE VIP AUTORIZADO</h3>
             </div>
-            <span class="px-2.5 py-0.5 rounded-full bg-brandGold text-brandGreen-dark text-[0.65rem] font-bold uppercase">
+            <span class="px-2.5 py-0.5 rounded-full bg-brandGold text-brandGreen-dark text-[0.65rem] font-bold uppercase shadow-sm">
               Ativo
             </span>
           </div>
@@ -344,11 +619,11 @@
             <p class="text-stone-300"><strong>Titular:</strong> <span class="text-white font-bold uppercase">${titular}</span></p>
             <p class="text-stone-300"><strong>Código do Passe:</strong> <span class="text-brandGold font-mono font-bold">${card.codigo_passe || token}</span></p>
             <p class="text-stone-300"><strong>Experiências Disponíveis:</strong> <span class="text-emerald-300 font-bold text-sm">${card.saldo_restante || 3} visita(s)</span></p>
-            <p class="text-stone-300"><strong>Validade:</strong> <span class="text-stone-200">${card.data_validade_formatada || '6 Meses'}</span></p>
+            <p class="text-stone-300"><strong>Validade:</strong> <span class="text-stone-200">${card.data_validade_formatada || '31/12/2026'}</span></p>
             <p class="text-stone-300"><strong>Cervejaria da Baixa:</strong> <span class="text-amber-200 font-bold">${breweryName}</span></p>
           </div>
 
-          <button type="button" id="confirmBaixaBtn" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-brandGreen-dark font-extrabold text-sm shadow-lg flex items-center justify-center gap-2">
+          <button type="button" id="confirmBaixaBtn" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-brandGreen-dark font-extrabold text-sm shadow-lg flex items-center justify-center gap-2 transition-all">
             <span>✓ Confirmar Degustação & Dar Baixa</span>
           </button>
         `;
@@ -361,24 +636,29 @@
             codigo: card.codigo_passe || token,
             cervejariaId: breweryId,
             cervejariaNome: breweryName,
+            operador: currentSession?.user || 'operador',
             dataHora: new Date().toLocaleString('pt-BR')
           });
           localStorage.setItem('brinda_validacoes_historico', JSON.stringify(localVisited));
 
-          // Tenta API se disponível
+          // Envia confirmação para API Serverless
           try {
-            await fetch('/api/validador/confirmar', {
+            await fetch('/api/validador', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 qr_token: token,
+                token: token,
                 cervejaria_id: breweryId,
-                cervejaria_nome: breweryName
+                cervejaria_nome: breweryName,
+                action: 'confirmar',
+                confirmar: true,
+                operador: currentSession?.user || 'operador'
               })
             });
           } catch(e) {}
 
-          resultCard.className = 'rounded-2xl p-5 border-2 border-brandGold bg-brandGreen-dark text-center space-y-3';
+          resultCard.className = 'rounded-2xl p-5 border-2 border-brandGold bg-brandGreen-dark text-center space-y-3 shadow-xl';
           resultCard.innerHTML = `
             <div class="text-3xl">🎉</div>
             <h4 class="text-base font-bold text-brandGold">Degustação Confirmada com Sucesso!</h4>
@@ -387,13 +667,28 @@
               A trava de segurança foi ativada para este estabelecimento.
             </p>
             <div class="pt-2">
-              <button type="button" onclick="location.reload()" class="py-2.5 px-6 rounded-xl bg-brandGold text-brandGreen-dark font-bold text-xs">
+              <button type="button" onclick="location.reload()" class="py-2.5 px-6 rounded-xl bg-brandGold text-brandGreen-dark font-bold text-xs hover:bg-amber-300 transition-all">
                 Próximo Atendimento
               </button>
             </div>
           `;
         });
       }
+
+      function showErrorResult(msg) {
+        resultCard.className = 'rounded-2xl p-5 border-2 border-amber-500 bg-amber-950/70 text-left space-y-3';
+        resultCard.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">⚠️</span>
+            <h3 class="text-sm font-bold text-amber-200">Não foi possível validar</h3>
+          </div>
+          <p class="text-xs text-stone-200">${msg}</p>
+          <button type="button" onclick="location.reload()" class="w-full py-2 bg-stone-700 text-white text-xs font-bold rounded-xl">Tentar Novamente</button>
+        `;
+      }
+
+      // Executa checagem de login
+      checkAuth();
     });
   </script>
 </body>

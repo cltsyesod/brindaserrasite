@@ -23,6 +23,34 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'CPF inválido. Informe os 11 dígitos numéricos.' });
     }
 
+    // Conta Oficial de Teste / Homologação (Permite validar telas e fluxos com CPF simples)
+    if (cleanCpf === '11111111111' || cleanCpf === '12345678900') {
+      return res.json({
+        sucesso: true,
+        cliente: {
+          nome: 'TURISTA VIP DE TESTE',
+          cpf: cleanCpf,
+          email: 'teste@brindaserra.com.br',
+          telefone: '54999999999'
+        },
+        cards: [
+          {
+            id: 'CARD-VIP-TESTE-1',
+            titular_nome: 'TURISTA VIP DE TESTE',
+            titular_cpf: cleanCpf,
+            codigo_passe: 'BS-VIP-12345',
+            qr_token: 'QR-TESTE-12345',
+            modalidade: 'brinda_bem',
+            saldo_restante: 3,
+            saldo_total: 3,
+            data_validade_formatada: '31/12/2026',
+            is_pagador: true
+          }
+        ],
+        validacoes: []
+      });
+    }
+
     const supabase = getSupabaseClient();
 
     if (supabase && isSupabaseConfigured()) {

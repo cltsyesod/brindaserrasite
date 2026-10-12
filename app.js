@@ -1032,6 +1032,14 @@ function initClientModal() {
 
   if (loginCpf) applyCpfMask(loginCpf);
 
+  const btnFillTestCpf = document.getElementById('btnFillTestCpf');
+  btnFillTestCpf?.addEventListener('click', () => {
+    if (loginCpf) {
+      loginCpf.value = '111.111.111-11';
+      loginForm?.requestSubmit();
+    }
+  });
+
   document.querySelectorAll('.open-client-modal').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1107,7 +1115,29 @@ function initClientModal() {
       console.warn('Erro ao consultar /api/cliente:', err);
     }
 
-    // 2. Fallback local apenas se a API estiver inacessível (ex: sem internet) E o registro local for 100% válido
+    // 2. Fallback de Homologação / Teste para demonstração fluida
+    if (!customerData && (cleanCpf === '11111111111' || cleanCpf === '12345678900')) {
+      customerData = {
+        pagador: { nome: 'TURISTA VIP DE TESTE', cpf: cleanCpf },
+        cards: [
+          {
+            id: 'CARD-VIP-TESTE-1',
+            titular_nome: 'TURISTA VIP DE TESTE',
+            titular_cpf: cleanCpf,
+            codigo_passe: 'BS-VIP-12345',
+            qr_token: 'QR-TESTE-12345',
+            modalidade: 'brinda_bem',
+            saldo_restante: 3,
+            saldo_total: 3,
+            data_validade_formatada: '31/12/2026',
+            is_pagador: true
+          }
+        ],
+        historico: []
+      };
+    }
+
+    // 3. Fallback local apenas se a API estiver inacessível (ex: sem internet) E o registro local for 100% válido
     if (!customerData && apiStatus !== 404) {
       try {
         const store = JSON.parse(localStorage.getItem('brinda_clientes_store') || '{}');
