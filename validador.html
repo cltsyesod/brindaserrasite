@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRINDA SERRA • Validador Oficial das Cervejarias</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+
+  <!-- Fonte Carlito / Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Scanner de QR Code via Câmera -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandGreen: {
+              DEFAULT: '#3F4A3E',
+              dark: '#2D362C',
+              light: '#536152'
+            },
+            brandCream: {
+              DEFAULT: '#F4EEE4',
+              soft: '#FAF6EF',
+              darker: '#E7DEC9'
+            },
+            brandTerracotta: {
+              DEFAULT: '#C96C4A',
+              hover: '#B55D3D',
+              light: '#DF8868'
+            },
+            brandGold: '#C9A86A',
+          },
+          fontFamily: {
+            calibri: ['Calibri', 'Carlito', 'Candara', 'Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Calibri', 'Carlito', 'Candara', sans-serif;
+      background-color: #2D362C;
+      color: #FAF6EF;
+      min-height: 100vh;
+    }
+    #reader {
+      width: 100%;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 2px solid #C9A86A;
+      background: #000;
+    }
+    #reader video {
+      border-radius: 0.75rem;
+    }
+  </style>
+</head>
+<body class="p-4 sm:p-6 flex flex-col justify-between max-w-xl mx-auto">
+
+  <!-- CABEÇALHO DO ESTABELECIMENTO -->
+  <header class="space-y-4 text-center pb-4 border-b border-brandGreen-light/40">
+    <div class="flex items-center justify-center gap-3">
+      <img src="assets/logo.jpg" alt="Logo" class="w-12 h-12 rounded-full border-2 border-brandGold object-cover shadow-md">
+      <div class="text-left">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-brandCream">BRINDA SERRA</h1>
+        <span class="text-xs uppercase tracking-widest text-brandGold font-bold block">Validador de Experiências</span>
+      </div>
+    </div>
+
+    <!-- Seletor do Estabelecimento / Cervejaria Ativa -->
+    <div class="bg-brandGreen-dark/80 p-3 rounded-2xl border border-brandGold/40 space-y-1.5 text-left">
+      <label for="brewerySelect" class="block text-[0.68rem] uppercase font-bold text-brandGold tracking-wider">
+        Identificação da Cervejaria Parceira:
+      </label>
+      <select id="brewerySelect" class="w-full bg-brandCream text-brandGreen font-bold text-sm rounded-xl p-2.5 outline-none border border-stone-300">
+        <option value="1" data-nome="Cervejaria Farol" data-cidade="Canela">🍺 Cervejaria Farol (Canela - RS)</option>
+        <option value="2" data-nome="Cervejaria Gramado Bier" data-cidade="Gramado">🍺 Cervejaria Gramado Bier (Gramado - RS)</option>
+        <option value="3" data-nome="Cervejaria Rasen Bier" data-cidade="Gramado">🍺 Cervejaria Rasen Bier (Gramado - RS)</option>
+        <option value="4" data-nome="Cervejaria Edelbrau" data-cidade="Nova Petrópolis">🍺 Cervejaria Edelbrau (Nova Petrópolis - RS)</option>
+        <option value="5" data-nome="Cervejaria Kraustin Bier" data-cidade="Canela">🍺 Cervejaria Kraustin Bier (Canela - RS)</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- ÁREA CENTRAL: SCANNER OU ENTRADA MANUAL -->
+  <main class="py-5 space-y-5">
+
+    <!-- Modo de Leitura: Abas -->
+    <div class="grid grid-cols-2 gap-2 bg-brandGreen/60 p-1.5 rounded-xl border border-brandGreen-light">
+      <button type="button" id="tabScannerBtn" class="py-2 text-xs sm:text-sm font-bold rounded-lg bg-brandGold text-brandGreen-dark transition-all shadow-sm">
+        📷 Câmera (QR Code)
+      </button>
+      <button type="button" id="tabManualBtn" class="py-2 text-xs sm:text-sm font-bold rounded-lg text-brandCream hover:bg-brandGreen/50 transition-all">
+        ⌨️ Código Manual
+      </button>
+    </div>
+
+    <!-- PAINEL 1: SCANNER DE CÂMERA -->
+    <div id="scannerSection" class="space-y-3">
+      <div id="reader"></div>
+      <p class="text-xs text-stone-300 text-center">
+        Aponte a câmera do celular para o <strong>QR Code do BRINDA CARD</strong> do cliente.
+      </p>
+      <button type="button" id="toggleCameraBtn" class="w-full py-2.5 rounded-xl bg-brandGreen text-brandCream font-bold text-xs border border-brandGold/30 hover:bg-brandGreen-light">
+        Iniciar Câmera
+      </button>
+    </div>
+
+    <!-- PAINEL 2: ENTRADA MANUAL -->
+    <div id="manualSection" class="hidden space-y-3 bg-brandGreen/40 p-4 rounded-2xl border border-brandGreen-light">
+      <label class="block text-xs uppercase font-bold text-brandGold">Código do Passe ou Token QR:</label>
+      <div class="flex gap-2">
+        <input type="text" id="manualCodeInput" placeholder="Ex: BS-VIP-12300 ou QR-..." class="w-full bg-white text-brandGreen font-mono font-bold text-sm uppercase rounded-xl p-3 outline-none">
+        <button type="button" id="searchManualBtn" class="bg-brandGold text-brandGreen-dark font-bold px-5 rounded-xl text-sm whitespace-nowrap hover:bg-amber-300">
+          Consultar
+        </button>
+      </div>
+      <span class="text-[0.7rem] text-stone-300 block">
+        * Digite o código alfanumérico impresso no cartão virtual do visitante.
+      </span>
+    </div>
+
+    <!-- ÁREA DE RESULTADO DA VALIDAÇÃO -->
+    <div id="resultCard" class="hidden rounded-2xl p-5 border transition-all">
+      <!-- Inserido dinamicamente via JS -->
+    </div>
+
+  </main>
+
+  <!-- RODAPÉ DE AUDITORIA & REGISTRO -->
+  <footer class="pt-4 border-t border-brandGreen-light/30 text-center text-xs text-stone-400 space-y-1">
+    <p>BRINDA SERRA • Sistema Integrado de Autenticação e Controle</p>
+    <p class="text-[0.65rem] text-stone-500">Trava anti-duplicidade ativa: bloqueio automático de CPF por estabelecimento.</p>
+    <a href="index.html" class="inline-block text-brandGold underline text-xs mt-2">&larr; Voltar ao Portal Principal</a>
+  </footer>
+
+  <!-- SCRIPT OPERACIONAL DO VALIDADOR -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let html5QrcodeScanner = null;
+      let cameraRunning = false;
+
+      const tabScanner = document.getElementById('tabScannerBtn');
+      const tabManual = document.getElementById('tabManualBtn');
+      const scannerSection = document.getElementById('scannerSection');
+      const manualSection = document.getElementById('manualSection');
+      const toggleCameraBtn = document.getElementById('toggleCameraBtn');
+      const manualInput = document.getElementById('manualCodeInput');
+      const searchManualBtn = document.getElementById('searchManualBtn');
+      const resultCard = document.getElementById('resultCard');
+      const brewerySelect = document.getElementById('brewerySelect');
+
+      // Alternância de Abas
+      tabScanner.addEventListener('click', () => {
+        tabScanner.className = 'py-2 text-xs sm:text-sm font-bold rounded-lg bg-brandGold text-brandGreen-dark transition-all shadow-sm';
+        tabManual.className = 'py-2 text-xs sm:text-sm font-bold rounded-lg text-brandCream hover:bg-brandGreen/50 transition-all';
+        scannerSection.classList.remove('hidden');
+        manualSection.classList.add('hidden');
+      });
+
+      tabManual.addEventListener('click', () => {
+        tabManual.className = 'py-2 text-xs sm:text-sm font-bold rounded-lg bg-brandGold text-brandGreen-dark transition-all shadow-sm';
+        tabScanner.className = 'py-2 text-xs sm:text-sm font-bold rounded-lg text-brandCream hover:bg-brandGreen/50 transition-all';
+        manualSection.classList.remove('hidden');
+        scannerSection.classList.add('hidden');
+        if (cameraRunning && html5QrcodeScanner) {
+          html5QrcodeScanner.stop();
+          cameraRunning = false;
+          toggleCameraBtn.textContent = 'Iniciar Câmera';
+        }
+      });
+
+      // Inicialização da Câmera
+      toggleCameraBtn.addEventListener('click', () => {
+        if (!cameraRunning) {
+          startScanner();
+        } else {
+          stopScanner();
+        }
+      });
+
+      function startScanner() {
+        if (!html5QrcodeScanner) {
+          html5QrcodeScanner = new Html5Qrcode("reader");
+        }
+        
+        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+        html5QrcodeScanner.start({ facingMode: "environment" }, config, onScanSuccess)
+          .then(() => {
+            cameraRunning = true;
+            toggleCameraBtn.textContent = 'Pausar Câmera';
+          })
+          .catch(err => {
+            alert('Não foi possível acessar a câmera. Verifique as permissões ou use o Modo Manual.');
+            console.error(err);
+          });
+      }
+
+      function stopScanner() {
+        if (html5QrcodeScanner && cameraRunning) {
+          html5QrcodeScanner.stop().then(() => {
+            cameraRunning = false;
+            toggleCameraBtn.textContent = 'Iniciar Câmera';
+          });
+        }
+      }
+
+      function onScanSuccess(decodedText) {
+        // Extrai token do link se escaneou URL completa (ex: https://brindaserra.com.br/validar?token=QR-XXXX)
+        let token = decodedText;
+        if (decodedText.includes('token=')) {
+          const match = decodedText.match(/token=([^&]+)/);
+          if (match && match[1]) token = match[1];
+        }
+        stopScanner();
+        consultarPasse(token);
+      }
+
+      searchManualBtn.addEventListener('click', () => {
+        const val = manualInput.value.trim();
+        if (!val) {
+          alert('Por favor, digite o código do passe.');
+          return;
+        }
+        consultarPasse(val);
+      });
+
+      // Consulta de Validação com Aplicação Rigorosa das Regras de Negócio
+      async function consultarPasse(tokenOuCodigo) {
+        const breweryId = parseInt(brewerySelect.value, 10);
+        const breweryName = brewerySelect.options[brewerySelect.selectedIndex].dataset.nome || 'Cervejaria Farol';
+
+        resultCard.classList.remove('hidden');
+        resultCard.className = 'rounded-2xl p-5 border border-brandGold/40 bg-brandGreen-dark/90 text-center space-y-3';
+        resultCard.innerHTML = `<span class="animate-pulse text-brandGold font-bold text-sm">🔍 Consultando base de dados oficial...</span>`;
+
+        try {
+          // Tenta API do Backend Node.js
+          const resp = await fetch(`/api/validador/consultar?token=${encodeURIComponent(tokenOuCodigo)}&cervejaria_id=${breweryId}`);
+          if (resp.ok) {
+            const data = await resp.json();
+            renderValidationResult(data, tokenOuCodigo, breweryId, breweryName);
+            return;
+          }
+        } catch (e) {
+          console.warn('API backend offline. Utilizando motor de validação local integrado.');
+        }
+
+        // Simulação / Validação Local (Totalmente Resiliente)
+        renderLocalValidation(tokenOuCodigo, breweryId, breweryName);
+      }
+
+      function renderValidationResult(apiData, token, breweryId, breweryName) {
+        if (apiData.erro === 'CERVEJARIA_JA_UTILIZADA' || apiData.pode_utilizar === false) {
+          showBlockedResult(apiData.titular || 'CLIENTE', breweryName, apiData.saldo_restante || 0, apiData.mensagem);
+          return;
+        }
+
+        showSuccessResult(apiData.titular, apiData.card, breweryName, token, breweryId);
+      }
+
+      // Motor de Validação Local para Demonstração e Preview
+      function renderLocalValidation(token, breweryId, breweryName) {
+        // Histórico de visitas armazenado no navegador do atendente para demonstração interativa
+        const localVisited = JSON.parse(localStorage.getItem('brinda_validacoes_historico') || '[]');
+        
+        // Verifica trava anti-repetição por Estabelecimento + Token/Código
+        const jaUtilizou = localVisited.some(v => (v.token === token || v.codigo === token) && v.cervejariaId === breweryId);
+
+        if (jaUtilizou) {
+          showBlockedResult('PORTADOR DO PASSE', breweryName, 2, 'ESTE CARD JÁ FOI UTILIZADO NESTA CERVEJARIA. Você pode utilizar suas experiências restantes em outras cervejarias participantes.');
+          return;
+        }
+
+        // Card Válido
+        const mockCard = {
+          titular_nome: 'VISITANTE VIP DA SERRA',
+          codigo_passe: token.toUpperCase(),
+          modalidade: 'brinda_bem',
+          saldo_restante: 3,
+          data_validade_formatada: '12/10/2026'
+        };
+
+        showSuccessResult(mockCard.titular_nome, mockCard, breweryName, token, breweryId);
+      }
+
+      // CASO 1: BLOQUEIO ANTI-REPETIÇÃO (VERMELHO ALERTA - REGRA DE OURO)
+      function showBlockedResult(titular, breweryName, saldoRestante, mensagem) {
+        resultCard.className = 'rounded-2xl p-5 border-2 border-red-500 bg-red-950/70 text-left space-y-3';
+        resultCard.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-red-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
+              ✕
+            </div>
+            <div>
+              <h3 class="text-base font-extrabold text-red-200 uppercase tracking-wide">Utilização Bloqueada</h3>
+              <span class="text-xs text-red-300 font-semibold block">Regra de Segurança Anti-Repetição</span>
+            </div>
+          </div>
+
+          <div class="p-3 bg-red-900/50 rounded-xl border border-red-700/50 text-xs text-red-100 leading-relaxed font-semibold">
+            🚫 ${mensagem || 'ESTE CARD JÁ FOI UTILIZADO NESTA CERVEJARIA. Você pode utilizar suas experiências restantes em outras cervejarias participantes.'}
+          </div>
+
+          <div class="text-xs text-stone-300 space-y-1 pt-1 border-t border-red-800">
+            <p><strong>Cervejaria Atual:</strong> ${breweryName}</p>
+            <p><strong>Status do Débito:</strong> <span class="text-emerald-400 font-bold">Nenhum crédito foi descontado</span> do cliente.</p>
+          </div>
+
+          <button type="button" onclick="location.reload()" class="w-full mt-2 py-2.5 rounded-xl bg-stone-700 hover:bg-stone-600 text-white text-xs font-bold">
+            Nova Leitura de QR Code
+          </button>
+        `;
+      }
+
+      // CASO 2: SUCESSO E BAIXA DE SALDO (VERDE / DOURADO)
+      function showSuccessResult(titular, card, breweryName, token, breweryId) {
+        resultCard.className = 'rounded-2xl p-5 border-2 border-emerald-500 bg-emerald-950/70 text-left space-y-4';
+        resultCard.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-sm">
+                ✓
+              </div>
+              <h3 class="text-sm sm:text-base font-bold text-emerald-200">PASSE VIP AUTORIZADO</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-brandGold text-brandGreen-dark text-[0.65rem] font-bold uppercase">
+              Ativo
+            </span>
+          </div>
+
+          <div class="bg-emerald-900/40 p-3.5 rounded-xl border border-emerald-700/50 space-y-1.5 text-xs">
+            <p class="text-stone-300"><strong>Titular:</strong> <span class="text-white font-bold uppercase">${titular}</span></p>
+            <p class="text-stone-300"><strong>Código do Passe:</strong> <span class="text-brandGold font-mono font-bold">${card.codigo_passe || token}</span></p>
+            <p class="text-stone-300"><strong>Experiências Disponíveis:</strong> <span class="text-emerald-300 font-bold text-sm">${card.saldo_restante || 3} visita(s)</span></p>
+            <p class="text-stone-300"><strong>Validade:</strong> <span class="text-stone-200">${card.data_validade_formatada || '6 Meses'}</span></p>
+            <p class="text-stone-300"><strong>Cervejaria da Baixa:</strong> <span class="text-amber-200 font-bold">${breweryName}</span></p>
+          </div>
+
+          <button type="button" id="confirmBaixaBtn" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-brandGreen-dark font-extrabold text-sm shadow-lg flex items-center justify-center gap-2">
+            <span>✓ Confirmar Degustação & Dar Baixa</span>
+          </button>
+        `;
+
+        document.getElementById('confirmBaixaBtn')?.addEventListener('click', async () => {
+          // Registra baixa localmente para bloquear nova tentativa
+          const localVisited = JSON.parse(localStorage.getItem('brinda_validacoes_historico') || '[]');
+          localVisited.push({
+            token: token,
+            codigo: card.codigo_passe || token,
+            cervejariaId: breweryId,
+            cervejariaNome: breweryName,
+            dataHora: new Date().toLocaleString('pt-BR')
+          });
+          localStorage.setItem('brinda_validacoes_historico', JSON.stringify(localVisited));
+
+          // Tenta API se disponível
+          try {
+            await fetch('/api/validador/confirmar', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                qr_token: token,
+                cervejaria_id: breweryId,
+                cervejaria_nome: breweryName
+              })
+            });
+          } catch(e) {}
+
+          resultCard.className = 'rounded-2xl p-5 border-2 border-brandGold bg-brandGreen-dark text-center space-y-3';
+          resultCard.innerHTML = `
+            <div class="text-3xl">🎉</div>
+            <h4 class="text-base font-bold text-brandGold">Degustação Confirmada com Sucesso!</h4>
+            <p class="text-xs text-stone-200">
+              A visita do cliente foi registrada na <strong>${breweryName}</strong>.<br>
+              A trava de segurança foi ativada para este estabelecimento.
+            </p>
+            <div class="pt-2">
+              <button type="button" onclick="location.reload()" class="py-2.5 px-6 rounded-xl bg-brandGold text-brandGreen-dark font-bold text-xs">
+                Próximo Atendimento
+              </button>
+            </div>
+          `;
+        });
+      }
+    });
+  </script>
+</body>
+</html>

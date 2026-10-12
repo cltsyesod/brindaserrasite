@@ -97,7 +97,11 @@
       </nav>
 
       <!-- Botão CTA Cabeçalho -->
-      <div class="hidden sm:flex items-center gap-3">
+      <div class="hidden sm:flex items-center gap-2.5">
+        <button type="button" class="open-client-modal border border-brandGreen/60 text-brandGreen hover:bg-brandGreen hover:text-white px-3.5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer">
+          <span>👤</span>
+          <span>Minha Conta</span>
+        </button>
         <a href="#brinda-card" class="btn-primary text-sm !py-2.5 !px-5 shadow-sm">
           <span>Adquirir BRINDA Card</span>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
@@ -118,7 +122,10 @@
       <a href="#vinicolas" class="mobile-nav-link block py-2 text-base font-semibold text-brandGreen hover:text-brandTerracotta">Vinícolas</a>
       <a href="#chocolates" class="mobile-nav-link block py-2 text-base font-semibold text-brandGreen hover:text-brandTerracotta">Chocolates</a>
       <a href="#contato" class="mobile-nav-link block py-2 text-base font-semibold text-brandGreen hover:text-brandTerracotta">Contato</a>
-      <div class="pt-3 border-t border-brandGreen/10">
+      <div class="pt-3 border-t border-brandGreen/10 space-y-2">
+        <button type="button" class="open-client-modal block w-full text-center py-2.5 px-4 rounded-xl border border-brandGreen text-brandGreen font-bold text-sm hover:bg-brandGreen hover:text-white transition-all">
+          👤 Minha Conta (Meus Passes)
+        </button>
         <a href="#brinda-card" class="btn-primary w-full text-center text-sm">Adquirir BRINDA Card</a>
       </div>
     </div>
@@ -1713,6 +1720,164 @@
     </div>
   </div>
 
+  <!-- ============================================================== -->
+  <!-- MODAL: ÁREA DO CLIENTE ("MINHA CONTA" / LOGIN POR CPF)         -->
+  <!-- ============================================================== -->
+  <div id="clienteModal" class="modal-backdrop">
+    <div class="modal-box !max-w-xl">
+      <div class="modal-header">
+        <div class="flex items-center gap-3">
+          <img src="assets/logo.jpg" alt="Logo" class="w-8 h-8 rounded-full border border-brandGold/40 object-cover">
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-brandGreen leading-tight">Área do Cliente • BRINDA SERRA</h3>
+            <span class="text-xs text-brandTerracotta font-semibold">Minha Conta & Cartões Virtuais</span>
+          </div>
+        </div>
+        <button id="closeClienteModalBtn" class="p-2 rounded-full text-stone-500 hover:bg-stone-200 focus:outline-none" aria-label="Fechar">✕</button>
+      </div>
+
+      <div class="modal-body space-y-4 p-5 sm:p-6 overflow-y-auto max-h-[75vh]">
+        <!-- TELA 1: LOGIN POR CPF -->
+        <div id="clienteLoginView" class="space-y-4 text-center">
+          <div class="w-12 h-12 rounded-full bg-brandGreen/10 text-brandGreen flex items-center justify-center mx-auto text-xl font-bold">
+            👤
+          </div>
+          <div>
+            <h4 class="text-lg font-bold text-brandGreen">Acesse seus Cartões</h4>
+            <p class="text-xs text-stone-600 max-w-sm mx-auto mt-1">
+              Informe seu CPF para consultar seus BRINDA CARDS, saldo de degustações restantes e histórico de cervejarias já visitadas.
+            </p>
+          </div>
+
+          <form id="clienteLoginForm" class="space-y-3 max-w-sm mx-auto text-left">
+            <div>
+              <label for="clienteLoginCpf" class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">Seu CPF Cadastrado</label>
+              <input type="text" id="clienteLoginCpf" maxlength="14" placeholder="000.000.000-00" required class="form-input-soft text-sm">
+            </div>
+            <button type="submit" class="btn-primary w-full text-sm !py-3 shadow-md flex items-center justify-center gap-2">
+              <span>Acessar Meus Passes</span>
+              <span>&rarr;</span>
+            </button>
+          </form>
+
+          <p class="text-[0.7rem] text-stone-500 pt-2 border-t border-stone-200">
+            Ainda não possui o BRINDA CARD? <a href="#brinda-card" class="text-brandTerracotta font-bold underline close-client-on-link">Adquira agora</a> por apenas R$ 10,00.
+          </p>
+        </div>
+
+        <!-- TELA 2: DASHBOARD DO CLIENTE LOGADO -->
+        <div id="clienteDashboardView" class="hidden space-y-5">
+          <!-- Cabeçalho do Cliente -->
+          <div class="flex items-center justify-between p-3.5 bg-stone-100 rounded-xl border border-stone-200">
+            <div>
+              <span class="text-[0.65rem] uppercase font-bold text-stone-500 block">Titular da Conta</span>
+              <h5 class="text-sm font-bold text-brandGreen" id="clienteDashNome">CARREGANDO...</h5>
+              <span class="text-xs text-stone-600" id="clienteDashCpf">CPF: ***</span>
+            </div>
+            <button type="button" id="clienteLogoutBtn" class="text-xs text-brandTerracotta font-bold hover:underline">
+              Sair da Conta
+            </button>
+          </div>
+
+          <!-- Abas para múltiplos cartões -->
+          <div id="clienteCardsTabs" class="hidden flex gap-1.5 flex-wrap justify-center">
+            <!-- Abas dinâmicas inseridas via JS -->
+          </div>
+
+          <!-- Componente Visual do Cartão Renderizado -->
+          <div id="clienteCardRendered" class="p-2 sm:p-4 rounded-2xl bg-stone-50 border border-stone-200">
+            <!-- Cartão Oficial 3D com QR Code -->
+          </div>
+
+          <!-- Saldo e Validade -->
+          <div class="grid grid-cols-2 gap-2 text-center">
+            <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+              <span class="text-[0.65rem] uppercase font-bold text-emerald-800 block">Experiências Restantes</span>
+              <span class="text-lg font-extrabold text-emerald-700" id="clienteDashSaldo">3 de 3</span>
+            </div>
+            <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+              <span class="text-[0.65rem] uppercase font-bold text-amber-800 block">Validade do Passe</span>
+              <span class="text-xs font-bold text-amber-900 mt-1 block" id="clienteDashValidade">6 Meses</span>
+            </div>
+          </div>
+
+          <!-- Histórico de Cervejarias Visitadas -->
+          <div class="space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-brandGreen block">Histórico de Visitas Realizadas:</span>
+            <div id="clienteHistoricoList" class="space-y-1.5 text-xs">
+              <!-- Preenchido via JS -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: PAINEL DO PROMOTOR / VENDEDOR (CONSULTA DE COMISSÕES)   -->
+  <!-- ============================================================== -->
+  <div id="vendorPortalModal" class="modal-backdrop">
+    <div class="modal-box !max-w-md">
+      <div class="modal-header">
+        <div>
+          <h3 class="text-base font-bold text-brandGreen">Painel do Promotor / Vendedor</h3>
+          <span class="text-xs text-brandTerracotta font-semibold">Extrato de Comissões & Metas</span>
+        </div>
+        <button id="closeVendorPortalModalBtn" class="p-2 rounded-full text-stone-500 hover:bg-stone-200 focus:outline-none">✕</button>
+      </div>
+
+      <div class="modal-body space-y-4 p-5">
+        <!-- Consulta por Código -->
+        <div id="vendorLoginView" class="space-y-3">
+          <p class="text-xs text-stone-600">
+            Consulte seu extrato de vendas, comissões acumuladas (R$ 20,00 por primeira experiência) e status do bônus mensal de R$ 200,00.
+          </p>
+          <form id="vendorSearchForm" class="space-y-3">
+            <div>
+              <label for="vendorPortalCode" class="block text-[0.7rem] font-bold text-stone-600 uppercase mb-1">Seu Código de Vendedor</label>
+              <input type="text" id="vendorPortalCode" placeholder="Ex: PEDRO01, HOTEL01, LUCASPROMO" required class="form-input-soft text-sm uppercase">
+            </div>
+            <button type="submit" class="btn-primary w-full text-sm !py-2.5">
+              Consultar Comissões
+            </button>
+          </form>
+        </div>
+
+        <!-- Dashboard do Vendedor -->
+        <div id="vendorDashboardView" class="hidden space-y-4">
+          <div class="p-3 bg-stone-100 rounded-xl border border-stone-200 flex justify-between items-center">
+            <div>
+              <h5 class="text-sm font-bold text-brandGreen" id="vpNome">Carregando...</h5>
+              <span class="text-xs text-stone-500" id="vpTipo">Motorista Parceiro</span>
+            </div>
+            <button type="button" id="vpVoltarBtn" class="text-xs text-brandTerracotta font-bold hover:underline">Trocar</button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-center">
+            <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+              <span class="text-[0.65rem] uppercase font-bold text-emerald-800 block">Comissões Acumuladas</span>
+              <span class="text-lg font-extrabold text-emerald-700" id="vpValorComissao">R$ 0,00</span>
+              <span class="text-[0.65rem] text-emerald-600 block" id="vpQtdVendas">0 vendas aprovadas</span>
+            </div>
+            <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+              <span class="text-[0.65rem] uppercase font-bold text-amber-800 block">Meta do Bônus Mensal</span>
+              <span class="text-sm font-extrabold text-amber-800" id="vpMetaBonus">0 / 20 vendas</span>
+              <span class="text-[0.65rem] text-amber-600 block">+ R$ 200,00 ao atingir 20</span>
+            </div>
+          </div>
+
+          <div class="p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs space-y-1 text-stone-600">
+            <p>📅 <strong>Fechamento Mensal:</strong> Dia 31 do mês corrente</p>
+            <p>💰 <strong>Data de Pagamento:</strong> Dia 10 do mês seguinte</p>
+            <p class="text-[0.65rem] text-stone-500 pt-1 border-t border-stone-200">* Comissões creditadas via PIX conforme cadastro.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- RODAPÉ ACOLHEDOR & ELEGANTE -->
   <footer class="bg-brandGreen text-brandCream pt-14 pb-10 border-t border-brandGreen-light/30">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1747,7 +1912,9 @@
           <span class="text-xs uppercase tracking-widest text-brandGold font-bold block mb-1">Parcerias & Legal</span>
           <ul class="space-y-1.5 text-xs sm:text-sm text-stone-300">
             <li><button type="button" class="open-vendor-modal text-left hover:text-brandPeach text-[#F8E2CE] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"><span>🤝</span><span>Quero Vender o BRINDA Card</span></button></li>
+            <li><button type="button" class="open-vendor-portal-modal text-left hover:text-brandPeach text-[#F8E2CE] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"><span>💼</span><span>Painel do Promotor / Vendedor</span></button></li>
             <li><button type="button" class="open-brewery-modal text-left hover:text-brandPeach text-[#F8E2CE] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"><span>🍺</span><span>Seja uma Cervejaria Parceira</span></button></li>
+            <li><a href="validador.html" class="hover:text-brandPeach text-emerald-300 font-semibold flex items-center gap-1.5 transition-colors"><span>📱</span><span>Validador das Cervejarias</span></a></li>
             <li class="pt-1"><a href="#termos" class="open-terms-modal hover:text-brandPeach underline">Termos e Condições Gerais de Uso</a></li>
             <li><span>Foro da Comarca de Canela - RS</span></li>
             <li><span>Atendimento: <a href="mailto:brindacard@gmail.com" class="hover:text-brandPeach">brindacard@gmail.com</a></span></li>

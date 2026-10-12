@@ -151,7 +151,13 @@ app.get('/api/cliente/:cpf', (req, res) => {
   res.json(painel);
 });
 
-// 7. Lista de Cervejarias Cadastradas
+// 7. Painel do Vendedor / Promotor: Consulta por Código
+app.get('/api/vendedor/:codigo', (req, res) => {
+  const painel = db.getVendedorPainel(req.params.codigo);
+  res.json(painel);
+});
+
+// 8. Lista de Cervejarias Cadastradas
 app.get('/api/cervejarias', (req, res) => {
   const data = db.loadDatabase();
   res.json(data.cervejarias);

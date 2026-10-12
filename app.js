@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
   initBrindaCardCalculator();
   initCheckoutModal();
+  initClientModal();
+  initVendorPortalModal();
   initLeadModals();
   initCityFilters();
   initTermsModal();
@@ -187,7 +189,6 @@ function initCheckoutModal() {
   const modal = document.getElementById('checkoutModal');
   const closeBtn = document.getElementById('closeCheckoutModalBtn');
   
-  // Elementos do Stepper
   const badges = [
     document.getElementById('stepBadge1'),
     document.getElementById('stepBadge2'),
@@ -389,13 +390,11 @@ function initCheckoutModal() {
 
     guestsList.appendChild(guestCard);
 
-    // Aplica máscaras aos novos campos
     const cpfInput = guestCard.querySelector('.guest-cpf');
     const phoneInput = guestCard.querySelector('.guest-phone');
     if (cpfInput) applyCpfMask(cpfInput);
     if (phoneInput) applyPhoneMask(phoneInput);
 
-    // Botão de remoção
     const removeBtn = guestCard.querySelector('.remove-guest-btn');
     removeBtn?.addEventListener('click', () => {
       guestCard.remove();
@@ -458,7 +457,6 @@ function initCheckoutModal() {
       return;
     }
 
-    // Validação de terceiros se selecionado
     const selectedTarget = document.querySelector('input[name="buy_target"]:checked')?.value || 'myself';
     if (selectedTarget === 'others' || selectedTarget === 'both') {
       const guestItems = guestsList?.querySelectorAll('.guest-item') || [];
@@ -471,7 +469,7 @@ function initCheckoutModal() {
         const gItem = guestItems[i];
         const gName = gItem.querySelector('.guest-name')?.value.trim() || '';
         const gCpf = gItem.querySelector('.guest-cpf')?.value.trim() || '';
-        const gDob = gItem.querySelector('.guest-dob')?.value.trim() || '';
+        const gDob = gItem.querySelector('.guest-dob')?.value || '';
 
         if (gName.length < 3) {
           showToast(`⚠️ Preencha o nome completo do Convidado ${i + 1}.`);
@@ -517,29 +515,23 @@ function initCheckoutModal() {
       return;
     }
 
-    // Calcula quantidade total de cartões a emitir
     const selectedTarget = document.querySelector('input[name="buy_target"]:checked')?.value || 'myself';
     const guestItems = guestsList?.querySelectorAll('.guest-item') || [];
     const qtdConvidados = (selectedTarget === 'others' || selectedTarget === 'both') ? guestItems.length : 0;
     const compraParaSi = selectedTarget !== 'others';
     const totalCartoes = (compraParaSi ? 1 : 0) + qtdConvidados;
 
-    // Regra Comercial do Documento:
-    // Taxa de Adesão: R$ 10,00 fixa
-    // Experiências: R$ 0 (base), R$ 130 (brinda_bem), R$ 190 (brinda_premium) por cartão
     const taxaAdesao = 10.00;
     const valorUnitarioExp = currentCalculatorState.selectedBeerPrice;
     const valorTotalExp = valorUnitarioExp * totalCartoes;
     const valorFinal = taxaAdesao + valorTotalExp;
 
-    // Atualiza resumo visual na Etapa 3
     if (summaryBasePrice) summaryBasePrice.textContent = formatCurrency(taxaAdesao);
     if (summaryExpName) summaryExpName.textContent = currentCalculatorState.selectedBeerName;
     if (summaryExpPrice) summaryExpPrice.textContent = formatCurrency(valorTotalExp);
     if (summaryGuestsCount) summaryGuestsCount.textContent = `${qtdConvidados} (${totalCartoes} cartão(ões) no total)`;
     if (summaryTotalPrice) summaryTotalPrice.textContent = formatCurrency(valorFinal);
 
-    // Geração do Código e QR Code Dinâmico do PIX
     const pixCode = `00020126580014br.gov.bcb.pix0136brindaserracard-pix-${Date.now()}520400005303986540${valorFinal.toFixed(2)}5802BR5920BRINDA SERRA6006CANELA62070503***6304`;
     if (pixCodeInput) pixCodeInput.value = pixCode;
 
@@ -622,7 +614,6 @@ function initCheckoutModal() {
       activeBtn.innerHTML = `<span>⏳ Emitindo seu BRINDA CARD Oficial...</span>`;
     }
 
-    // Coleta dados dos terceiros
     const selectedTarget = document.querySelector('input[name="buy_target"]:checked')?.value || 'myself';
     const compraParaSi = selectedTarget !== 'others';
     const terceiros = [];
@@ -640,7 +631,6 @@ function initCheckoutModal() {
       });
     }
 
-    // Origem e Código do Vendedor
     const originType = originSelect?.value || 'direto';
     let originDetail = '';
     let vendorCode = '';
@@ -675,7 +665,6 @@ function initCheckoutModal() {
 
     let cardsResult = [];
 
-    // Tenta comunicação com o backend Node.js
     try {
       const resp = await fetch('/api/checkout', {
         method: 'POST',
@@ -689,13 +678,15 @@ function initCheckoutModal() {
         }
       }
     } catch (err) {
-      console.warn('Backend API /api/checkout offline ou estático na Vercel. Emitindo cartões client-side com total fidelidade:', err);
+      console.warn('Backend API /api/checkout offline ou estático na Vercel. Emitindo cartões client-side:', err);
     }
 
-    // Se o backend não responder (ex: Preview estático Vercel), gera client-side instantaneamente
     if (!cardsResult || cardsResult.length === 0) {
       cardsResult = generateClientSideCards(payload);
     }
+
+    // Salva na persistência local para consulta imediata em "Minha Conta"
+    saveCustomerCardsLocally(payload.pagador, cardsResult);
 
     emittedCardsData = cardsResult;
     activeEmittedCardIndex = 0;
@@ -714,7 +705,6 @@ function initCheckoutModal() {
   confirmPixSimBtn?.addEventListener('click', () => processOrderCompletion('PIX'));
   confirmCardPayBtn?.addEventListener('click', () => processOrderCompletion('Cartão de Crédito'));
 
-  // Download / Impressão e WhatsApp
   downloadCardBtn?.addEventListener('click', () => {
     window.print();
   });
@@ -727,7 +717,23 @@ function initCheckoutModal() {
   });
 }
 
-// Fallback de Emissão Homologada Client-Side (resiliência completa no preview Vercel)
+// Persistência local segura para Minha Conta
+function saveCustomerCardsLocally(pagador, cards) {
+  try {
+    const store = JSON.parse(localStorage.getItem('brinda_clientes_store') || '{}');
+    const cpfKey = pagador.cpf.replace(/\D/g, '');
+    store[cpfKey] = {
+      pagador: pagador,
+      cards: cards,
+      updated_at: new Date().toISOString()
+    };
+    localStorage.setItem('brinda_clientes_store', JSON.stringify(store));
+  } catch (e) {
+    console.error('Erro ao salvar localmente:', e);
+  }
+}
+
+// Fallback de Emissão Homologada Client-Side
 function generateClientSideCards(payload) {
   const cards = [];
   const validade = new Date();
@@ -770,53 +776,8 @@ function generateClientSideCards(payload) {
   return cards;
 }
 
-// Renderizador dos Cartões Emitidos na Etapa 4 (100% FIEL AO PRINT DO CLIENTE)
-async function renderStep4Cards(cards, activeIndex = 0) {
-  const tabsContainer = document.getElementById('multiCardTabsContainer');
-  const cardContainer = document.getElementById('renderedCardContainer');
-  if (!cardContainer) return;
-
-  // Renderiza abas se houver mais de 1 cartão emitido
-  if (tabsContainer) {
-    if (cards.length > 1) {
-      tabsContainer.classList.remove('hidden');
-      tabsContainer.innerHTML = cards.map((c, i) => `
-        <button type="button" class="card-tab-btn ${i === activeIndex ? 'active' : ''}" data-index="${i}">
-          ${c.is_pagador ? '👤 Meu Cartão' : `🎁 ${c.titular_nome.split(' ')[0]}`}
-        </button>
-      `).join('');
-
-      tabsContainer.querySelectorAll('.card-tab-btn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const idx = parseInt(btn.dataset.index || '0', 10);
-          activeEmittedCardIndex = idx;
-          await renderStep4Cards(cards, idx);
-        });
-      });
-    } else {
-      tabsContainer.classList.add('hidden');
-    }
-  }
-
-  const activeCard = cards[activeIndex] || cards[0];
-  if (!activeCard) return;
-
-  // Gera o QR Code escaneável de validação
-  const validationUrl = `https://brindaserra.com.br/validar?token=${encodeURIComponent(activeCard.qr_token)}`;
-  let qrCodeDataUri = activeCard.qr_image_base64 || '';
-
-  if (!qrCodeDataUri && window.QRCode && window.QRCode.toDataURL) {
-    try {
-      qrCodeDataUri = await QRCode.toDataURL(validationUrl, {
-        width: 180,
-        margin: 1,
-        color: { dark: '#1A1D1A', light: '#FFFFFF' }
-      });
-    } catch (err) {
-      console.error('Erro ao gerar imagem QR:', err);
-    }
-  }
-
+// Renderizador do HTML Oficial do BRINDA CARD (Componente Universal 100% Homologado)
+function renderOfficialCardHtml(activeCard, qrCodeDataUri) {
   const nomeTitular = (activeCard.titular_nome || 'CLIENTE VIP').toUpperCase();
   const validadeFormatada = activeCard.data_validade_formatada || '6 Meses da Compra';
   const codigoPasse = activeCard.codigo_passe || 'BS-2026-VIP';
@@ -828,8 +789,7 @@ async function renderStep4Cards(cards, activeIndex = 0) {
     benefitLabel = '5 Degustações Inclusas';
   }
 
-  // HTML COM FIDELIDADE VISUAL ABSOLUTA AO MOCKUP APROVADO
-  cardContainer.innerHTML = `
+  return `
     <div class="brinda-card-official" style="
       background: linear-gradient(135deg, #1E261D 0%, #2D362C 50%, #3F4A3E 100%);
       border-radius: 24px;
@@ -958,12 +918,321 @@ async function renderStep4Cards(cards, activeIndex = 0) {
   `;
 }
 
-// 4. Modais de Parcerias B2B (Quero Vender & Seja uma Cervejaria Parceira)
+// Renderizador dos Cartões Emitidos na Etapa 4
+async function renderStep4Cards(cards, activeIndex = 0) {
+  const tabsContainer = document.getElementById('multiCardTabsContainer');
+  const cardContainer = document.getElementById('renderedCardContainer');
+  if (!cardContainer) return;
+
+  if (tabsContainer) {
+    if (cards.length > 1) {
+      tabsContainer.classList.remove('hidden');
+      tabsContainer.innerHTML = cards.map((c, i) => `
+        <button type="button" class="card-tab-btn ${i === activeIndex ? 'active' : ''}" data-index="${i}">
+          ${c.is_pagador ? '👤 Meu Cartão' : `🎁 ${c.titular_nome.split(' ')[0]}`}
+        </button>
+      `).join('');
+
+      tabsContainer.querySelectorAll('.card-tab-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const idx = parseInt(btn.dataset.index || '0', 10);
+          activeEmittedCardIndex = idx;
+          await renderStep4Cards(cards, idx);
+        });
+      });
+    } else {
+      tabsContainer.classList.add('hidden');
+    }
+  }
+
+  const activeCard = cards[activeIndex] || cards[0];
+  if (!activeCard) return;
+
+  const validationUrl = `https://brindaserra.com.br/validar?token=${encodeURIComponent(activeCard.qr_token)}`;
+  let qrCodeDataUri = activeCard.qr_image_base64 || '';
+
+  if (!qrCodeDataUri && window.QRCode && window.QRCode.toDataURL) {
+    try {
+      qrCodeDataUri = await QRCode.toDataURL(validationUrl, {
+        width: 180,
+        margin: 1,
+        color: { dark: '#1A1D1A', light: '#FFFFFF' }
+      });
+    } catch (err) {
+      console.error('Erro ao gerar imagem QR:', err);
+    }
+  }
+
+  cardContainer.innerHTML = renderOfficialCardHtml(activeCard, qrCodeDataUri);
+}
+
+// 4. ÁREA DO CLIENTE ("MINHA CONTA" / LOGIN POR CPF)
+function initClientModal() {
+  const modal = document.getElementById('clienteModal');
+  const closeBtn = document.getElementById('closeClienteModalBtn');
+  const loginView = document.getElementById('clienteLoginView');
+  const dashView = document.getElementById('clienteDashboardView');
+  const loginForm = document.getElementById('clienteLoginForm');
+  const loginCpf = document.getElementById('clienteLoginCpf');
+  const logoutBtn = document.getElementById('clienteLogoutBtn');
+
+  const dashNome = document.getElementById('clienteDashNome');
+  const dashCpf = document.getElementById('clienteDashCpf');
+  const dashSaldo = document.getElementById('clienteDashSaldo');
+  const dashValidade = document.getElementById('clienteDashValidade');
+  const cardRendered = document.getElementById('clienteCardRendered');
+  const cardsTabs = document.getElementById('clienteCardsTabs');
+  const historicoList = document.getElementById('clienteHistoricoList');
+
+  if (loginCpf) applyCpfMask(loginCpf);
+
+  document.querySelectorAll('.open-client-modal').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      modal?.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeClientModal() {
+    modal?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  closeBtn?.addEventListener('click', closeClientModal);
+
+  document.querySelectorAll('.close-client-on-link').forEach(link => {
+    link.addEventListener('click', closeClientModal);
+  });
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeClientModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeClientModal();
+    });
+  }
+
+  logoutBtn?.addEventListener('click', () => {
+    loginView?.classList.remove('hidden');
+    dashView?.classList.add('hidden');
+    if (loginForm) loginForm.reset();
+  });
+
+  // Consulta e Login de Cliente
+  loginForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const rawCpf = loginCpf?.value.trim() || '';
+    const cleanCpf = rawCpf.replace(/\D/g, '');
+
+    if (cleanCpf.length !== 11) {
+      showToast('⚠️ Digite um CPF válido com 11 dígitos.');
+      return;
+    }
+
+    let customerData = null;
+
+    // 1. Tenta API do Backend Node.js
+    try {
+      const resp = await fetch(`/api/cliente/${cleanCpf}`);
+      if (resp.ok) {
+        const json = await resp.json();
+        if (json.sucesso && json.cliente) {
+          customerData = {
+            pagador: json.cliente,
+            cards: json.cards || [],
+            historico: json.historico_visitas || []
+          };
+        }
+      }
+    } catch (err) {}
+
+    // 2. Fallback na Base Local
+    if (!customerData) {
+      try {
+        const store = JSON.parse(localStorage.getItem('brinda_clientes_store') || '{}');
+        if (store[cleanCpf]) {
+          customerData = store[cleanCpf];
+        }
+      } catch (err) {}
+    }
+
+    // 3. Fallback de Demonstração / Boas-vindas para clientes recém-cadastrados
+    if (!customerData) {
+      // Se não encontrou compras para o CPF informado
+      showToast('⚠️ Nenhum BRINDA CARD ativo encontrado para este CPF. Adquira seu passe para ativar seu acesso!');
+      return;
+    }
+
+    // Renderiza Dashboard do Cliente
+    loginView?.classList.add('hidden');
+    dashView?.classList.remove('hidden');
+
+    if (dashNome) dashNome.textContent = (customerData.pagador.nome || 'CLIENTE VIP').toUpperCase();
+    if (dashCpf) dashCpf.textContent = `CPF: ${rawCpf}`;
+
+    const cards = customerData.cards || [];
+    let currentIdx = 0;
+
+    async function displaySelectedCard(idx) {
+      const card = cards[idx] || cards[0];
+      if (!card) return;
+
+      if (dashSaldo) dashSaldo.textContent = `${card.saldo_restante || 0} de ${card.saldo_total || 3}`;
+      if (dashValidade) dashValidade.textContent = card.data_validade_formatada || '6 Meses da Compra';
+
+      const validationUrl = `https://brindaserra.com.br/validar?token=${encodeURIComponent(card.qr_token)}`;
+      let qrUri = card.qr_image_base64 || '';
+      if (!qrUri && window.QRCode && window.QRCode.toDataURL) {
+        try {
+          qrUri = await QRCode.toDataURL(validationUrl, { width: 180, margin: 1, color: { dark: '#1A1D1A', light: '#FFFFFF' } });
+        } catch (e) {}
+      }
+
+      if (cardRendered) {
+        cardRendered.innerHTML = renderOfficialCardHtml(card, qrUri);
+      }
+    }
+
+    if (cardsTabs) {
+      if (cards.length > 1) {
+        cardsTabs.classList.remove('hidden');
+        cardsTabs.innerHTML = cards.map((c, i) => `
+          <button type="button" class="card-tab-btn ${i === 0 ? 'active' : ''}" data-idx="${i}">
+            ${c.is_pagador ? '👤 Meu Card' : `🎁 ${c.titular_nome.split(' ')[0]}`}
+          </button>
+        `).join('');
+
+        cardsTabs.querySelectorAll('.card-tab-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const idx = parseInt(btn.dataset.idx || '0', 10);
+            cardsTabs.querySelectorAll('.card-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            await displaySelectedCard(idx);
+          });
+        });
+      } else {
+        cardsTabs.classList.add('hidden');
+      }
+    }
+
+    await displaySelectedCard(0);
+
+    // Histórico de Visitas com Bloqueio Anti-Repetição
+    const visited = JSON.parse(localStorage.getItem('brinda_validacoes_historico') || '[]');
+    const userVisited = visited.filter(v => v.token === cards[0]?.qr_token || v.codigo === cards[0]?.codigo_passe);
+
+    if (historicoList) {
+      if (userVisited.length > 0) {
+        historicoList.innerHTML = userVisited.map(v => `
+          <div class="p-2.5 bg-white rounded-lg border border-stone-200 flex items-center justify-between">
+            <div>
+              <span class="font-bold text-brandGreen block">${v.cervejariaNome}</span>
+              <span class="text-[0.65rem] text-stone-500">${v.dataHora} • Cortesia Utilizada</span>
+            </div>
+            <span class="text-[0.65rem] font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded">
+              Visita Esgotada nesta Casa
+            </span>
+          </div>
+        `).join('');
+      } else {
+        historicoList.innerHTML = `
+          <div class="p-3 bg-stone-50 rounded-lg border border-stone-200 text-center text-stone-500 text-xs">
+            Nenhuma degustação realizada ainda. Apresente seu QR Code nas cervejarias parceiras de Canela e Gramado!
+          </div>
+        `;
+      }
+    }
+  });
+}
+
+// 5. PAINEL DO PROMOTOR / VENDEDOR (EXTRATO DE COMISSÕES B2B)
+function initVendorPortalModal() {
+  const modal = document.getElementById('vendorPortalModal');
+  const closeBtn = document.getElementById('closeVendorPortalModalBtn');
+  const loginView = document.getElementById('vendorLoginView');
+  const dashView = document.getElementById('vendorDashboardView');
+  const searchForm = document.getElementById('vendorSearchForm');
+  const codeInput = document.getElementById('vendorPortalCode');
+  const voltarBtn = document.getElementById('vpVoltarBtn');
+
+  const vpNome = document.getElementById('vpNome');
+  const vpTipo = document.getElementById('vpTipo');
+  const vpValorComissao = document.getElementById('vpValorComissao');
+  const vpQtdVendas = document.getElementById('vpQtdVendas');
+  const vpMetaBonus = document.getElementById('vpMetaBonus');
+
+  document.querySelectorAll('.open-vendor-portal-modal').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      modal?.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeVendorPortalModal() {
+    modal?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  closeBtn?.addEventListener('click', closeVendorPortalModal);
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeVendorPortalModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeVendorPortalModal();
+    });
+  }
+
+  voltarBtn?.addEventListener('click', () => {
+    loginView?.classList.remove('hidden');
+    dashView?.classList.add('hidden');
+    if (searchForm) searchForm.reset();
+  });
+
+  // Base cadastral homologada de vendedores exemplo
+  const vendedoresBase = {
+    'PEDRO01': { nome: 'Pedro da Silva', tipo: '🚗 Motorista de Aplicativo / Uber', vendas: 4 },
+    'HOTEL01': { nome: 'Concierge Hotel Casa da Montanha', tipo: '🏨 Hotel Parceiro (Gramado)', vendas: 12 },
+    'LUCASPROMO': { nome: 'Lucas Promotor Autônomo', tipo: '👤 Promotor da Serra', vendas: 8 }
+  };
+
+  searchForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const code = (codeInput?.value || '').trim().toUpperCase();
+
+    if (!code) {
+      showToast('⚠️ Informe o código do vendedor.');
+      return;
+    }
+
+    const vendedor = vendedoresBase[code] || {
+      nome: `Parceiro (${code})`,
+      tipo: '👤 Promotor Credenciado',
+      vendas: 1
+    };
+
+    loginView?.classList.add('hidden');
+    dashView?.classList.remove('hidden');
+
+    if (vpNome) vpNome.textContent = vendedor.nome;
+    if (vpTipo) vpTipo.textContent = vendedor.tipo;
+
+    const totalComissao = vendedor.vendas * 20.00;
+    if (vpValorComissao) vpValorComissao.textContent = formatCurrency(totalComissao);
+    if (vpQtdVendas) vpQtdVendas.textContent = `${vendedor.vendas} venda(s) na 1ª experiência`;
+    if (vpMetaBonus) vpMetaBonus.textContent = `${vendedor.vendas} / 20 vendas`;
+  });
+}
+
+// 6. Modais de Parcerias B2B (Quero Vender & Seja uma Cervejaria Parceira)
 function initLeadModals() {
   const vendorModal = document.getElementById('vendorModal');
   const breweryModal = document.getElementById('breweryModal');
 
-  // Abertura
   document.querySelectorAll('.open-vendor-modal').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -980,7 +1249,6 @@ function initLeadModals() {
     });
   });
 
-  // Fechamento
   document.querySelectorAll('.close-vendor-modal').forEach(btn => {
     btn.addEventListener('click', () => {
       vendorModal?.classList.remove('open');
@@ -1006,7 +1274,6 @@ function initLeadModals() {
     }
   });
 
-  // Submissão do Formulário de Vendedor
   const vendorForm = document.getElementById('vendorLeadForm');
   if (vendorForm) {
     const vPhone = document.getElementById('vendorPhone');
@@ -1024,7 +1291,6 @@ function initLeadModals() {
     });
   }
 
-  // Submissão do Formulário de Cervejaria
   const breweryForm = document.getElementById('breweryLeadForm');
   if (breweryForm) {
     const bPhone = document.getElementById('breweryPhone');
@@ -1044,7 +1310,7 @@ function initLeadModals() {
   }
 }
 
-// 5. Filtros de Cidades para Cervejarias
+// 7. Filtros de Cidades para Cervejarias
 function initCityFilters() {
   const filterBtns = document.querySelectorAll('.city-filter-btn');
   const breweryCards = document.querySelectorAll('.brewery-item');
@@ -1081,7 +1347,7 @@ function initCityFilters() {
   });
 }
 
-// 6. Modal de Termos de Uso
+// 8. Modal de Termos de Uso
 function initTermsModal() {
   const openBtns = document.querySelectorAll('.open-terms-modal');
   const closeBtns = document.querySelectorAll('.close-terms-modal');
@@ -1119,7 +1385,7 @@ function initTermsModal() {
   }
 }
 
-// 7. Efeito Parallax Suave para a Foto da Vinícola
+// 9. Efeito Parallax Suave para a Foto da Vinícola
 function initWineryParallax() {
   const wrapper = document.querySelector('.parallax-winery-wrapper');
   const bg = document.querySelector('.parallax-winery-bg');
@@ -1141,7 +1407,7 @@ function initWineryParallax() {
   updateParallax();
 }
 
-// 8. Formulário de Contato
+// 10. Formulário de Contato
 function initContactForm() {
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {

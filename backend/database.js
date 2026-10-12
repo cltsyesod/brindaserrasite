@@ -341,11 +341,36 @@ function getClientePainel(cpf) {
   };
 }
 
+/**
+ * Consulta comissões e painel do vendedor/promotor
+ */
+function getVendedorPainel(codigo) {
+  const db = loadDatabase();
+  const cleanCode = (codigo || '').trim().toUpperCase();
+  const vendedor = db.vendedores.find(v => v.codigo === cleanCode);
+  const comissoes = db.comissoes.filter(c => c.vendedor_codigo === cleanCode);
+  const totalComissoes = comissoes.reduce((acc, c) => acc + (c.valor_comissao || 0), 0);
+  const metaBonus = comissoes.length >= 20;
+
+  return {
+    sucesso: true,
+    vendedor: vendedor || { nome: `Parceiro (${cleanCode})`, codigo: cleanCode, tipo: 'promotor' },
+    total_vendas: comissoes.length,
+    total_comissoes: totalComissoes,
+    atingiu_bonus: metaBonus,
+    valor_bonus: metaBonus ? 200.00 : 0.00,
+    fechamento_mensal: 'Dia 31',
+    data_pagamento: 'Dia 10'
+  };
+}
+
 module.exports = {
   loadDatabase,
   getOrCreateCliente,
   createPedido,
   consultarQrCode,
   confirmarValidacao,
-  getClientePainel
+  getClientePainel,
+  getVendedorPainel
 };
+
