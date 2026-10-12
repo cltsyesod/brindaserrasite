@@ -134,7 +134,7 @@
   <!-- ========================================== -->
   <div id="dashboardSection" class="hidden min-h-screen flex flex-col">
 
-    <!-- BARRA SUPERIOR EXECUTIVA -->
+    <!-- BARRA SUPERIOR EXECUTIVA (SEM NENHUM TERMO TÉCNICO) -->
     <header class="bg-brandGreen text-white border-b border-brandGold/30 sticky top-0 z-40 shadow-md">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
@@ -150,14 +150,9 @@
         </div>
 
         <div class="flex items-center gap-2.5 sm:gap-4 text-xs">
-          <span id="liveEnvBadge" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 font-semibold text-[0.7rem]">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Supabase Conectado</span>
-          </span>
-
-          <button type="button" id="btnRefreshData" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold flex items-center gap-1.5 transition-all" title="Atualizar dados">
+          <button type="button" id="btnRefreshData" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold flex items-center gap-1.5 transition-all shadow-sm" title="Atualizar dados">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            <span class="hidden sm:inline">Atualizar</span>
+            <span class="hidden sm:inline">Atualizar Dados</span>
           </button>
 
           <a href="index.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-brandCream text-brandGreen font-bold hover:bg-white transition-all shadow-sm flex items-center gap-1">
@@ -209,48 +204,64 @@
       <!-- ========================================== -->
       <section id="tabVisaoGeral" class="tab-content space-y-6">
         
-        <!-- CARDS DE KPIS -->
+        <!-- CARDS DE KPIS CLICÁVEIS (REDIRECIONAM DIRETO PARA CADA SEÇÃO) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           
-          <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-2">
+          <!-- Card 1: Faturamento Bruto -> Vai para Vendas -->
+          <div class="kpi-nav-card bg-white p-5 rounded-3xl border border-stone-200 shadow-sm hover:border-brandGold hover:shadow-lg transition-all transform hover:-translate-y-1 cursor-pointer group" data-target="tabVendas" title="Clique para ver detalhes das vendas">
             <div class="flex items-center justify-between text-stone-500">
               <span class="text-xs uppercase font-bold tracking-wider">Faturamento Bruto</span>
               <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">💰</span>
             </div>
             <div class="text-2xl sm:text-3xl font-black text-brandGreen" id="kpiFaturamento">R$ 0,00</div>
-            <span class="text-[0.7rem] text-stone-500 block">Total de vendas pagas aprovadas</span>
+            <div class="flex items-center justify-between text-[0.7rem] text-stone-500 pt-1">
+              <span>Total de vendas pagas</span>
+              <span class="text-brandTerracotta font-bold group-hover:underline flex items-center gap-1">Ver Pedidos &rarr;</span>
+            </div>
           </div>
 
-          <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-2">
+          <!-- Card 2: Pedidos Concluídos -> Vai para Vendas -->
+          <div class="kpi-nav-card bg-white p-5 rounded-3xl border border-stone-200 shadow-sm hover:border-brandGold hover:shadow-lg transition-all transform hover:-translate-y-1 cursor-pointer group" data-target="tabVendas" title="Clique para ver a lista de pedidos">
             <div class="flex items-center justify-between text-stone-500">
               <span class="text-xs uppercase font-bold tracking-wider">Pedidos Concluídos</span>
               <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">📦</span>
             </div>
             <div class="text-2xl sm:text-3xl font-black text-brandGreen" id="kpiPedidos">0</div>
-            <span class="text-[0.7rem] text-stone-500 block">Transações via Pix e Cartão</span>
+            <div class="flex items-center justify-between text-[0.7rem] text-stone-500 pt-1">
+              <span>Transações via Pix e Cartão</span>
+              <span class="text-brandTerracotta font-bold group-hover:underline flex items-center gap-1">Ver Histórico &rarr;</span>
+            </div>
           </div>
 
-          <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-2">
+          <!-- Card 3: BRINDA CARDS Ativos -> Vai para Cards -->
+          <div class="kpi-nav-card bg-white p-5 rounded-3xl border border-stone-200 shadow-sm hover:border-brandGold hover:shadow-lg transition-all transform hover:-translate-y-1 cursor-pointer group" data-target="tabCards" title="Clique para ver os cartões nominais emitidos">
             <div class="flex items-center justify-between text-stone-500">
               <span class="text-xs uppercase font-bold tracking-wider">BRINDA CARDS Ativos</span>
               <span class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm">🎟️</span>
             </div>
             <div class="text-2xl sm:text-3xl font-black text-brandGreen" id="kpiCards">0</div>
-            <span class="text-[0.7rem] text-stone-500 block">Passaportes emitidos com QR Code</span>
+            <div class="flex items-center justify-between text-[0.7rem] text-stone-500 pt-1">
+              <span>Passaportes emitidos</span>
+              <span class="text-brandTerracotta font-bold group-hover:underline flex items-center gap-1">Ver Cards &rarr;</span>
+            </div>
           </div>
 
-          <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-2">
+          <!-- Card 4: Degustações Validadas -> Vai para Cervejarias -->
+          <div class="kpi-nav-card bg-white p-5 rounded-3xl border border-stone-200 shadow-sm hover:border-brandGold hover:shadow-lg transition-all transform hover:-translate-y-1 cursor-pointer group" data-target="tabCervejarias" title="Clique para ver validações nas cervejarias">
             <div class="flex items-center justify-between text-stone-500">
               <span class="text-xs uppercase font-bold tracking-wider">Degustações Validadas</span>
               <span class="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-sm">🍺</span>
             </div>
             <div class="text-2xl sm:text-3xl font-black text-brandGreen" id="kpiValidacoes">0</div>
-            <span class="text-[0.7rem] text-stone-500 block">Visitas realizadas nas cervejarias</span>
+            <div class="flex items-center justify-between text-[0.7rem] text-stone-500 pt-1">
+              <span>Visitas realizadas</span>
+              <span class="text-brandTerracotta font-bold group-hover:underline flex items-center gap-1">Ver Cervejarias &rarr;</span>
+            </div>
           </div>
 
         </div>
 
-        <!-- INDICADORES ESPECÍFICOS: ORIGEM DAS VENDAS & REGRAS COMERCIAIS -->
+        <!-- INDICADORES ESPECÍFICOS: ORIGEM DAS VENDAS & REGRAS COMERCIAIS (CLICÁVEIS) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           <!-- Bloco Origem das Vendas -->
@@ -258,24 +269,24 @@
             <div class="flex items-center justify-between border-b border-stone-100 pb-3">
               <div>
                 <h3 class="text-base font-bold text-brandGreen">Origem das Aquisições ("Como nos Conheceu?")</h3>
-                <p class="text-xs text-stone-500">Distribuição dos canais de atração de clientes</p>
+                <p class="text-xs text-stone-500">Clique em qualquer canal para abrir a respectiva gestão</p>
               </div>
               <span class="text-xs font-bold text-brandTerracotta">Auditoria</span>
             </div>
 
             <div class="space-y-3 pt-1 text-xs" id="origensProgressBars">
-              <!-- Preenchido dinamicamente via JS -->
+              <!-- Preenchido dinamicamente via JS com links diretos -->
             </div>
           </div>
 
-          <!-- Bloco Regras de Comissão & Bônus Mensal -->
-          <div class="lg:col-span-6 bg-white p-6 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+          <!-- Bloco Regras de Comissão & Bônus Mensal (Clicável para Vendedores) -->
+          <div class="kpi-nav-card lg:col-span-6 bg-white p-6 rounded-3xl border border-stone-200 shadow-sm space-y-4 hover:border-brandGold hover:shadow-md transition-all cursor-pointer group" data-target="tabVendedores" title="Clique para gerenciar vendedores e comissões">
             <div class="flex items-center justify-between border-b border-stone-100 pb-3">
               <div>
                 <h3 class="text-base font-bold text-brandGreen">Regra Comercial dos Vendedores</h3>
-                <p class="text-xs text-stone-500">Parâmetros de comissionamento de parceiros</p>
+                <p class="text-xs text-stone-500">Parâmetros de comissionamento de promotores e parceiros</p>
               </div>
-              <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[0.65rem] font-bold uppercase">Configurado</span>
+              <span class="text-xs font-bold text-brandTerracotta group-hover:underline">Gerenciar Vendedores &rarr;</span>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -393,8 +404,18 @@
       <!-- ========================================== -->
       <section id="tabCervejarias" class="tab-content hidden space-y-6">
         
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-stone-200 shadow-sm">
+          <div>
+            <h2 class="text-lg font-bold text-brandGreen">Cervejarias Parceiras Credenciadas</h2>
+            <p class="text-xs text-stone-500">Estabelecimentos com validador oficial ativo na Serra Gaúcha</p>
+          </div>
+          <button type="button" id="btnCadastrarCervejaria" class="px-4 py-2.5 bg-brandGreen hover:bg-brandGreen-dark text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
+            <span>+</span><span>Cadastrar Cervejaria Parceira</span>
+          </button>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-5 gap-3" id="cervejariasSummaryGrid">
-          <!-- Resumo das 5 cervejarias -->
+          <!-- Resumo das cervejarias -->
         </div>
 
         <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-5 space-y-4">
@@ -474,20 +495,18 @@
       <!-- ========================================== -->
       <section id="tabHoteis" class="tab-content hidden space-y-6">
         
-        <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-4">
-          <div class="flex items-center justify-between border-b border-stone-200 pb-3">
-            <div>
-              <h3 class="text-base font-bold text-brandGreen">Cadastro de Hotéis Parceiros</h3>
-              <p class="text-xs text-stone-500">Hotéis da Serra Gaúcha cadastrados para indicação e vinculação de equipes</p>
-            </div>
-            <button type="button" id="btnCadastrarHotel" class="px-3 py-1.5 bg-brandGreen text-white text-xs font-bold rounded-xl hover:bg-brandGreen-dark transition-all">
-              + Adicionar Hotel
-            </button>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-stone-200 shadow-sm">
+          <div>
+            <h2 class="text-lg font-bold text-brandGreen">Cadastro de Hotéis Parceiros</h2>
+            <p class="text-xs text-stone-500">Hotéis da Serra Gaúcha cadastrados para indicação e vinculação de equipes</p>
           </div>
+          <button type="button" id="btnCadastrarHotel" class="px-4 py-2.5 bg-brandGreen hover:bg-brandGreen-dark text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
+            <span>+</span><span>Adicionar Hotel</span>
+          </button>
+        </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="hoteisGrid">
-            <!-- Inserido dinamicamente -->
-          </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="hoteisGrid">
+          <!-- Inserido dinamicamente -->
         </div>
 
       </section>
@@ -538,8 +557,10 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- MODAL: CADASTRAR NOVO VENDEDOR             -->
+  <!-- MODAIS DE CADASTRO                         -->
   <!-- ========================================== -->
+
+  <!-- MODAL 1: CADASTRAR NOVO VENDEDOR -->
   <div id="newVendorModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-stone-200">
       <div class="flex items-center justify-between border-b border-stone-100 pb-3">
@@ -550,13 +571,13 @@
       <form id="newVendorForm" class="space-y-3 text-xs">
         <div>
           <label class="block font-bold text-stone-700 mb-1">Nome Completo:</label>
-          <input type="text" id="nvNome" required placeholder="Ex: Carlos Alberto" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+          <input type="text" id="nvNome" required placeholder="Ex: Camila Rossi" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-stone-700 mb-1">Código de Venda (Único):</label>
-            <input type="text" id="nvCodigo" required placeholder="Ex: CARLOS01" class="w-full bg-stone-50 font-mono font-bold uppercase rounded-xl p-2.5 border border-stone-300 outline-none">
+            <input type="text" id="nvCodigo" required placeholder="Ex: CAMILA01" class="w-full bg-stone-50 font-mono font-bold uppercase rounded-xl p-2.5 border border-stone-300 outline-none">
           </div>
           <div>
             <label class="block font-bold text-stone-700 mb-1">Categoria:</label>
@@ -570,8 +591,8 @@
         </div>
 
         <div>
-          <label class="block font-bold text-stone-700 mb-1">Nome do Hotel (se aplicável):</label>
-          <input type="text" id="nvHotel" placeholder="Ex: Hotel Casa da Montanha" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+          <label class="block font-bold text-stone-700 mb-1">Nome do Hotel ou Cidade (se aplicável):</label>
+          <input type="text" id="nvHotel" placeholder="Ex: Hotel Casa da Montanha ou Gramado" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
         </div>
 
         <div>
@@ -582,6 +603,111 @@
         <div class="pt-2 flex justify-end gap-2">
           <button type="button" id="cancelNewVendorBtn" class="px-4 py-2 bg-stone-200 text-stone-700 font-bold rounded-xl hover:bg-stone-300">Cancelar</button>
           <button type="submit" class="px-5 py-2 bg-brandGreen text-white font-bold rounded-xl hover:bg-brandGreen-dark shadow-sm">Salvar Vendedor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: CADASTRAR NOVO HOTEL PARCEIRO -->
+  <div id="newHotelModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <h3 class="text-base font-bold text-brandGreen">Cadastrar Novo Hotel Parceiro</h3>
+        <button type="button" id="closeNewHotelModalBtn" class="text-stone-400 hover:text-stone-700 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="newHotelForm" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Nome do Hotel:</label>
+          <input type="text" id="nhNome" required placeholder="Ex: Hotel Ritta Höppner" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Endereço Completo:</label>
+          <input type="text" id="nhEndereco" required placeholder="Ex: Rua Pedro Candiago, 305 - Gramado" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Cidade:</label>
+            <select id="nhCidade" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+              <option value="Gramado">Gramado - RS</option>
+              <option value="Canela">Canela - RS</option>
+              <option value="Nova Petrópolis">Nova Petrópolis - RS</option>
+              <option value="Porto Alegre">Porto Alegre - RS</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Telefone / WhatsApp:</label>
+            <input type="text" id="nhTelefone" placeholder="(54) 3286-0000" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Contato / Concierge Responsável:</label>
+          <input type="text" id="nhContato" placeholder="Ex: Concierge Chefe ou Recepção Executiva" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" id="cancelNewHotelBtn" class="px-4 py-2 bg-stone-200 text-stone-700 font-bold rounded-xl hover:bg-stone-300">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-brandGreen text-white font-bold rounded-xl hover:bg-brandGreen-dark shadow-sm">Salvar Hotel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: CADASTRAR NOVA CERVEJARIA PARCEIRA -->
+  <div id="newBreweryModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <h3 class="text-base font-bold text-brandGreen">Cadastrar Cervejaria Parceira</h3>
+        <button type="button" id="closeNewBreweryModalBtn" class="text-stone-400 hover:text-stone-700 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="newBreweryForm" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Nome da Cervejaria:</label>
+          <input type="text" id="ncNome" required placeholder="Ex: Cervejaria Gramado Sunset" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Cidade:</label>
+            <select id="ncCidade" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+              <option value="Canela">Canela - RS</option>
+              <option value="Gramado">Gramado - RS</option>
+              <option value="Nova Petrópolis">Nova Petrópolis - RS</option>
+              <option value="Porto Alegre">Porto Alegre - RS</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Telefone:</label>
+            <input type="text" id="ncTelefone" placeholder="(54) 99999-0000" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Endereço:</label>
+          <input type="text" id="ncEndereco" placeholder="Av. das Hortênsias, 1000" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Possui Tour Guiado?</label>
+            <select id="ncTour" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+              <option value="true">Sim, possui visitação guiada</option>
+              <option value="false">Não, somente degustação</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">PIN do Validador:</label>
+            <input type="text" id="ncPin" value="1234" maxlength="6" class="w-full bg-stone-50 font-mono font-bold text-center rounded-xl p-2.5 border border-stone-300 outline-none">
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" id="cancelNewBreweryBtn" class="px-4 py-2 bg-stone-200 text-stone-700 font-bold rounded-xl hover:bg-stone-300">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-brandGreen text-white font-bold rounded-xl hover:bg-brandGreen-dark shadow-sm">Salvar Cervejaria</button>
         </div>
       </form>
     </div>
@@ -615,12 +741,24 @@
       const hoteisGrid = document.getElementById('hoteisGrid');
       const origensProgressBars = document.getElementById('origensProgressBars');
 
-      // Modal
+      // Modais
       const newVendorModal = document.getElementById('newVendorModal');
       const btnOpenNewVendorModal = document.getElementById('btnOpenNewVendorModal');
       const closeNewVendorModalBtn = document.getElementById('closeNewVendorModalBtn');
       const cancelNewVendorBtn = document.getElementById('cancelNewVendorBtn');
       const newVendorForm = document.getElementById('newVendorForm');
+
+      const newHotelModal = document.getElementById('newHotelModal');
+      const btnCadastrarHotel = document.getElementById('btnCadastrarHotel');
+      const closeNewHotelModalBtn = document.getElementById('closeNewHotelModalBtn');
+      const cancelNewHotelBtn = document.getElementById('cancelNewHotelBtn');
+      const newHotelForm = document.getElementById('newHotelForm');
+
+      const newBreweryModal = document.getElementById('newBreweryModal');
+      const btnCadastrarCervejaria = document.getElementById('btnCadastrarCervejaria');
+      const closeNewBreweryModalBtn = document.getElementById('closeNewBreweryModalBtn');
+      const cancelNewBreweryBtn = document.getElementById('cancelNewBreweryBtn');
+      const newBreweryForm = document.getElementById('newBreweryForm');
 
       // Estado Global
       let adminData = null;
@@ -661,30 +799,103 @@
         location.reload();
       });
 
-      // 2. ALTERNÂNCIA DE ABAS
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+      // 2. NAVEGAÇÃO POR ABAS
+      function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          if (b.dataset.tab === tabId) {
+            b.classList.add('active');
+          } else {
+            b.classList.remove('active');
+          }
+        });
 
-          btn.classList.add('active');
-          const targetId = btn.dataset.tab;
-          document.getElementById(targetId)?.classList.remove('hidden');
+        document.querySelectorAll('.tab-content').forEach(c => {
+          if (c.id === tabId) {
+            c.classList.remove('hidden');
+          } else {
+            c.classList.add('hidden');
+          }
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+
+      // CARDS CLICÁVEIS NO DASHBOARD -> NAVEGAM DIRETO PARA A ABA CORRESPONDENTE
+      document.querySelectorAll('.kpi-nav-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const target = card.dataset.target;
+          if (target) switchTab(target);
         });
       });
 
-      // 3. CARGA DE DADOS DA API
+      // 3. CARGA DE DADOS DA API E DO ARMAZENAMENTO LOCAL
       async function loadDashboardData() {
         try {
           const resp = await fetch('/api/admin');
           const data = await resp.json();
           if (data && data.sucesso) {
-            adminData = data;
-            renderAll(data);
+            adminData = mergeWithLocalData(data);
+            renderAll(adminData);
           }
         } catch (err) {
           console.error('Erro ao buscar dados admin:', err);
+          const fallbackData = mergeWithLocalData({
+            metricas: { faturamento_total: 700, pedidos_pagos: 4, cards_ativos: 4, validacoes_total: 2, origens: { hotel: 1, uber: 1, google: 1, instagram: 1, outros: 0 } },
+            pedidos: [],
+            cards: [],
+            validacoes: [],
+            vendedores: [],
+            leads: [],
+            cervejarias: []
+          });
+          renderAll(fallbackData);
         }
+      }
+
+      // Mescla com dados que a usuária acabou de criar no navegador para que NUNCA desapareçam
+      function mergeWithLocalData(apiData) {
+        // 1. Leads locais
+        const localLeads = JSON.parse(localStorage.getItem('brinda_leads_historico') || '[]');
+        const existingLeads = apiData.leads || [];
+        const leadsMap = new Map();
+        localLeads.forEach(l => leadsMap.set(l.telefone || l.nome, l));
+        existingLeads.forEach(l => leadsMap.set(l.telefone || l.nome, l));
+        apiData.leads = Array.from(leadsMap.values());
+
+        // 2. Vendedores locais
+        const localVend = JSON.parse(localStorage.getItem('brinda_vendedores_cadastrados') || '[]');
+        const existingVend = apiData.vendedores || [];
+        const vendMap = new Map();
+        localVend.forEach(v => vendMap.set(v.codigo?.toUpperCase(), v));
+        existingVend.forEach(v => vendMap.set(v.codigo?.toUpperCase(), v));
+
+        // Se houver algum lead de vendedor, garante que apareça também na tabela de Vendedores!
+        apiData.leads.forEach(l => {
+          if (l.tipo === 'vendedor') {
+            const first = (l.nome?.split(' ')[0] || 'VEND').replace(/[^a-zA-Z]/g, '').toUpperCase();
+            const code = `${first}01`;
+            if (!vendMap.has(code) && !Array.from(vendMap.values()).some(v => v.telefone === l.telefone)) {
+              vendMap.set(code, {
+                nome: l.nome,
+                codigo: code,
+                tipo: l.categoria || 'autonomo',
+                hotel_nome: l.empresa_nome || (l.cidade ? `Região: ${l.cidade}` : 'Autônomo'),
+                telefone: l.telefone,
+                status: 'ativo',
+                total_vendas: 0,
+                total_comissao: 0,
+                total_a_receber: 0,
+                total_pendente: 0
+              });
+            }
+          }
+        });
+
+        apiData.vendedores = Array.from(vendMap.values());
+        return apiData;
       }
 
       btnRefreshData?.addEventListener('click', () => {
@@ -721,19 +932,19 @@
         const total = (origens.hotel || 0) + (origens.uber || 0) + (origens.google || 0) + (origens.instagram || 0) + (origens.outros || 0) || 1;
 
         const items = [
-          { label: '🏨 Hotéis Parceiros', count: origens.hotel || 0, color: 'bg-emerald-500' },
-          { label: '🚗 Motoristas Uber / Táxi', count: origens.uber || 0, color: 'bg-amber-500' },
-          { label: '🔍 Google (Pesquisa Direta)', count: origens.google || 0, color: 'bg-blue-500' },
-          { label: '📸 Instagram / Redes', count: origens.instagram || 0, color: 'bg-rose-500' },
-          { label: '🤝 Outros / Indicação Amigo', count: origens.outros || 0, color: 'bg-stone-500' },
+          { label: '🏨 Hotéis Parceiros', count: origens.hotel || 0, color: 'bg-emerald-500', tab: 'tabHoteis' },
+          { label: '🚗 Motoristas Uber / Táxi', count: origens.uber || 0, color: 'bg-amber-500', tab: 'tabVendedores' },
+          { label: '🔍 Google (Pesquisa Direta)', count: origens.google || 0, color: 'bg-blue-500', tab: 'tabVendas' },
+          { label: '📸 Instagram / Redes', count: origens.instagram || 0, color: 'bg-rose-500', tab: 'tabVendas' },
+          { label: '🤝 Outros / Indicação Amigo', count: origens.outros || 0, color: 'bg-stone-500', tab: 'tabVendas' },
         ];
 
         origensProgressBars.innerHTML = items.map(item => {
           const pct = Math.round((item.count / total) * 100);
           return `
-            <div class="space-y-1">
+            <div class="space-y-1 cursor-pointer hover:bg-stone-50 p-1.5 rounded-xl transition-all" onclick="document.querySelector('[data-tab=\\'${item.tab}\\']').click()">
               <div class="flex justify-between font-bold text-stone-700">
-                <span>${item.label}</span>
+                <span class="hover:text-brandTerracotta transition-colors">${item.label} &rarr;</span>
                 <span>${item.count} venda(s) • ${pct}%</span>
               </div>
               <div class="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden">
@@ -804,8 +1015,11 @@
       // Cervejarias
       function renderCervejarias(cervejarias, validacoes) {
         if (!cervejariasSummaryGrid) return;
-        cervejariasSummaryGrid.innerHTML = (cervejarias || []).map(c => {
-          const totalVisitas = (validacoes || []).filter(v => v.cervejaria_id === c.id).length;
+        const localCerv = JSON.parse(localStorage.getItem('brinda_cervejarias_cadastradas') || '[]');
+        const allCerv = [...(cervejarias || []), ...localCerv.filter(lc => !(cervejarias || []).some(c => c.nome === lc.nome))];
+
+        cervejariasSummaryGrid.innerHTML = allCerv.map(c => {
+          const totalVisitas = (validacoes || []).filter(v => v.cervejaria_id === c.id || v.cervejaria_nome === c.nome).length;
           return `
             <div class="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm space-y-1">
               <span class="text-[0.65rem] uppercase font-bold text-stone-400 block">${c.cidade} - RS</span>
@@ -848,6 +1062,7 @@
             <td class="py-3 px-4">
               <strong class="text-stone-900 block">${v.nome}</strong>
               ${v.hotel_nome ? `<span class="text-[0.65rem] text-stone-500">${v.hotel_nome}</span>` : ''}
+              ${v.telefone ? `<span class="text-[0.65rem] text-brandGreen font-mono block">${v.telefone}</span>` : ''}
             </td>
             <td class="py-3 px-4 uppercase text-[0.68rem] font-bold text-stone-600">${v.tipo}</td>
             <td class="py-3 px-4 font-extrabold text-center text-sm">${v.total_vendas || 0}</td>
@@ -893,21 +1108,24 @@
       // Hotéis
       function renderHoteis(vendedores) {
         if (!hoteisGrid) return;
-        const hoteis = [
+        const localHoteis = JSON.parse(localStorage.getItem('brinda_hoteis_cadastrados') || '[]');
+        const defaultHoteis = [
           { nome: 'Hotel Casa da Montanha', endereco: 'Av. Borges de Medeiros, 3166 - Gramado', tel: '(54) 3286-5000', resp: 'Concierge Chefe' },
           { nome: 'Hotel Alpestre', endereco: 'Rua Ceará, 94 - Bairro Planalto - Gramado', tel: '(54) 3286-3555', resp: 'Recepção Executiva' },
           { nome: 'Grande Hotel Canela', endereco: 'Rua Getúlio Vargas, 300 - Canela', tel: '(54) 3282-1285', resp: 'Gerência de Atendimento' },
           { nome: 'Villa Bella Hotel & Spa', endereco: 'Rua Villa Bella, 125 - Gramado', tel: '(54) 3295-8100', resp: 'Equipe de Hospedagem' },
         ];
 
-        hoteisGrid.innerHTML = hoteis.map(h => `
-          <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 space-y-2">
+        const allHoteis = [...localHoteis, ...defaultHoteis.filter(dh => !localHoteis.some(lh => lh.nome === dh.nome))];
+
+        hoteisGrid.innerHTML = allHoteis.map(h => `
+          <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 space-y-2 hover:border-brandGold transition-all">
             <span class="text-xs uppercase font-bold text-brandTerracotta block">Parceiro Oficial</span>
             <h4 class="text-sm font-bold text-brandGreen">${h.nome}</h4>
             <p class="text-[0.7rem] text-stone-600">${h.endereco}</p>
             <div class="pt-2 border-t border-stone-200 text-[0.68rem] text-stone-500 space-y-0.5">
-              <p><strong>Contato:</strong> ${h.resp}</p>
-              <p><strong>Telefone:</strong> ${h.tel}</p>
+              <p><strong>Contato:</strong> ${h.resp || h.contato || 'Recepção'}</p>
+              <p><strong>Telefone:</strong> ${h.tel || h.telefone || '-'}</p>
             </div>
           </div>
         `).join('');
@@ -937,7 +1155,7 @@
               </select>
             </td>
             <td class="py-3 px-4 text-center">
-              <a href="https://wa.me/55${l.telefone.replace(/\\D/g, '')}?text=Ol%C3%A1%20${encodeURIComponent(l.nome)}%2C%20somos%20da%20BRINDA%20Serra!" target="_blank" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-[0.65rem] inline-flex items-center gap-1">
+              <a href="https://wa.me/55${(l.telefone || '').replace(/\\D/g, '')}?text=Ol%C3%A1%20${encodeURIComponent(l.nome)}%2C%20somos%20da%20BRINDA%20Serra!" target="_blank" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-[0.65rem] inline-flex items-center gap-1 shadow-xs">
                 <span>WhatsApp</span>
               </a>
             </td>
@@ -966,26 +1184,117 @@
       newVendorForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const nome = document.getElementById('nvNome').value.trim();
-        const codigo = document.getElementById('nvCodigo').value.trim();
+        const codigo = document.getElementById('nvCodigo').value.trim().toUpperCase();
         const tipo = document.getElementById('nvTipo').value;
         const hotel_nome = document.getElementById('nvHotel').value.trim();
         const telefone = document.getElementById('nvTelefone').value.trim();
+
+        const novoVendedorObj = {
+          id: Date.now(),
+          nome,
+          codigo,
+          tipo,
+          hotel_nome: hotel_nome || null,
+          telefone: telefone || null,
+          status: 'ativo',
+          total_vendas: 0,
+          total_comissao: 0,
+          total_a_receber: 0,
+          total_pendente: 0,
+          created_at: new Date().toISOString()
+        };
+
+        // Salva localmente
+        const localVend = JSON.parse(localStorage.getItem('brinda_vendedores_cadastrados') || '[]');
+        localVend.unshift(novoVendedorObj);
+        localStorage.setItem('brinda_vendedores_cadastrados', JSON.stringify(localVend));
+
+        // Envia para API
+        try {
+          await fetch('/api/admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'criar_vendedor', payload: novoVendedorObj })
+          });
+        } catch (err) {}
+
+        newVendorModal.classList.add('hidden');
+        newVendorForm.reset();
+        loadDashboardData();
+      });
+
+      // 6. MODAL DE NOVO HOTEL
+      btnCadastrarHotel?.addEventListener('click', () => newHotelModal.classList.remove('hidden'));
+      closeNewHotelModalBtn?.addEventListener('click', () => newHotelModal.classList.add('hidden'));
+      cancelNewHotelBtn?.addEventListener('click', () => newHotelModal.classList.add('hidden'));
+
+      newHotelForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nome = document.getElementById('nhNome').value.trim();
+        const endereco = document.getElementById('nhEndereco').value.trim();
+        const cidade = document.getElementById('nhCidade').value;
+        const telefone = document.getElementById('nhTelefone').value.trim();
+        const resp = document.getElementById('nhContato').value.trim();
+
+        const novoHotelObj = { nome, endereco: `${endereco} - ${cidade}`, cidade, tel: telefone, resp };
+
+        const localHoteis = JSON.parse(localStorage.getItem('brinda_hoteis_cadastrados') || '[]');
+        localHoteis.unshift(novoHotelObj);
+        localStorage.setItem('brinda_hoteis_cadastrados', JSON.stringify(localHoteis));
 
         try {
           await fetch('/api/admin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'criar_vendedor',
-              payload: { nome, codigo, tipo, hotel_nome, telefone }
-            })
+            body: JSON.stringify({ action: 'criar_hotel', payload: novoHotelObj })
           });
-          newVendorModal.classList.add('hidden');
-          newVendorForm.reset();
-          loadDashboardData();
-        } catch (err) {
-          alert('Erro ao salvar vendedor.');
-        }
+        } catch(e) {}
+
+        newHotelModal.classList.add('hidden');
+        newHotelForm.reset();
+        loadDashboardData();
+      });
+
+      // 7. MODAL DE NOVA CERVEJARIA
+      btnCadastrarCervejaria?.addEventListener('click', () => newBreweryModal.classList.remove('hidden'));
+      closeNewBreweryModalBtn?.addEventListener('click', () => newBreweryModal.classList.add('hidden'));
+      cancelNewBreweryBtn?.addEventListener('click', () => newBreweryModal.classList.add('hidden'));
+
+      newBreweryForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nome = document.getElementById('ncNome').value.trim();
+        const cidade = document.getElementById('ncCidade').value;
+        const endereco = document.getElementById('ncEndereco').value.trim();
+        const telefone = document.getElementById('ncTelefone').value.trim();
+        const tour_guiado = document.getElementById('ncTour').value === 'true';
+        const pin_acesso = document.getElementById('ncPin').value.trim();
+
+        const novaCervObj = {
+          id: Date.now(),
+          nome,
+          cidade,
+          endereco,
+          telefone,
+          tour_guiado,
+          pin_acesso,
+          status: 'ativo'
+        };
+
+        const localCerv = JSON.parse(localStorage.getItem('brinda_cervejarias_cadastradas') || '[]');
+        localCerv.unshift(novaCervObj);
+        localStorage.setItem('brinda_cervejarias_cadastradas', JSON.stringify(localCerv));
+
+        try {
+          await fetch('/api/admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'criar_cervejaria', payload: novaCervObj })
+          });
+        } catch(e) {}
+
+        newBreweryModal.classList.add('hidden');
+        newBreweryForm.reset();
+        loadDashboardData();
       });
 
       // Inicializa

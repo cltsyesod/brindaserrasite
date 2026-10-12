@@ -1427,6 +1427,42 @@ function initLeadModals() {
         });
       } catch (err) {}
 
+      // Salva no histórico local para exibição instantânea no painel administrativo
+      try {
+        const localLeads = JSON.parse(localStorage.getItem('brinda_leads_historico') || '[]');
+        localLeads.unshift({
+          id: `LEAD-${Date.now()}`,
+          tipo: 'vendedor',
+          nome: vName,
+          empresa_nome: vCity ? `Parceiro (${vCity})` : 'Autônomo',
+          telefone: vPhoneVal,
+          cidade: vCity,
+          categoria: vType,
+          status: 'novo',
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('brinda_leads_historico', JSON.stringify(localLeads));
+
+        const localVend = JSON.parse(localStorage.getItem('brinda_vendedores_cadastrados') || '[]');
+        const codeNum = Math.floor(10 + Math.random() * 89);
+        const code = (vName.split(' ')[0] || 'VEND').replace(/[^a-zA-Z]/g, '').toUpperCase() + codeNum;
+        localVend.unshift({
+          id: Date.now(),
+          nome: vName,
+          codigo: code,
+          tipo: vType,
+          hotel_nome: vCity ? `Região: ${vCity}` : null,
+          telefone: vPhoneVal,
+          status: 'ativo',
+          total_vendas: 0,
+          total_comissao: 0,
+          total_a_receber: 0,
+          total_pendente: 0,
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('brinda_vendedores_cadastrados', JSON.stringify(localVend));
+      } catch (e) {}
+
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.innerText = 'Enviar Cadastro de Vendedor';
@@ -1472,6 +1508,22 @@ function initLeadModals() {
           })
         });
       } catch (err) {}
+
+      try {
+        const localLeads = JSON.parse(localStorage.getItem('brinda_leads_historico') || '[]');
+        localLeads.unshift({
+          id: `LEAD-${Date.now()}`,
+          tipo: 'cervejaria',
+          nome: bContact,
+          empresa_nome: bName,
+          telefone: bPhoneVal,
+          cidade: bCity,
+          categoria: 'Fábrica e Tap House',
+          status: 'novo',
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('brinda_leads_historico', JSON.stringify(localLeads));
+      } catch (e) {}
 
       if (submitBtn) {
         submitBtn.disabled = false;
