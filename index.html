@@ -97,11 +97,7 @@
       </nav>
 
       <!-- Botão CTA Cabeçalho -->
-      <div class="hidden sm:flex items-center gap-2.5">
-        <button type="button" class="open-client-modal border border-brandGreen/60 text-brandGreen hover:bg-brandGreen hover:text-white px-3.5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer">
-          <span>👤</span>
-          <span>Minha Conta</span>
-        </button>
+      <div class="hidden sm:flex items-center gap-3">
         <a href="#brinda-card" class="btn-primary text-sm !py-2.5 !px-5 shadow-sm">
           <span>Adquirir BRINDA Card</span>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
@@ -122,10 +118,7 @@
       <a href="#vinicolas" class="mobile-nav-link block py-2 text-base font-semibold text-brandGreen hover:text-brandTerracotta">Vinícolas</a>
       <a href="#chocolates" class="mobile-nav-link block py-2 text-base font-semibold text-brandGreen hover:text-brandTerracotta">Chocolates</a>
       <a href="#contato" class="mobile-nav-link block py-2 text-base font-semibold text-brandGreen hover:text-brandTerracotta">Contato</a>
-      <div class="pt-3 border-t border-brandGreen/10 space-y-2">
-        <button type="button" class="open-client-modal block w-full text-center py-2.5 px-4 rounded-xl border border-brandGreen text-brandGreen font-bold text-sm hover:bg-brandGreen hover:text-white transition-all">
-          👤 Minha Conta (Meus Passes)
-        </button>
+      <div class="pt-3 border-t border-brandGreen/10">
         <a href="#brinda-card" class="btn-primary w-full text-center text-sm">Adquirir BRINDA Card</a>
       </div>
     </div>
@@ -640,6 +633,14 @@
             <span>⚡ Envio Imediato</span>
             <span class="hidden sm:inline">•</span>
             <span>📋 Validade de 6 Meses</span>
+          </div>
+
+          <!-- Acesso à Área do Cliente / Minha Conta -->
+          <div class="text-center pt-3 border-t border-stone-200 mt-2">
+            <span class="text-xs text-stone-600">Já possui o BRINDA CARD?</span>
+            <button type="button" class="open-client-modal text-xs font-bold text-brandTerracotta hover:text-brandGreen underline ml-1 cursor-pointer">
+              Consulte seu saldo e cartões aqui
+            </button>
           </div>
 
         </div>
@@ -1901,6 +1902,7 @@
           <ul class="space-y-1.5 text-xs sm:text-sm text-stone-300">
             <li><a href="#inicio" class="hover:text-brandPeach">Início</a></li>
             <li><a href="#brinda-card" class="hover:text-brandPeach font-bold text-brandGold-light">BRINDA Card</a></li>
+            <li><button type="button" class="open-client-modal hover:text-brandPeach text-left cursor-pointer">Minha Conta (Meus Passes)</button></li>
             <li><a href="#cervejarias" class="hover:text-brandPeach">Cervejarias Participantes</a></li>
             <li><a href="#vinicolas" class="hover:text-brandPeach">Vinícolas & Tours</a></li>
             <li><a href="#chocolates" class="hover:text-brandPeach">Chocolates Artesanais</a></li>
