@@ -155,6 +155,11 @@
             <span class="hidden sm:inline">Atualizar Dados</span>
           </button>
 
+          <button type="button" id="btnRestaurarCadastros" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-200 font-bold flex items-center gap-1.5 transition-all shadow-sm text-xs" title="Restaurar registros padrão ou excluídos por teste">
+            <span>↺</span>
+            <span class="hidden md:inline">Restaurar Registros</span>
+          </button>
+
           <a href="index.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-brandCream text-brandGreen font-bold hover:bg-white transition-all shadow-sm flex items-center gap-1">
             <span>Portal</span>
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
@@ -904,17 +909,10 @@
 
       // Mescla com dados que a usuária acabou de criar no navegador para que NUNCA desapareçam
       function mergeWithLocalData(apiData) {
-        // 1. LEADS B2B
+        // 1. LEADS B2B (servidor primeiro, depois local para que cadastros locais nunca sejam sobrescritos)
         const localLeads = JSON.parse(localStorage.getItem('brinda_leads_historico') || '[]');
         const existingLeads = apiData.leads || [];
         const leadsMap = new Map();
-
-        localLeads.forEach(l => {
-          const key = String(l.id || l.telefone || l.nome).toLowerCase();
-          if (!isExcluido('leads', key) && !isExcluido('leads', l.id) && !isExcluido('leads', l.nome)) {
-            leadsMap.set(key, l);
-          }
-        });
 
         existingLeads.forEach(l => {
           const key = String(l.id || l.telefone || l.nome).toLowerCase();
@@ -923,14 +921,21 @@
           }
         });
 
+        localLeads.forEach(l => {
+          const key = String(l.id || l.telefone || l.nome).toLowerCase();
+          if (!isExcluido('leads', key) && !isExcluido('leads', l.id) && !isExcluido('leads', l.nome)) {
+            leadsMap.set(key, l);
+          }
+        });
+
         apiData.leads = Array.from(leadsMap.values());
 
-        // 2. VENDEDORES
+        // 2. VENDEDORES (servidor primeiro, depois local para que vendedores cadastrados pela usuária nunca sumam)
         const localVend = JSON.parse(localStorage.getItem('brinda_vendedores_cadastrados') || '[]');
         const existingVend = apiData.vendedores || [];
         const vendMap = new Map();
 
-        localVend.forEach(v => {
+        existingVend.forEach(v => {
           const key = String(v.codigo || v.nome).trim().toUpperCase();
           if (!isExcluido('vendedores', key) && !isExcluido('vendedores', v.nome)) {
             v.status = getStatusEfetivo(v.codigo, v.status);
@@ -938,7 +943,7 @@
           }
         });
 
-        existingVend.forEach(v => {
+        localVend.forEach(v => {
           const key = String(v.codigo || v.nome).trim().toUpperCase();
           if (!isExcluido('vendedores', key) && !isExcluido('vendedores', v.nome)) {
             v.status = getStatusEfetivo(v.codigo, v.status);
@@ -1033,6 +1038,7 @@
 
         // 4. HOTÉIS
         const localHoteis = JSON.parse(localStorage.getItem('brinda_hoteis_cadastrados') || '[]');
+        const existingHoteis = apiData.hoteis || [];
         const defaultHoteis = [
           { nome: 'Hotel Casa da Montanha', endereco: 'Av. Borges de Medeiros, 3166 - Gramado', tel: '(54) 3286-5000', resp: 'Concierge Chefe', status: 'ativo' },
           { nome: 'Hotel Alpestre', endereco: 'Rua Ceará, 94 - Bairro Planalto - Gramado', tel: '(54) 3286-3555', resp: 'Recepção Executiva', status: 'ativo' },
@@ -1045,6 +1051,13 @@
           if (!isExcluido('hoteis', key)) {
             h.status = getStatusEfetivo(h.nome, h.status);
             hotelMap.set(key, h);
+          }
+        });
+        existingHoteis.forEach(h => {
+          const key = h.nome.trim().toLowerCase();
+          if (!isExcluido('hoteis', key)) {
+            h.status = getStatusEfetivo(h.nome, h.status || 'ativo');
+            hotelMap.set(key, { ...hotelMap.get(key), ...h });
           }
         });
         localHoteis.forEach(h => {
@@ -1072,6 +1085,15 @@
         loadDashboardData().then(() => {
           setTimeout(() => btnRefreshData.classList.remove('animate-spin'), 600);
         });
+      });
+
+      document.getElementById('btnRestaurarCadastros')?.addEventListener('click', () => {
+        if (confirm('Deseja restaurar todos os cadastros originais e redefinir exclusões de teste?')) {
+          localStorage.removeItem('brinda_exclusoes_admin');
+          localStorage.removeItem('brinda_status_overrides');
+          loadDashboardData();
+          alert('✓ Todos os cadastros e itens foram restaurados com sucesso!');
+        }
       });
 
       // Formatação de Moeda

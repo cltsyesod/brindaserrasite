@@ -232,19 +232,62 @@ module.exports = async function handler(req, res) {
       cervejarias = resCerv.data || [];
     }
 
-    // Exemplos de demonstração que NÃO substituem os dados reais, apenas somam se não existirem
+    // 1. Leads Iniciais de Demonstração e Histórico (garante que nada seja perdido)
+    const mockLeadsIniciais = [
+      {
+        id: 'LEAD-01',
+        tipo: 'vendedor',
+        nome: 'Roberto Carlos Silveira',
+        empresa_nome: 'Motorista Executivo Gramado',
+        telefone: '(54) 99655-1122',
+        cidade: 'Gramado - RS',
+        categoria: 'Motorista / Agência',
+        status: 'novo',
+        created_at: new Date(Date.now() - 3600000 * 4).toISOString()
+      },
+      {
+        id: 'LEAD-02',
+        tipo: 'cervejaria',
+        nome: 'Fábio Goulart',
+        empresa_nome: 'Cervejaria Gramado Sunset',
+        telefone: '(54) 98111-7788',
+        cidade: 'Gramado - RS',
+        categoria: 'Fábrica e Tap House',
+        status: 'em_contato',
+        created_at: new Date(Date.now() - 3600000 * 24).toISOString()
+      },
+      {
+        id: 'LEAD-03',
+        tipo: 'vendedor',
+        nome: 'Camila Rossi',
+        empresa_nome: 'Promotora Turística Serra',
+        telefone: '(54) 99188-3344',
+        cidade: 'Gramado - RS',
+        categoria: 'autonomo',
+        status: 'aprovado',
+        created_at: new Date(Date.now() - 3600000 * 1).toISOString()
+      }
+    ];
+
+    const leadsMap = new Map();
+    mockLeadsIniciais.forEach(l => leadsMap.set(l.telefone || l.nome, l));
+    leads.forEach(l => leadsMap.set(l.telefone || l.nome, l));
+    const leadsFinal = Array.from(leadsMap.values());
+
+    // 2. Vendedores: combina vendedores padrão, leads de vendedores e cadastros reais
     const mockVendedoresExemplo = [
       { id: 'V-MOCK-1', nome: 'Pedro da Silva (Motorista Uber)', codigo: 'PEDRO01', tipo: 'uber', hotel_nome: null, telefone: '(54) 99812-4455', status: 'ativo' },
       { id: 'V-MOCK-2', nome: 'Concierge Casa da Montanha', codigo: 'HOTEL01', tipo: 'hotel', hotel_nome: 'Hotel Casa da Montanha', telefone: '(54) 3286-5000', status: 'ativo' },
-      { id: 'V-MOCK-3', nome: 'Lucas Promotor de Turismo', codigo: 'LUCASPROMO', tipo: 'autonomo', hotel_nome: null, telefone: '(54) 99123-9988', status: 'ativo' }
+      { id: 'V-MOCK-3', nome: 'Lucas Promotor de Turismo', codigo: 'LUCASPROMO', tipo: 'autonomo', hotel_nome: null, telefone: '(54) 99123-9988', status: 'ativo' },
+      { id: 'V-MOCK-4', nome: 'Camila Rossi (Promotora)', codigo: 'CAMILA01', tipo: 'autonomo', hotel_nome: 'Região: Gramado - RS', telefone: '(54) 99188-3344', status: 'ativo' },
+      { id: 'V-MOCK-5', nome: 'Roberto Carlos Silveira', codigo: 'ROBERTO01', tipo: 'uber', hotel_nome: 'Motorista Executivo Gramado', telefone: '(54) 99655-1122', status: 'ativo' }
     ];
 
     const vendedoresMap = new Map();
-    // 1. Vendedores reais de vendedores
+    mockVendedoresExemplo.forEach(mv => vendedoresMap.set(mv.codigo?.toUpperCase(), mv));
     vendedores.forEach(v => vendedoresMap.set(v.codigo?.toUpperCase() || v.nome?.toUpperCase(), v));
 
-    // 2. Leads do tipo 'vendedor': se cadastrou no site, entra DIRETO nos vendedores
-    leads.forEach(l => {
+    leadsFinal.forEach(l => {
       if (l.tipo === 'vendedor' || !l.tipo) {
         const primeiroNome = (l.nome?.trim().split(' ')[0] || 'VEND').replace(/[^a-zA-Z]/g, '').toUpperCase();
         const code = `${primeiroNome}01`;
@@ -263,21 +306,23 @@ module.exports = async function handler(req, res) {
       }
     });
 
-    // 3. Adiciona exemplos se lista estiver com poucos
-    if (vendedoresMap.size < 3) {
-      mockVendedoresExemplo.forEach(mv => {
-        if (!vendedoresMap.has(mv.codigo)) vendedoresMap.set(mv.codigo, mv);
-      });
-    }
-
     const vendedoresFinal = Array.from(vendedoresMap.values());
 
-    // Cervejarias: combina oficiais + leads do tipo cervejaria para aparecerem na lista
+    // 3. Cervejarias: combina oficiais, leads e cadastros
+    const defaultCervs = [
+      { id: 1, nome: 'Cervejaria Farol', cidade: 'Canela', status: 'ativo', endereco: 'R. Severino Inocente Zini, 150', telefone: '(54) 3282-7007' },
+      { id: 2, nome: 'Cervejaria Gramado Bier', cidade: 'Gramado', status: 'ativo', endereco: 'Av. das Hortênsias, 5000', telefone: '(54) 3286-1234' },
+      { id: 3, nome: 'Cervejaria Rasen Bier', cidade: 'Gramado', status: 'ativo', endereco: 'Rua Caxias do Sul, 356', telefone: '(54) 3286-6888' },
+      { id: 4, nome: 'Cervejaria Edelbrau', cidade: 'Nova Petrópolis', status: 'ativo', endereco: 'Av. 15 de Novembro, 4024', telefone: '(54) 3281-4555' },
+      { id: 5, nome: 'Cervejaria Kraustin Bier', cidade: 'Canela', status: 'ativo', endereco: 'Rua Borges de Medeiros, 800', telefone: '(54) 3282-9900' },
+      { id: 6, nome: 'Cervejaria Gramado Sunset', cidade: 'Gramado', status: 'ativo', endereco: 'Contato: Fábio Goulart', telefone: '(54) 98111-7788' }
+    ];
+
     const cervejariasMap = new Map();
+    defaultCervs.forEach(c => cervejariasMap.set(c.nome.toLowerCase(), c));
     cervejarias.forEach(c => cervejariasMap.set(c.nome?.toLowerCase(), c));
 
-    // Se houver lead de cervejaria, adiciona na lista para que a administradora veja e aprove/gerencie
-    leads.forEach(l => {
+    leadsFinal.forEach(l => {
       if (l.tipo === 'cervejaria') {
         const bName = l.empresa_nome || (l.nome.includes('Cervejaria') ? l.nome : `Cervejaria ${l.nome}`);
         if (!cervejariasMap.has(bName.toLowerCase())) {
@@ -289,29 +334,24 @@ module.exports = async function handler(req, res) {
             telefone: l.telefone,
             tour_guiado: false,
             pin_acesso: '1234',
-            status: l.status === 'aprovado' ? 'ativo' : 'ativo', // exibe ativa para testes
+            status: 'ativo',
             created_at: l.created_at
           });
         }
       }
     });
 
-    if (cervejariasMap.size < 5) {
-      const defaultCervs = [
-        { id: 1, nome: 'Cervejaria Farol', cidade: 'Canela', status: 'ativo' },
-        { id: 2, nome: 'Cervejaria Gramado Bier', cidade: 'Gramado', status: 'ativo' },
-        { id: 3, nome: 'Cervejaria Rasen Bier', cidade: 'Gramado', status: 'ativo' },
-        { id: 4, nome: 'Cervejaria Edelbrau', cidade: 'Nova Petrópolis', status: 'ativo' },
-        { id: 5, nome: 'Cervejaria Kraustin Bier', cidade: 'Canela', status: 'ativo' }
-      ];
-      defaultCervs.forEach(c => {
-        if (!cervejariasMap.has(c.nome.toLowerCase())) cervejariasMap.set(c.nome.toLowerCase(), c);
-      });
-    }
-
     const cervejariasFinal = Array.from(cervejariasMap.values());
 
-    // Pedidos e Cards de demonstração caso banco esteja zerado
+    // 4. Hotéis Parceiros
+    const defaultHoteis = [
+      { id: 1, nome: 'Hotel Casa da Montanha', endereco: 'Av. Borges de Medeiros, 3166 - Gramado', tel: '(54) 3286-5000', resp: 'Concierge Chefe', status: 'ativo' },
+      { id: 2, nome: 'Hotel Alpestre', endereco: 'Rua Ceará, 94 - Bairro Planalto - Gramado', tel: '(54) 3286-3555', resp: 'Recepção Executiva', status: 'ativo' },
+      { id: 3, nome: 'Grande Hotel Canela', endereco: 'Rua Getúlio Vargas, 300 - Canela', tel: '(54) 3282-1285', resp: 'Gerência de Atendimento', status: 'ativo' },
+      { id: 4, nome: 'Villa Bella Hotel & Spa', endereco: 'Rua Villa Bella, 125 - Gramado', tel: '(54) 3295-8100', resp: 'Equipe de Hospedagem', status: 'ativo' },
+    ];
+
+    // 5. Pedidos de demonstração e histórico
     if (pedidos.length === 0) {
       pedidos = [
         {
@@ -345,20 +385,57 @@ module.exports = async function handler(req, res) {
           origem_tipo: 'uber',
           origem_detalhe: 'Motorista Pedro Silva',
           vendedor_codigo: 'PEDRO01'
+        },
+        {
+          id: 'BS-ORD-9019',
+          created_at: new Date(Date.now() - 3600000 * 18).toISOString(),
+          pagador_nome: 'Rodrigo Fontana Alencar',
+          pagador_cpf: '789.123.456-00',
+          plano_cervejaria: 'brinda_bem',
+          taxa_adesao: 10.00,
+          valor_unitario_exp: 130.00,
+          qtd_cards: 1,
+          valor_total: 140.00,
+          forma_pagamento: 'PIX',
+          status: 'pago',
+          origem_tipo: 'google',
+          origem_detalhe: 'Pesquisa Direta',
+          vendedor_codigo: null
+        },
+        {
+          id: 'BS-ORD-9018',
+          created_at: new Date(Date.now() - 3600000 * 36).toISOString(),
+          pagador_nome: 'Juliana Paes Cavalcante',
+          pagador_cpf: '333.444.555-88',
+          plano_cervejaria: 'base',
+          taxa_adesao: 10.00,
+          valor_unitario_exp: 0.00,
+          qtd_cards: 1,
+          valor_total: 10.00,
+          forma_pagamento: 'PIX',
+          status: 'pago',
+          origem_tipo: 'instagram',
+          origem_detalhe: '@brindaserra',
+          vendedor_codigo: null
         }
       ];
     }
 
+    // 6. Cards de demonstração e histórico
     if (cards.length === 0) {
       cards = [
         { id: 'CARD-MOCK-1', codigo_passe: 'BS-VIP-12345', titular_nome: 'TURISTA VIP DE TESTE', titular_cpf: '11111111111', modalidade: 'brinda_bem', saldo_total: 3, saldo_restante: 2, status: 'ativo', data_validade_formatada: '31/12/2026', qr_token: 'QR-TESTE-12345' },
-        { id: 'CARD-MOCK-2', codigo_passe: 'BS-VIP-45891', titular_nome: 'Marcos Vinicius Santos', titular_cpf: '458.912.830-11', modalidade: 'brinda_bem', saldo_total: 3, saldo_restante: 3, status: 'ativo', data_validade_formatada: '12/10/2026', qr_token: 'BS-45891283011-9021' }
+        { id: 'CARD-MOCK-2', codigo_passe: 'BS-VIP-45891', titular_nome: 'Marcos Vinicius Santos', titular_cpf: '458.912.830-11', modalidade: 'brinda_bem', saldo_total: 3, saldo_restante: 3, status: 'ativo', data_validade_formatada: '12/10/2026', qr_token: 'BS-45891283011-9021' },
+        { id: 'CARD-MOCK-3', codigo_passe: 'BS-VIP-61234', titular_nome: 'Carla Beatriz Menezes', titular_cpf: '612.345.980-44', modalidade: 'brinda_premium', saldo_total: 5, saldo_restante: 4, status: 'ativo', data_validade_formatada: '12/10/2026', qr_token: 'BS-61234598044-9020' },
+        { id: 'CARD-MOCK-4', codigo_passe: 'BS-VIP-61235', titular_nome: 'Lucas Menezes (Convidado)', titular_cpf: '612.999.000-22', modalidade: 'brinda_premium', saldo_total: 5, saldo_restante: 5, status: 'ativo', data_validade_formatada: '12/10/2026', qr_token: 'BS-61299900022-9020' }
       ];
     }
 
+    // 7. Validações
     if (validacoes.length === 0) {
       validacoes = [
-        { id: 'VAL-001', titular_cpf: '11111111111', titular_nome: 'TURISTA VIP DE TESTE', cervejaria_id: 1, cervejaria_nome: 'Cervejaria Farol', saldo_anterior: 3, saldo_pos: 2, validado_em: new Date(Date.now() - 1800000).toISOString(), validado_por: 'farol' }
+        { id: 'VAL-001', titular_cpf: '11111111111', titular_nome: 'TURISTA VIP DE TESTE', cervejaria_id: 1, cervejaria_nome: 'Cervejaria Farol', saldo_anterior: 3, saldo_pos: 2, validado_em: new Date(Date.now() - 1800000).toISOString(), validado_por: 'farol' },
+        { id: 'VAL-002', titular_cpf: '612.345.980-44', titular_nome: 'Carla Beatriz Menezes', cervejaria_id: 3, cervejaria_nome: 'Cervejaria Rasen Bier', saldo_anterior: 5, saldo_pos: 4, validado_em: new Date(Date.now() - 7200000).toISOString(), validado_por: 'rasen' }
       ];
     }
 
@@ -409,7 +486,7 @@ module.exports = async function handler(req, res) {
         pedidos_pagos: totalPedidosPagos,
         cards_ativos: totalCardsAtivos,
         validacoes_total: totalValidacoes,
-        leads_total: leads.length,
+        leads_total: leadsFinal.length,
         origens: origensContagem
       },
       pedidos,
@@ -417,8 +494,9 @@ module.exports = async function handler(req, res) {
       validacoes,
       vendedores: vendedoresResumo,
       comissoes,
-      leads,
-      cervejarias: cervejariasFinal
+      leads: leadsFinal,
+      cervejarias: cervejariasFinal,
+      hoteis: defaultHoteis
     });
 
   } catch (err) {
