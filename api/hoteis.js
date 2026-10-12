@@ -1,7 +1,7 @@
 // api/hoteis.js
 // Endpoint Serverless Vercel: Gestão e Consulta Dinâmica de Hotéis Parceiros
-const { getSupabaseClient, isSupabaseConfigured } = require('./supabase');
-const { store, getEffectiveStatus, setOverride, addExclusao, addHotel, isExcluido } = require('./store');
+const { getSupabaseClient, isSupabaseConfigured } = require('../lib/supabase');
+const { store, getEffectiveStatus, setOverride, addExclusao, addHotel, isExcluido } = require('../lib/store');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

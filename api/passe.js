@@ -1,7 +1,7 @@
 // api/passe.js
 // Endpoint Serverless Vercel: Consulta direta de passe individual por token/código para a tela do celular
 const QRCode = require('qrcode');
-const { getSupabaseClient, isSupabaseConfigured } = require('./supabase');
+const { getSupabaseClient, isSupabaseConfigured } = require('../lib/supabase');
 
 async function generateQrDataUri(payload) {
   try {

@@ -1,7 +1,7 @@
 // api/checkout.js
 // Endpoint Serverless Vercel: Processamento de Checkout e Emissão do BRINDA CARD no Supabase
 const QRCode = require('qrcode');
-const { getSupabaseClient, isSupabaseConfigured } = require('./supabase');
+const { getSupabaseClient, isSupabaseConfigured } = require('../lib/supabase');
 
 async function generateQrDataUri(payload) {
   try {

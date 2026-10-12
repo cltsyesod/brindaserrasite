@@ -1,7 +1,7 @@
 // api/cervejarias.js
 // Endpoint Serverless Vercel: Listagem das Cervejarias Parceiras Ativas
-const { getSupabaseClient, isSupabaseConfigured } = require('./supabase');
-const { store, getEffectiveStatus, isExcluido } = require('./store');
+const { getSupabaseClient, isSupabaseConfigured } = require('../lib/supabase');
+const { store, getEffectiveStatus, isExcluido } = require('../lib/store');
 
 const fallbackCervejarias = [
   { id: 1, nome: "Cervejaria Farol", cidade: "Canela", slug: "farol", tour_guiado: true, status: 'ativo' },

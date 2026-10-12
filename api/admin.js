@@ -1,6 +1,6 @@
 // api/admin.js
 // Endpoint Serverless Vercel: Painel Administrativo de Controle e Auditoria
-const { getSupabaseClient, isSupabaseConfigured } = require('./supabase');
+const { getSupabaseClient, isSupabaseConfigured } = require('../lib/supabase');
 const { 
   store, 
   getEffectiveStatus, 
@@ -10,7 +10,7 @@ const {
   addVendedor,
   addHotel,
   addCervejaria
-} = require('./store');
+} = require('../lib/store');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

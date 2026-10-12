@@ -1,6 +1,6 @@
 // api/cliente.js
 // Endpoint Serverless Vercel: Consulta de Minha Conta / Passes do Cliente no Supabase
-const { getSupabaseClient, isSupabaseConfigured } = require('./supabase');
+const { getSupabaseClient, isSupabaseConfigured } = require('../lib/supabase');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

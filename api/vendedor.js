@@ -1,6 +1,6 @@
 // api/vendedor.js
 // Endpoint Serverless Vercel: Consulta do Painel do Vendedor / Promotor no Supabase
-const { getSupabaseClient, isSupabaseConfigured } = require('./supabase');
+const { getSupabaseClient, isSupabaseConfigured } = require('../lib/supabase');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

@@ -1,6 +1,6 @@
 // api/validador.js
 // Endpoint Serverless Vercel: Validador de Experiências com Regra Anti-Repetição no Supabase
-const { getSupabaseClient, isSupabaseConfigured } = require('./supabase');
+const { getSupabaseClient, isSupabaseConfigured } = require('../lib/supabase');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

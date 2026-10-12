@@ -1,7 +1,7 @@
 // api/leads.js
 // Endpoint Serverless Vercel: Captação de Leads B2B (Promotores, Motoristas e Cervejarias)
-const { getSupabaseClient, isSupabaseConfigured } = require('./supabase');
-const { addLead, addVendedor, addCervejaria } = require('./store');
+const { getSupabaseClient, isSupabaseConfigured } = require('../lib/supabase');
+const { addLead, addVendedor, addCervejaria } = require('../lib/store');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
