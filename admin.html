@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRINDA SERRA • Painel Administrativo Geral</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+
+  <!-- Fonte Carlito / Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandGreen: {
+              DEFAULT: '#3F4A3E',
+              dark: '#2D362C',
+              light: '#536152'
+            },
+            brandCream: {
+              DEFAULT: '#F4EEE4',
+              soft: '#FAF6EF',
+              darker: '#E7DEC9'
+            },
+            brandTerracotta: {
+              DEFAULT: '#C96C4A',
+              hover: '#B55D3D',
+              light: '#DF8868'
+            },
+            brandGold: '#C9A86A',
+          },
+          fontFamily: {
+            calibri: ['Calibri', 'Carlito', 'Candara', 'Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Calibri', 'Carlito', 'Candara', sans-serif;
+      background-color: #F8F5EE;
+      color: #232722;
+      min-height: 100vh;
+    }
+    .tab-btn.active {
+      background-color: #3F4A3E;
+      color: #FAF6EF;
+      font-weight: 700;
+    }
+    .badge-approved {
+      background-color: #E8F5E9;
+      color: #2E7D32;
+      border: 1px solid #A5D6A7;
+    }
+    .badge-pending {
+      background-color: #FFF8E1;
+      color: #B78103;
+      border: 1px solid #FFE082;
+    }
+    /* Estilos de Impressão de Relatórios */
+    @media print {
+      header, .no-print, nav, #loginSection {
+        display: none !important;
+      }
+      main {
+        width: 100% !important;
+        padding: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body class="selection:bg-brandTerracotta selection:text-white">
+
+  <!-- ========================================== -->
+  <!-- TELA 1: LOGIN ADMINISTRATIVO               -->
+  <!-- ========================================== -->
+  <section id="loginSection" class="min-h-screen flex items-center justify-center p-4 bg-brandGreen-dark">
+    <div class="max-w-md w-full bg-brandCream rounded-3xl p-7 sm:p-8 shadow-2xl border-2 border-brandGold space-y-6">
+      
+      <div class="text-center space-y-2">
+        <img src="assets/logo.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-brandGold mx-auto object-cover shadow-md">
+        <h1 class="text-2xl font-black text-brandGreen tracking-tight">BRINDA SERRA</h1>
+        <p class="text-xs uppercase tracking-widest text-brandTerracotta font-bold">Painel de Controle da Administração</p>
+        <p class="text-xs text-stone-600">Área restrita de gestão executiva, vendas, comissões e parceiros.</p>
+      </div>
+
+      <form id="adminLoginForm" class="space-y-4">
+        <div>
+          <label for="adminUser" class="block text-xs uppercase font-bold text-brandGreen mb-1">Usuário:</label>
+          <input type="text" id="adminUser" required placeholder="admin" value="admin"
+            class="w-full bg-white text-brandGreen font-bold text-sm rounded-xl px-4 py-3 border border-stone-300 focus:border-brandGold focus:ring-1 focus:ring-brandGold outline-none">
+        </div>
+
+        <div>
+          <label for="adminPass" class="block text-xs uppercase font-bold text-brandGreen mb-1">Senha:</label>
+          <input type="password" id="adminPass" required placeholder="123" value="123"
+            class="w-full bg-white text-brandGreen font-bold text-sm rounded-xl px-4 py-3 border border-stone-300 focus:border-brandGold focus:ring-1 focus:ring-brandGold outline-none">
+        </div>
+
+        <div id="loginError" class="hidden p-3 bg-red-100 border border-red-300 text-red-800 text-xs font-semibold rounded-xl text-center">
+          ⚠️ Credenciais inválidas. Verifique os dados abaixo.
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-brandGreen hover:bg-brandGreen-dark text-white font-extrabold text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+          <span>Acessar Painel Executivo</span>
+          <span>&rarr;</span>
+        </button>
+      </form>
+
+      <div class="pt-4 border-t border-stone-200 text-center space-y-2">
+        <div class="p-3 bg-stone-100 rounded-xl text-xs text-stone-600 space-y-1">
+          <p class="font-bold text-brandGreen">🔑 Credenciais de Acesso Oficial:</p>
+          <p>Usuário: <code class="text-brandTerracotta font-mono font-bold">admin</code> | Senha: <code class="text-brandTerracotta font-mono font-bold">123</code></p>
+        </div>
+        <a href="index.html" class="inline-block text-xs text-stone-500 hover:text-brandGreen hover:underline pt-1">
+          &larr; Voltar ao Portal BRINDA Serra
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- TELA 2: DASHBOARD ADMINISTRATIVO COMPLETO   -->
+  <!-- ========================================== -->
+  <div id="dashboardSection" class="hidden min-h-screen flex flex-col">
+
+    <!-- BARRA SUPERIOR EXECUTIVA -->
+    <header class="bg-brandGreen text-white border-b border-brandGold/30 sticky top-0 z-40 shadow-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        
+        <div class="flex items-center gap-3.5">
+          <img src="assets/logo.jpg" alt="Logo" class="w-11 h-11 rounded-full border border-brandGold object-cover shadow-sm">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl font-extrabold tracking-tight text-brandCream">BRINDA Serra</span>
+              <span class="text-[0.62rem] bg-brandGold text-brandGreen-dark uppercase px-2 py-0.5 rounded-full font-bold tracking-wider">Gestão Geral</span>
+            </div>
+            <p class="text-xs text-brandCream-soft">Painel de Controle e Auditoria da Proprietária</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2.5 sm:gap-4 text-xs">
+          <span id="liveEnvBadge" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 font-semibold text-[0.7rem]">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Supabase Conectado</span>
+          </span>
+
+          <button type="button" id="btnRefreshData" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold flex items-center gap-1.5 transition-all" title="Atualizar dados">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span class="hidden sm:inline">Atualizar</span>
+          </button>
+
+          <a href="index.html" target="_blank" class="px-3 py-1.5 rounded-xl bg-brandCream text-brandGreen font-bold hover:bg-white transition-all shadow-sm flex items-center gap-1">
+            <span>Portal</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </a>
+
+          <button type="button" id="adminLogoutBtn" class="px-3 py-1.5 rounded-xl bg-red-950/70 hover:bg-red-900 border border-red-700/60 text-red-200 font-bold transition-all flex items-center gap-1">
+            <span>🚪</span>
+            <span class="hidden sm:inline">Sair</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- NAVEGAÇÃO POR ABAS -->
+    <nav class="bg-white border-b border-stone-200 sticky top-20 z-30 shadow-xs overflow-x-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1 py-2.5 min-w-max">
+        <button type="button" class="tab-btn active px-4 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-100 transition-all flex items-center gap-2" data-tab="tabVisaoGeral">
+          <span>📊</span><span>Visão Geral</span>
+        </button>
+        <button type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-100 transition-all flex items-center gap-2" data-tab="tabVendas">
+          <span>🛒</span><span>Vendas & Pedidos</span>
+        </button>
+        <button type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-100 transition-all flex items-center gap-2" data-tab="tabCards">
+          <span>🎟️</span><span>BRINDA CARDS</span>
+        </button>
+        <button type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-100 transition-all flex items-center gap-2" data-tab="tabCervejarias">
+          <span>🍺</span><span>Cervejarias & Validações</span>
+        </button>
+        <button type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-100 transition-all flex items-center gap-2" data-tab="tabVendedores">
+          <span>💼</span><span>Vendedores & Comissões</span>
+        </button>
+        <button type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-100 transition-all flex items-center gap-2" data-tab="tabHoteis">
+          <span>🏨</span><span>Hotéis Parceiros</span>
+        </button>
+        <button type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-100 transition-all flex items-center gap-2" data-tab="tabLeads">
+          <span>📥</span><span>Leads B2B</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 space-y-8 w-full">
+
+      <!-- ========================================== -->
+      <!-- ABA 1: VISÃO GERAL (MÉTRICAS & KPIS)       -->
+      <!-- ========================================== -->
+      <section id="tabVisaoGeral" class="tab-content space-y-6">
+        
+        <!-- CARDS DE KPIS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between text-stone-500">
+              <span class="text-xs uppercase font-bold tracking-wider">Faturamento Bruto</span>
+              <span class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">💰</span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-brandGreen" id="kpiFaturamento">R$ 0,00</div>
+            <span class="text-[0.7rem] text-stone-500 block">Total de vendas pagas aprovadas</span>
+          </div>
+
+          <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between text-stone-500">
+              <span class="text-xs uppercase font-bold tracking-wider">Pedidos Concluídos</span>
+              <span class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">📦</span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-brandGreen" id="kpiPedidos">0</div>
+            <span class="text-[0.7rem] text-stone-500 block">Transações via Pix e Cartão</span>
+          </div>
+
+          <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between text-stone-500">
+              <span class="text-xs uppercase font-bold tracking-wider">BRINDA CARDS Ativos</span>
+              <span class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm">🎟️</span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-brandGreen" id="kpiCards">0</div>
+            <span class="text-[0.7rem] text-stone-500 block">Passaportes emitidos com QR Code</span>
+          </div>
+
+          <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between text-stone-500">
+              <span class="text-xs uppercase font-bold tracking-wider">Degustações Validadas</span>
+              <span class="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-sm">🍺</span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-brandGreen" id="kpiValidacoes">0</div>
+            <span class="text-[0.7rem] text-stone-500 block">Visitas realizadas nas cervejarias</span>
+          </div>
+
+        </div>
+
+        <!-- INDICADORES ESPECÍFICOS: ORIGEM DAS VENDAS & REGRAS COMERCIAIS -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Bloco Origem das Vendas -->
+          <div class="lg:col-span-6 bg-white p-6 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+              <div>
+                <h3 class="text-base font-bold text-brandGreen">Origem das Aquisições ("Como nos Conheceu?")</h3>
+                <p class="text-xs text-stone-500">Distribuição dos canais de atração de clientes</p>
+              </div>
+              <span class="text-xs font-bold text-brandTerracotta">Auditoria</span>
+            </div>
+
+            <div class="space-y-3 pt-1 text-xs" id="origensProgressBars">
+              <!-- Preenchido dinamicamente via JS -->
+            </div>
+          </div>
+
+          <!-- Bloco Regras de Comissão & Bônus Mensal -->
+          <div class="lg:col-span-6 bg-white p-6 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+              <div>
+                <h3 class="text-base font-bold text-brandGreen">Regra Comercial dos Vendedores</h3>
+                <p class="text-xs text-stone-500">Parâmetros de comissionamento de parceiros</p>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[0.65rem] font-bold uppercase">Configurado</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 space-y-1">
+                <span class="text-[0.65rem] uppercase font-bold text-stone-500 block">Comissão Padrão</span>
+                <span class="text-xl font-black text-emerald-700 block">R$ 20,00</span>
+                <p class="text-[0.68rem] text-stone-600 leading-snug">
+                  Por 1ª compra de experiência vinculada ao CPF do titular pagador.
+                </p>
+              </div>
+
+              <div class="p-3.5 bg-amber-50 rounded-2xl border border-amber-200 space-y-1">
+                <span class="text-[0.65rem] uppercase font-bold text-amber-800 block">Bônus por Metas</span>
+                <span class="text-xl font-black text-amber-800 block">+ R$ 200,00</span>
+                <p class="text-[0.68rem] text-stone-600 leading-snug">
+                  Ao ultrapassar 20 vendas aprovadas dentro do mesmo mês.
+                </p>
+              </div>
+            </div>
+
+            <div class="p-3 bg-brandCream/60 rounded-xl border border-stone-200 text-xs text-stone-700 space-y-1">
+              <p>📅 <strong>Ciclo de Apuração:</strong> Vendas computadas do dia 1 ao 31 de cada mês.</p>
+              <p>💰 <strong>Pagamento:</strong> Todo dia 10 do mês subsequente (via PIX cadastrado).</p>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ABA 2: VENDAS & PEDIDOS                    -->
+      <!-- ========================================== -->
+      <section id="tabVendas" class="tab-content hidden space-y-4">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-stone-200 shadow-sm">
+          <div>
+            <h2 class="text-lg font-bold text-brandGreen">Registro Completo de Pedidos</h2>
+            <p class="text-xs text-stone-500">Histórico de todas as transações, titulares e valores</p>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <input type="text" id="searchPedidosInput" placeholder="Buscar por CPF ou Nome..." 
+              class="w-full sm:w-64 bg-stone-50 text-stone-800 text-xs rounded-xl px-3 py-2 border border-stone-300 outline-none focus:border-brandGold">
+            <button type="button" id="exportPedidosBtn" class="px-3 py-2 bg-stone-100 hover:bg-stone-200 border border-stone-300 rounded-xl text-xs font-bold text-brandGreen flex items-center gap-1.5 whitespace-nowrap">
+              <span>📥</span><span>Exportar CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-stone-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase text-[0.68rem] tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Pedido ID</th>
+                  <th class="py-3 px-4">Data/Hora</th>
+                  <th class="py-3 px-4">Pagador / CPF</th>
+                  <th class="py-3 px-4">Modalidade</th>
+                  <th class="py-3 px-4">Cards</th>
+                  <th class="py-3 px-4">Valor Total</th>
+                  <th class="py-3 px-4">Pagamento</th>
+                  <th class="py-3 px-4">Origem / Vendedor</th>
+                  <th class="py-3 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody id="pedidosTableBody" class="divide-y divide-stone-100">
+                <!-- Inserido dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ABA 3: BRINDA CARDS EMITIDOS               -->
+      <!-- ========================================== -->
+      <section id="tabCards" class="tab-content hidden space-y-4">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-stone-200 shadow-sm">
+          <div>
+            <h2 class="text-lg font-bold text-brandGreen">Passaportes Virtuais Emitidos (BRINDA CARDS)</h2>
+            <p class="text-xs text-stone-500">Controle individual de saldos, titularidades e validade de 6 meses</p>
+          </div>
+          <input type="text" id="searchCardsInput" placeholder="Buscar por Código ou Titular..." 
+            class="w-full sm:w-64 bg-stone-50 text-stone-800 text-xs rounded-xl px-3 py-2 border border-stone-300 outline-none focus:border-brandGold">
+        </div>
+
+        <div class="bg-white rounded-3xl border border-stone-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase text-[0.68rem] tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Código do Passe</th>
+                  <th class="py-3 px-4">Titular</th>
+                  <th class="py-3 px-4">CPF</th>
+                  <th class="py-3 px-4">Modalidade</th>
+                  <th class="py-3 px-4">Saldo Restante</th>
+                  <th class="py-3 px-4">Validade Limite</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-center">Passe Mobile</th>
+                </tr>
+              </thead>
+              <tbody id="cardsTableBody" class="divide-y divide-stone-100">
+                <!-- Inserido dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ABA 4: CERVEJARIAS & VALIDAÇÕES            -->
+      <!-- ========================================== -->
+      <section id="tabCervejarias" class="tab-content hidden space-y-6">
+        
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3" id="cervejariasSummaryGrid">
+          <!-- Resumo das 5 cervejarias -->
+        </div>
+
+        <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-brandGreen">Auditoria de Validações e Visitas</h3>
+              <p class="text-xs text-stone-500">Histórico de degustações liberadas com trava anti-duplicidade</p>
+            </div>
+            <span class="text-xs font-bold text-brandGold bg-stone-900 px-3 py-1 rounded-full">Trava Anti-Repetição Ativa</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase text-[0.68rem] tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Data / Hora</th>
+                  <th class="py-3 px-4">Cervejaria</th>
+                  <th class="py-3 px-4">Titular</th>
+                  <th class="py-3 px-4">CPF</th>
+                  <th class="py-3 px-4">Saldo Anterior &rarr; Pós</th>
+                  <th class="py-3 px-4">Operador</th>
+                  <th class="py-3 px-4">Status</th>
+                </tr>
+              </thead>
+              <tbody id="validacoesTableBody" class="divide-y divide-stone-100">
+                <!-- Inserido dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ABA 5: VENDEDORES & COMISSÕES              -->
+      <!-- ========================================== -->
+      <section id="tabVendedores" class="tab-content hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-stone-200 shadow-sm">
+          <div>
+            <h2 class="text-lg font-bold text-brandGreen">Gestão de Promotores, Motoristas & Hotéis</h2>
+            <p class="text-xs text-stone-500">Apuração de comissões (R$ 20,00) e bônus de metas mensais (R$ 200,00)</p>
+          </div>
+          <button type="button" id="btnOpenNewVendorModal" class="px-4 py-2.5 bg-brandTerracotta hover:bg-brandTerracotta-hover text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
+            <span>+</span><span>Cadastrar Novo Vendedor</span>
+          </button>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-stone-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase text-[0.68rem] tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Código</th>
+                  <th class="py-3 px-4">Nome do Vendedor</th>
+                  <th class="py-3 px-4">Categoria</th>
+                  <th class="py-3 px-4">Vendas no Mês</th>
+                  <th class="py-3 px-4">Meta do Bônus (>20)</th>
+                  <th class="py-3 px-4">Comissão</th>
+                  <th class="py-3 px-4">Bônus</th>
+                  <th class="py-3 px-4">Total a Pagar</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="vendedoresTableBody" class="divide-y divide-stone-100">
+                <!-- Inserido dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ABA 6: HOTÉIS PARCEIROS                    -->
+      <!-- ========================================== -->
+      <section id="tabHoteis" class="tab-content hidden space-y-6">
+        
+        <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-brandGreen">Cadastro de Hotéis Parceiros</h3>
+              <p class="text-xs text-stone-500">Hotéis da Serra Gaúcha cadastrados para indicação e vinculação de equipes</p>
+            </div>
+            <button type="button" id="btnCadastrarHotel" class="px-3 py-1.5 bg-brandGreen text-white text-xs font-bold rounded-xl hover:bg-brandGreen-dark transition-all">
+              + Adicionar Hotel
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="hoteisGrid">
+            <!-- Inserido dinamicamente -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ABA 7: LEADS B2B (PARCERIAS)               -->
+      <!-- ========================================== -->
+      <section id="tabLeads" class="tab-content hidden space-y-6">
+        
+        <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-brandGreen">Interessados em Parcerias (Formulários do Site)</h3>
+              <p class="text-xs text-stone-500">Candidatos a vendedores e cervejarias que enviaram propostas</p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase text-[0.68rem] tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Data</th>
+                  <th class="py-3 px-4">Interesse</th>
+                  <th class="py-3 px-4">Nome</th>
+                  <th class="py-3 px-4">Empresa / Estabelecimento</th>
+                  <th class="py-3 px-4">WhatsApp / Telefone</th>
+                  <th class="py-3 px-4">Cidade</th>
+                  <th class="py-3 px-4">Status do Lead</th>
+                  <th class="py-3 px-4 text-center">Contato</th>
+                </tr>
+              </thead>
+              <tbody id="leadsTableBody" class="divide-y divide-stone-100">
+                <!-- Inserido dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- RODAPÉ DA ADMINISTRAÇÃO -->
+    <footer class="bg-white border-t border-stone-200 py-4 text-center text-xs text-stone-500">
+      <p>BRINDA SERRA • Painel Administrativo Oficial da Proprietária • Todos os direitos reservados © 2026</p>
+    </footer>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: CADASTRAR NOVO VENDEDOR             -->
+  <!-- ========================================== -->
+  <div id="newVendorModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <h3 class="text-base font-bold text-brandGreen">Cadastrar Novo Vendedor / Promotor</h3>
+        <button type="button" id="closeNewVendorModalBtn" class="text-stone-400 hover:text-stone-700 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="newVendorForm" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Nome Completo:</label>
+          <input type="text" id="nvNome" required placeholder="Ex: Carlos Alberto" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Código de Venda (Único):</label>
+            <input type="text" id="nvCodigo" required placeholder="Ex: CARLOS01" class="w-full bg-stone-50 font-mono font-bold uppercase rounded-xl p-2.5 border border-stone-300 outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Categoria:</label>
+            <select id="nvTipo" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+              <option value="uber">Motorista Uber / Táxi</option>
+              <option value="hotel">Concierge de Hotel</option>
+              <option value="autonomo">Promotor Autônomo</option>
+              <option value="guia">Guia de Turismo</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Nome do Hotel (se aplicável):</label>
+          <input type="text" id="nvHotel" placeholder="Ex: Hotel Casa da Montanha" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Telefone / WhatsApp (para PIX):</label>
+          <input type="text" id="nvTelefone" placeholder="(54) 99999-0000" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" id="cancelNewVendorBtn" class="px-4 py-2 bg-stone-200 text-stone-700 font-bold rounded-xl hover:bg-stone-300">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-brandGreen text-white font-bold rounded-xl hover:bg-brandGreen-dark shadow-sm">Salvar Vendedor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPT OPERACIONAL DO PAINEL ADMINISTRATIVO -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginSection = document.getElementById('loginSection');
+      const dashboardSection = document.getElementById('dashboardSection');
+      const adminLoginForm = document.getElementById('adminLoginForm');
+      const adminUser = document.getElementById('adminUser');
+      const adminPass = document.getElementById('adminPass');
+      const loginError = document.getElementById('loginError');
+      const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+      const btnRefreshData = document.getElementById('btnRefreshData');
+
+      // KPIs
+      const kpiFaturamento = document.getElementById('kpiFaturamento');
+      const kpiPedidos = document.getElementById('kpiPedidos');
+      const kpiCards = document.getElementById('kpiCards');
+      const kpiValidacoes = document.getElementById('kpiValidacoes');
+
+      // Tabelas
+      const pedidosTableBody = document.getElementById('pedidosTableBody');
+      const cardsTableBody = document.getElementById('cardsTableBody');
+      const validacoesTableBody = document.getElementById('validacoesTableBody');
+      const vendedoresTableBody = document.getElementById('vendedoresTableBody');
+      const leadsTableBody = document.getElementById('leadsTableBody');
+      const cervejariasSummaryGrid = document.getElementById('cervejariasSummaryGrid');
+      const hoteisGrid = document.getElementById('hoteisGrid');
+      const origensProgressBars = document.getElementById('origensProgressBars');
+
+      // Modal
+      const newVendorModal = document.getElementById('newVendorModal');
+      const btnOpenNewVendorModal = document.getElementById('btnOpenNewVendorModal');
+      const closeNewVendorModalBtn = document.getElementById('closeNewVendorModalBtn');
+      const cancelNewVendorBtn = document.getElementById('cancelNewVendorBtn');
+      const newVendorForm = document.getElementById('newVendorForm');
+
+      // Estado Global
+      let adminData = null;
+
+      // 1. CHECAGEM DE AUTENTICAÇÃO
+      function checkAdminAuth() {
+        const isAuth = sessionStorage.getItem('brinda_admin_logged') === 'true' || localStorage.getItem('brinda_admin_logged') === 'true';
+        if (isAuth) {
+          loginSection.classList.add('hidden');
+          dashboardSection.classList.remove('hidden');
+          loadDashboardData();
+        } else {
+          loginSection.classList.remove('hidden');
+          dashboardSection.classList.add('hidden');
+        }
+      }
+
+      adminLoginForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const u = adminUser.value.trim().toLowerCase();
+        const p = adminPass.value.trim();
+
+        if (u === 'admin' && (p === '123' || p === 'brinda123')) {
+          sessionStorage.setItem('brinda_admin_logged', 'true');
+          localStorage.setItem('brinda_admin_logged', 'true');
+          loginError.classList.add('hidden');
+          loginSection.classList.add('hidden');
+          dashboardSection.classList.remove('hidden');
+          loadDashboardData();
+        } else {
+          loginError.classList.remove('hidden');
+        }
+      });
+
+      adminLogoutBtn?.addEventListener('click', () => {
+        sessionStorage.removeItem('brinda_admin_logged');
+        localStorage.removeItem('brinda_admin_logged');
+        location.reload();
+      });
+
+      // 2. ALTERNÂNCIA DE ABAS
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+          btn.classList.add('active');
+          const targetId = btn.dataset.tab;
+          document.getElementById(targetId)?.classList.remove('hidden');
+        });
+      });
+
+      // 3. CARGA DE DADOS DA API
+      async function loadDashboardData() {
+        try {
+          const resp = await fetch('/api/admin');
+          const data = await resp.json();
+          if (data && data.sucesso) {
+            adminData = data;
+            renderAll(data);
+          }
+        } catch (err) {
+          console.error('Erro ao buscar dados admin:', err);
+        }
+      }
+
+      btnRefreshData?.addEventListener('click', () => {
+        btnRefreshData.classList.add('animate-spin');
+        loadDashboardData().then(() => {
+          setTimeout(() => btnRefreshData.classList.remove('animate-spin'), 600);
+        });
+      });
+
+      // Formatação de Moeda
+      const fmtBRL = (val) => Number(val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+      // 4. RENDERIZAÇÃO GERAL
+      function renderAll(data) {
+        // KPIs
+        if (kpiFaturamento) kpiFaturamento.textContent = fmtBRL(data.metricas.faturamento_total);
+        if (kpiPedidos) kpiPedidos.textContent = data.metricas.pedidos_pagos;
+        if (kpiCards) kpiCards.textContent = data.metricas.cards_ativos;
+        if (kpiValidacoes) kpiValidacoes.textContent = data.metricas.validacoes_total;
+
+        renderOrigens(data.metricas.origens);
+        renderPedidos(data.pedidos);
+        renderCards(data.cards);
+        renderCervejarias(data.cervejarias, data.validacoes);
+        renderValidacoes(data.validacoes);
+        renderVendedores(data.vendedores);
+        renderHoteis(data.vendedores);
+        renderLeads(data.leads);
+      }
+
+      // Origem das Vendas
+      function renderOrigens(origens) {
+        if (!origensProgressBars) return;
+        const total = (origens.hotel || 0) + (origens.uber || 0) + (origens.google || 0) + (origens.instagram || 0) + (origens.outros || 0) || 1;
+
+        const items = [
+          { label: '🏨 Hotéis Parceiros', count: origens.hotel || 0, color: 'bg-emerald-500' },
+          { label: '🚗 Motoristas Uber / Táxi', count: origens.uber || 0, color: 'bg-amber-500' },
+          { label: '🔍 Google (Pesquisa Direta)', count: origens.google || 0, color: 'bg-blue-500' },
+          { label: '📸 Instagram / Redes', count: origens.instagram || 0, color: 'bg-rose-500' },
+          { label: '🤝 Outros / Indicação Amigo', count: origens.outros || 0, color: 'bg-stone-500' },
+        ];
+
+        origensProgressBars.innerHTML = items.map(item => {
+          const pct = Math.round((item.count / total) * 100);
+          return `
+            <div class="space-y-1">
+              <div class="flex justify-between font-bold text-stone-700">
+                <span>${item.label}</span>
+                <span>${item.count} venda(s) • ${pct}%</span>
+              </div>
+              <div class="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden">
+                <div class="${item.color} h-full rounded-full transition-all" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Tabela de Pedidos
+      function renderPedidos(pedidos) {
+        if (!pedidosTableBody) return;
+        pedidosTableBody.innerHTML = (pedidos || []).map(p => `
+          <tr class="hover:bg-stone-50 transition-colors">
+            <td class="py-3 px-4 font-mono font-bold text-brandGreen">${p.id}</td>
+            <td class="py-3 px-4 text-stone-500">${new Date(p.created_at).toLocaleString('pt-BR')}</td>
+            <td class="py-3 px-4">
+              <strong class="text-stone-900 block">${p.pagador_nome}</strong>
+              <span class="text-[0.65rem] text-stone-500">${p.pagador_cpf}</span>
+            </td>
+            <td class="py-3 px-4 font-semibold">${p.plano_cervejaria === 'brinda_bem' ? '🍺 Brinda Bem (3)' : (p.plano_cervejaria === 'brinda_premium' ? '👑 Brinda Premium (5)' : 'Adesão Base')}</td>
+            <td class="py-3 px-4 font-bold text-center">${p.qtd_cards || 1}</td>
+            <td class="py-3 px-4 font-black text-brandGreen">${fmtBRL(p.valor_total)}</td>
+            <td class="py-3 px-4 text-stone-600">${p.forma_pagamento || 'PIX'}</td>
+            <td class="py-3 px-4">
+              <span class="capitalize font-semibold text-stone-800">${p.origem_tipo || 'Direto'}</span>
+              ${p.vendedor_codigo ? `<span class="block text-[0.65rem] text-brandTerracotta font-mono font-bold">Código: ${p.vendedor_codigo}</span>` : ''}
+            </td>
+            <td class="py-3 px-4">
+              <span class="px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold ${p.status === 'pago' ? 'badge-approved' : 'badge-pending'}">
+                ${p.status === 'pago' ? '✓ Pago' : 'Pendente'}
+              </span>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Tabela de Cards
+      function renderCards(cards) {
+        if (!cardsTableBody) return;
+        cardsTableBody.innerHTML = (cards || []).map(c => `
+          <tr class="hover:bg-stone-50 transition-colors">
+            <td class="py-3 px-4 font-mono font-bold text-brandGold">${c.codigo_passe}</td>
+            <td class="py-3 px-4 font-bold text-stone-900">${c.titular_nome}</td>
+            <td class="py-3 px-4 text-stone-500 font-mono">${c.titular_cpf || '-'}</td>
+            <td class="py-3 px-4 font-semibold capitalize">${c.modalidade?.replace('_', ' ') || 'Brinda Bem'}</td>
+            <td class="py-3 px-4">
+              <span class="font-black text-sm ${c.saldo_restante > 0 ? 'text-emerald-700' : 'text-stone-400'}">
+                ${c.saldo_restante} de ${c.saldo_total}
+              </span>
+            </td>
+            <td class="py-3 px-4 text-stone-600">${c.data_validade_formatada || '31/12/2026'}</td>
+            <td class="py-3 px-4">
+              <span class="px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold ${c.status === 'ativo' ? 'badge-approved' : 'badge-pending'}">
+                ${c.status === 'ativo' ? 'Ativo' : 'Esgotado'}
+              </span>
+            </td>
+            <td class="py-3 px-4 text-center">
+              <a href="/passe?token=${encodeURIComponent(c.qr_token || c.codigo_passe)}" target="_blank" class="px-2 py-1 bg-stone-100 hover:bg-stone-200 text-brandGreen font-bold rounded-lg text-[0.65rem] border border-stone-300">
+                Ver Passe
+              </a>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Cervejarias
+      function renderCervejarias(cervejarias, validacoes) {
+        if (!cervejariasSummaryGrid) return;
+        cervejariasSummaryGrid.innerHTML = (cervejarias || []).map(c => {
+          const totalVisitas = (validacoes || []).filter(v => v.cervejaria_id === c.id).length;
+          return `
+            <div class="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm space-y-1">
+              <span class="text-[0.65rem] uppercase font-bold text-stone-400 block">${c.cidade} - RS</span>
+              <h4 class="text-sm font-bold text-brandGreen">${c.nome}</h4>
+              <div class="pt-2 flex items-center justify-between">
+                <span class="text-xs text-stone-600">Visitas:</span>
+                <span class="text-base font-extrabold text-brandTerracotta">${totalVisitas}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Tabela de Validações
+      function renderValidacoes(validacoes) {
+        if (!validacoesTableBody) return;
+        validacoesTableBody.innerHTML = (validacoes || []).map(v => `
+          <tr class="hover:bg-stone-50 transition-colors">
+            <td class="py-3 px-4 text-stone-500">${new Date(v.validado_em).toLocaleString('pt-BR')}</td>
+            <td class="py-3 px-4 font-bold text-brandGreen">${v.cervejaria_nome}</td>
+            <td class="py-3 px-4 text-stone-800 font-semibold">${v.titular_nome || 'Cliente VIP'}</td>
+            <td class="py-3 px-4 font-mono text-stone-500">${v.titular_cpf}</td>
+            <td class="py-3 px-4 font-bold text-stone-700">${v.saldo_anterior} &rarr; <span class="text-emerald-700">${v.saldo_pos}</span></td>
+            <td class="py-3 px-4 font-mono text-stone-500">${v.validado_por || 'operador'}</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-0.5 rounded-full text-[0.65rem] font-bold badge-approved">
+                ✓ Liberado
+              </span>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Tabela de Vendedores
+      function renderVendedores(vendedores) {
+        if (!vendedoresTableBody) return;
+        vendedoresTableBody.innerHTML = (vendedores || []).map(v => `
+          <tr class="hover:bg-stone-50 transition-colors">
+            <td class="py-3 px-4 font-mono font-bold text-brandTerracotta">${v.codigo}</td>
+            <td class="py-3 px-4">
+              <strong class="text-stone-900 block">${v.nome}</strong>
+              ${v.hotel_nome ? `<span class="text-[0.65rem] text-stone-500">${v.hotel_nome}</span>` : ''}
+            </td>
+            <td class="py-3 px-4 uppercase text-[0.68rem] font-bold text-stone-600">${v.tipo}</td>
+            <td class="py-3 px-4 font-extrabold text-center text-sm">${v.total_vendas || 0}</td>
+            <td class="py-3 px-4">
+              ${v.atingiu_bonus ? 
+                '<span class="px-2 py-0.5 rounded-full text-[0.65rem] font-bold bg-amber-100 text-amber-800">🎉 Atingiu Meta (+R$ 200)</span>' : 
+                `<span class="text-stone-500">${v.total_vendas || 0} / 20 vendas</span>`}
+            </td>
+            <td class="py-3 px-4 font-bold text-emerald-700">${fmtBRL(v.total_comissao)}</td>
+            <td class="py-3 px-4 font-bold text-amber-800">${fmtBRL(v.valor_bonus)}</td>
+            <td class="py-3 px-4 font-black text-brandGreen text-sm">${fmtBRL(v.total_a_receber)}</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-0.5 rounded-full text-[0.65rem] font-bold ${v.status === 'ativo' ? 'badge-approved' : 'badge-pending'}">
+                ${v.status === 'ativo' ? 'Ativo' : 'Inativo'}
+              </span>
+            </td>
+            <td class="py-3 px-4 text-center">
+              ${(v.total_pendente > 0) ? `
+                <button type="button" class="btn-pagar-comissao px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-[0.65rem]" data-codigo="${v.codigo}">
+                  Pagar PIX
+                </button>
+              ` : '<span class="text-[0.68rem] text-stone-400">Em dia</span>'}
+            </td>
+          </tr>
+        `).join('');
+
+        // Eventos de Pagar Comissão
+        document.querySelectorAll('.btn-pagar-comissao').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const codigo = btn.dataset.codigo;
+            if (confirm(`Confirmar pagamento de comissão para o vendedor ${codigo}?`)) {
+              await fetch('/api/admin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'pagar_comissao', payload: { vendedor_codigo: codigo } })
+              });
+              loadDashboardData();
+            }
+          });
+        });
+      }
+
+      // Hotéis
+      function renderHoteis(vendedores) {
+        if (!hoteisGrid) return;
+        const hoteis = [
+          { nome: 'Hotel Casa da Montanha', endereco: 'Av. Borges de Medeiros, 3166 - Gramado', tel: '(54) 3286-5000', resp: 'Concierge Chefe' },
+          { nome: 'Hotel Alpestre', endereco: 'Rua Ceará, 94 - Bairro Planalto - Gramado', tel: '(54) 3286-3555', resp: 'Recepção Executiva' },
+          { nome: 'Grande Hotel Canela', endereco: 'Rua Getúlio Vargas, 300 - Canela', tel: '(54) 3282-1285', resp: 'Gerência de Atendimento' },
+          { nome: 'Villa Bella Hotel & Spa', endereco: 'Rua Villa Bella, 125 - Gramado', tel: '(54) 3295-8100', resp: 'Equipe de Hospedagem' },
+        ];
+
+        hoteisGrid.innerHTML = hoteis.map(h => `
+          <div class="bg-stone-50 p-4 rounded-2xl border border-stone-200 space-y-2">
+            <span class="text-xs uppercase font-bold text-brandTerracotta block">Parceiro Oficial</span>
+            <h4 class="text-sm font-bold text-brandGreen">${h.nome}</h4>
+            <p class="text-[0.7rem] text-stone-600">${h.endereco}</p>
+            <div class="pt-2 border-t border-stone-200 text-[0.68rem] text-stone-500 space-y-0.5">
+              <p><strong>Contato:</strong> ${h.resp}</p>
+              <p><strong>Telefone:</strong> ${h.tel}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Leads B2B
+      function renderLeads(leads) {
+        if (!leadsTableBody) return;
+        leadsTableBody.innerHTML = (leads || []).map(l => `
+          <tr class="hover:bg-stone-50 transition-colors">
+            <td class="py-3 px-4 text-stone-500">${new Date(l.created_at).toLocaleDateString('pt-BR')}</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-0.5 rounded-full text-[0.65rem] font-bold ${l.tipo === 'vendedor' ? 'bg-amber-100 text-amber-800' : 'bg-purple-100 text-purple-800'}">
+                ${l.tipo === 'vendedor' ? '🤝 Quero Vender' : '🍺 Cervejaria Parceira'}
+              </span>
+            </td>
+            <td class="py-3 px-4 font-bold text-stone-900">${l.nome}</td>
+            <td class="py-3 px-4 text-stone-600">${l.empresa_nome || '-'}</td>
+            <td class="py-3 px-4 font-mono font-semibold text-brandGreen">${l.telefone}</td>
+            <td class="py-3 px-4 text-stone-600">${l.cidade || 'Serra Gaúcha'}</td>
+            <td class="py-3 px-4">
+              <select class="lead-status-select bg-stone-100 rounded-lg p-1 text-[0.65rem] font-bold outline-none border border-stone-300" data-id="${l.id}">
+                <option value="novo" ${l.status === 'novo' ? 'selected' : ''}>Novo Contato</option>
+                <option value="em_contato" ${l.status === 'em_contato' ? 'selected' : ''}>Em Contato</option>
+                <option value="aprovado" ${l.status === 'aprovado' ? 'selected' : ''}>Aprovado / Parceiro</option>
+                <option value="nao_interessado" ${l.status === 'nao_interessado' ? 'selected' : ''}>Não Interessado</option>
+              </select>
+            </td>
+            <td class="py-3 px-4 text-center">
+              <a href="https://wa.me/55${l.telefone.replace(/\\D/g, '')}?text=Ol%C3%A1%20${encodeURIComponent(l.nome)}%2C%20somos%20da%20BRINDA%20Serra!" target="_blank" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-[0.65rem] inline-flex items-center gap-1">
+                <span>WhatsApp</span>
+              </a>
+            </td>
+          </tr>
+        `).join('');
+
+        // Alteração de status do lead
+        document.querySelectorAll('.lead-status-select').forEach(sel => {
+          sel.addEventListener('change', async () => {
+            const leadId = sel.dataset.id;
+            const newStatus = sel.value;
+            await fetch('/api/admin', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ action: 'atualizar_lead', payload: { id: leadId, status: newStatus } })
+            });
+          });
+        });
+      }
+
+      // 5. MODAL DE NOVO VENDEDOR
+      btnOpenNewVendorModal?.addEventListener('click', () => newVendorModal.classList.remove('hidden'));
+      closeNewVendorModalBtn?.addEventListener('click', () => newVendorModal.classList.add('hidden'));
+      cancelNewVendorBtn?.addEventListener('click', () => newVendorModal.classList.add('hidden'));
+
+      newVendorForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nome = document.getElementById('nvNome').value.trim();
+        const codigo = document.getElementById('nvCodigo').value.trim();
+        const tipo = document.getElementById('nvTipo').value;
+        const hotel_nome = document.getElementById('nvHotel').value.trim();
+        const telefone = document.getElementById('nvTelefone').value.trim();
+
+        try {
+          await fetch('/api/admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'criar_vendedor',
+              payload: { nome, codigo, tipo, hotel_nome, telefone }
+            })
+          });
+          newVendorModal.classList.add('hidden');
+          newVendorForm.reset();
+          loadDashboardData();
+        } catch (err) {
+          alert('Erro ao salvar vendedor.');
+        }
+      });
+
+      // Inicializa
+      checkAdminAuth();
+    });
+  </script>
+</body>
+</html>
