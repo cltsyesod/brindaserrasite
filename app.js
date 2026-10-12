@@ -716,7 +716,9 @@ function initCheckoutModal() {
   shareWhatsappBtn?.addEventListener('click', () => {
     const card = emittedCardsData[activeEmittedCardIndex] || emittedCardsData[0];
     if (!card) return;
-    const text = `🎉 Olá! Acabei de emitir meu *BRINDA CARD* oficial para vivenciar experiências exclusivas nas cervejarias da Serra Gaúcha!\n\n💳 *Titular:* ${card.titular_nome}\n🎫 *Código de Passe:* ${card.codigo_passe}\n📋 *Validade:* ${card.data_validade_formatada}\n\nConheça e brinde junto em Canela e Gramado: https://brindaserra.com.br`;
+    const originUrl = window.location.origin;
+    const passUrl = `${originUrl}/passe?token=${encodeURIComponent(card.qr_token || card.codigo_passe)}`;
+    const text = `🎉 Olá! Acabei de emitir meu *BRINDA CARD* oficial para vivenciar experiências exclusivas nas cervejarias da Serra Gaúcha!\n\n💳 *Titular:* ${card.titular_nome}\n🎫 *Código de Passe:* ${card.codigo_passe}\n📋 *Validade:* ${card.data_validade_formatada}\n🔗 *Acessar meu Cartão no Celular:* ${passUrl}\n\nConheça e brinde junto em Canela e Gramado: https://brindaserra.com.br`;
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
   });
 }
@@ -1368,9 +1370,38 @@ function initLeadModals() {
     const vPhone = document.getElementById('vendorPhone');
     if (vPhone) applyPhoneMask(vPhone);
 
-    vendorForm.addEventListener('submit', (e) => {
+    vendorForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const vName = document.getElementById('vendorName')?.value || 'Parceiro';
+      const vPhoneVal = document.getElementById('vendorPhone')?.value || '';
+      const vCity = document.getElementById('vendorCity')?.value || '';
+      const vType = document.getElementById('vendorType')?.value || 'outro';
+
+      const submitBtn = vendorForm.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Enviando...';
+      }
+
+      try {
+        await fetch('/api/leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tipo: 'vendedor',
+            nome: vName,
+            telefone: vPhoneVal,
+            cidade: vCity,
+            categoria: vType
+          })
+        });
+      } catch (err) {}
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Enviar Cadastro de Vendedor';
+      }
+
       showToast(`🎉 Obrigado, ${vName}! Sua solicitação de vendedor parceiro foi registrada. Entraremos em contato via WhatsApp.`);
       vendorForm.reset();
       setTimeout(() => {
@@ -1385,10 +1416,38 @@ function initLeadModals() {
     const bPhone = document.getElementById('breweryPhone');
     if (bPhone) applyPhoneMask(bPhone);
 
-    breweryForm.addEventListener('submit', (e) => {
+    breweryForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const bContact = document.getElementById('breweryContact')?.value || '';
       const bName = document.getElementById('breweryName')?.value || 'Cervejaria';
+      const bPhoneVal = document.getElementById('breweryPhone')?.value || '';
+      const bCity = document.getElementById('breweryCity')?.value || '';
+
+      const submitBtn = breweryForm.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Enviando...';
+      }
+
+      try {
+        await fetch('/api/leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tipo: 'cervejaria',
+            nome: bContact,
+            empresa_nome: bName,
+            telefone: bPhoneVal,
+            cidade: bCity
+          })
+        });
+      } catch (err) {}
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Cadastrar Cervejaria para Avaliação';
+      }
+
       showToast(`🍺 Parabéns! Recebemos a solicitação da ${bName}. Nossa curadoria entrará em contato com ${bContact} em breve.`);
       breweryForm.reset();
       setTimeout(() => {

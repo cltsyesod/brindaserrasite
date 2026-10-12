@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRINDA CARD • Passaporte Virtual Oficial</title>
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+
+  <!-- Fonte Calibri / Carlito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandGreen: {
+              DEFAULT: '#3F4A3E',
+              dark: '#2D362C',
+              light: '#536152'
+            },
+            brandCream: {
+              DEFAULT: '#F4EEE4',
+              soft: '#FAF6EF',
+              darker: '#E7DEC9'
+            },
+            brandTerracotta: {
+              DEFAULT: '#C96C4A',
+              hover: '#B55D3D',
+              light: '#DF8868'
+            },
+            brandGold: '#C9A86A',
+          },
+          fontFamily: {
+            calibri: ['Calibri', 'Carlito', 'Candara', 'Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Calibri', 'Carlito', 'Candara', sans-serif;
+      background-color: #F4EEE4;
+      color: #232722;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brinda-card-official {
+      background: linear-gradient(135deg, #1E261D 0%, #2D362C 50%, #3F4A3E 100%);
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(45, 54, 44, 0.45), 0 0 0 1px rgba(201, 168, 106, 0.35);
+      color: #F4EEE4;
+      aspect-ratio: 1.586 / 1;
+      max-width: 480px;
+      width: 100%;
+      margin: 0 auto;
+      font-family: 'Calibri', 'Carlito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      user-select: none;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    /* Impressão Oficial de 1 Página Colorida */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 8mm;
+      }
+      *, *:before, *:after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        overflow: hidden !important;
+        background: #FAF6EF !important;
+      }
+      header, footer, .no-print {
+        display: none !important;
+      }
+      main {
+        position: fixed !important;
+        inset: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .brinda-card-official {
+        width: 480px !important;
+        max-width: 480px !important;
+        margin: auto !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+    }
+  </style>
+</head>
+<body class="p-4 sm:p-6">
+
+  <!-- CABEÇALHO -->
+  <header class="max-w-md mx-auto w-full text-center pb-4 pt-2">
+    <a href="index.html" class="inline-flex items-center gap-3 group">
+      <img src="assets/logo.jpg" alt="Logo BRINDA Serra" class="w-11 h-11 rounded-full object-cover shadow-sm border border-brandGold">
+      <div class="text-left">
+        <span class="text-xl font-bold tracking-tight text-brandGreen group-hover:text-brandTerracotta transition-colors">BRINDA Serra</span>
+        <span class="text-[0.7rem] uppercase tracking-widest text-brandTerracotta font-semibold block -mt-1">Passaporte de Experiências</span>
+      </div>
+    </a>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="max-w-md mx-auto w-full space-y-5 my-auto">
+
+    <!-- Container do Cartão Oficial -->
+    <div id="cardDisplayContainer" class="w-full flex justify-center">
+      <div class="animate-pulse p-8 bg-brandCream-darker/40 rounded-3xl text-center text-sm font-semibold text-brandGreen">
+        Carregando seu BRINDA CARD oficial...
+      </div>
+    </div>
+
+    <!-- Badges de Informação -->
+    <div id="cardInfoBadges" class="hidden grid grid-cols-2 gap-2 text-center no-print">
+      <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+        <span class="text-[0.65rem] uppercase font-bold text-emerald-800 block">Experiências Restantes</span>
+        <span class="text-base font-extrabold text-emerald-700" id="badgeSaldo">Carregando...</span>
+      </div>
+      <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+        <span class="text-[0.65rem] uppercase font-bold text-amber-800 block">Validade do Passe</span>
+        <span class="text-xs font-bold text-amber-900 mt-1 block" id="badgeValidade">6 Meses</span>
+      </div>
+    </div>
+
+    <!-- Instruções para o Turista -->
+    <div class="bg-white/80 p-4 rounded-2xl border border-stone-200 text-xs text-stone-600 space-y-1.5 shadow-xs no-print">
+      <p class="font-bold text-brandGreen flex items-center gap-1.5">
+        <span>📍</span>
+        <span>Como utilizar nas Cervejarias Participantes:</span>
+      </p>
+      <p class="leading-relaxed">
+        Apresente este <strong>QR Code na tela do seu celular</strong> ao chegar à cervejaria parceira em Canela, Gramado, Nova Petrópolis ou Porto Alegre para liberar sua degustação.
+      </p>
+      <p class="text-[0.68rem] text-stone-400">
+        * Conforme o regulamento, cada parceiro pode ser visitado uma única vez por CPF.
+      </p>
+    </div>
+
+    <!-- Ações: Imprimir / Compartilhar -->
+    <div class="space-y-2 pt-1 no-print">
+      <div class="flex flex-col sm:flex-row gap-2">
+        <button type="button" id="printPasseBtn" class="flex-1 py-3 px-4 rounded-full bg-brandTerracotta hover:bg-brandTerracotta-hover text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer">
+          <span>📥 Baixar Cartão / Imprimir</span>
+        </button>
+        <button type="button" id="sharePasseBtn" class="flex-1 py-3 px-4 rounded-full border border-brandGreen/30 hover:bg-white text-brandGreen font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
+          <span>📲 Compartilhar no WhatsApp</span>
+        </button>
+      </div>
+
+      <div class="text-center pt-2">
+        <a href="index.html#cervejarias" class="text-xs font-bold text-brandTerracotta hover:text-brandGreen underline">
+          🍺 Ver lista completa de Cervejarias Participantes
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer class="max-w-md mx-auto w-full text-center pt-4 text-xs text-stone-400 no-print">
+    <p>© 2026 BRINDA Serra • Serra Gaúcha</p>
+  </footer>
+
+  <script>
+    // Recupera token da URL (ex: /passe?token=BS-12345)
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token') || urlParams.get('id') || '';
+
+    const container = document.getElementById('cardDisplayContainer');
+    const infoBadges = document.getElementById('cardInfoBadges');
+    const badgeSaldo = document.getElementById('badgeSaldo');
+    const badgeValidade = document.getElementById('badgeValidade');
+    const printBtn = document.getElementById('printPasseBtn');
+    const shareBtn = document.getElementById('sharePasseBtn');
+
+    let currentCardData = null;
+
+    async function loadPasse() {
+      if (!token) {
+        container.innerHTML = `
+          <div class="p-6 bg-red-50 border border-red-200 rounded-2xl text-center space-y-2 text-xs text-red-700">
+            <p class="font-bold text-sm">⚠️ Passe não informado</p>
+            <p>Acesse através do link enviado ou faça login com seu CPF na <a href="index.html" class="underline font-bold">página principal</a>.</p>
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        const resp = await fetch(`/api/passe?token=${encodeURIComponent(token)}`);
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.sucesso && data.card) {
+            renderCard(data.card);
+            return;
+          }
+        }
+      } catch (err) {}
+
+      // Fallback em LocalStorage (se foi emitido neste navegador)
+      try {
+        const store = JSON.parse(localStorage.getItem('brinda_clientes_store') || '{}');
+        for (const cpf in store) {
+          const cards = store[cpf].cards || [];
+          const found = cards.find(c => c.qr_token === token || c.codigo_passe === token.toUpperCase());
+          if (found) {
+            renderCard(found);
+            return;
+          }
+        }
+      } catch (e) {}
+
+      // Não encontrado
+      container.innerHTML = `
+        <div class="p-6 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2 text-xs text-amber-800">
+          <p class="font-bold text-sm">⚠️ Passe não localizado</p>
+          <p>Não encontramos um cartão ativo correspondente a este link. Verifique o código ou acesse com seu CPF em <a href="index.html" class="underline font-bold text-brandTerracotta">Minha Conta</a>.</p>
+        </div>
+      `;
+    }
+
+    function renderCard(card) {
+      currentCardData = card;
+      const nomeTitular = (card.titular_nome || 'CLIENTE VIP').toUpperCase();
+      const validadeFormatada = card.data_validade_formatada || '6 Meses da Compra';
+      const codigoPasse = card.codigo_passe || 'BS-2026-VIP';
+
+      let benefitLabel = 'Acesso à Rota';
+      if (card.modalidade === 'brinda_bem' || card.saldo_restante === 3) {
+        benefitLabel = '3 Degustações Inclusas';
+      } else if (card.modalidade === 'brinda_premium' || card.saldo_restante === 5) {
+        benefitLabel = '5 Degustações Inclusas';
+      }
+
+      const validationUrl = `https://brindaserra.com.br/validar?token=${encodeURIComponent(card.qr_token || codigoPasse)}`;
+      const qrFallbackUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(validationUrl)}`;
+      const qrSrc = card.qr_image_base64 || qrFallbackUrl;
+
+      container.innerHTML = `
+        <div class="brinda-card-official">
+          <div style="
+            border: 1px solid rgba(201, 168, 106, 0.35);
+            border-radius: 20px;
+            height: calc(100% - 24px);
+            margin: 12px;
+            padding: 1.25rem 1.4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+            box-sizing: border-box;
+            background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 70%);
+          ">
+            <!-- Topo -->
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid #C9A86A; background: #2D362C; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                  <img src="assets/logo.jpg" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div>
+                  <span style="display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; color: #C9A86A; line-height: 1.1;">BRINDA CARD</span>
+                  <span style="font-size: 0.65rem; color: #D1D5DB; letter-spacing: 0.5px;">cartão virtual oficial</span>
+                </div>
+              </div>
+              <div style="background: rgba(201, 168, 106, 0.2); border: 1px solid rgba(201, 168, 106, 0.6); padding: 4px 12px; border-radius: 9999px; font-size: 0.65rem; font-weight: bold; color: #F8E2CE; letter-spacing: 1px; text-transform: uppercase;">
+                VIP PASS
+              </div>
+            </div>
+
+            <!-- Centro -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin: 6px 0;">
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="width: 44px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #FDE68A 0%, #D97706 60%, #B45309 100%); border: 1px solid rgba(180, 83, 9, 0.5); display: flex; align-items: center; justify-content: center; box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.5);">
+                  <div style="width: 26px; height: 20px; border: 1px solid rgba(120, 53, 15, 0.6); border-radius: 2px;"></div>
+                </div>
+                <span style="font-size: 0.65rem; color: #E5E7EB; letter-spacing: 1.5px; font-family: monospace;">DIGITAL MEMBER</span>
+                <span style="font-size: 0.62rem; color: #C9A86A; font-weight: 600;">${benefitLabel}</span>
+              </div>
+
+              <div style="background: #FFFFFF; padding: 6px 8px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); display: flex; flex-direction: column; align-items: center; text-align: center;">
+                <img src="${qrSrc}" alt="QR Code" style="width: 68px; height: 68px; display: block; object-fit: contain;" onerror="this.src='${qrFallbackUrl}'" />
+                <span style="font-size: 0.55rem; color: #374151; font-family: monospace; font-weight: bold; margin-top: 2px;">${codigoPasse}</span>
+              </div>
+            </div>
+
+            <!-- Rodapé -->
+            <div style="padding-top: 8px; border-top: 1px solid rgba(201, 168, 106, 0.3); display: flex; align-items: flex-end; justify-content: space-between;">
+              <div style="max-width: 65%;">
+                <span style="font-size: 0.58rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 1px; display: block;">TITULAR DO CARTÃO</span>
+                <span style="font-size: 0.95rem; font-weight: bold; color: #FAF6EF; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">
+                  ${nomeTitular}
+                </span>
+              </div>
+              <div style="text-align: right;">
+                <span style="font-size: 0.58rem; color: #9CA3AF; text-transform: uppercase; letter-spacing: 1px; display: block;">VALIDADE</span>
+                <span style="font-size: 0.78rem; font-weight: bold; color: #F8E2CE; white-space: nowrap;">
+                  ${validadeFormatada}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      if (infoBadges) infoBadges.classList.remove('hidden');
+      if (badgeSaldo) badgeSaldo.textContent = `${card.saldo_restante || 0} de ${card.saldo_total || 3}`;
+      if (badgeValidade) badgeValidade.textContent = validadeFormatada;
+    }
+
+    printBtn?.addEventListener('click', () => {
+      window.print();
+    });
+
+    shareBtn?.addEventListener('click', () => {
+      if (!currentCardData) return;
+      const shareUrl = window.location.href;
+      const text = `🎉 Olá! Aqui está meu *BRINDA CARD* oficial para vivenciar experiências exclusivas nas cervejarias da Serra Gaúcha!\n\n💳 *Titular:* ${currentCardData.titular_nome}\n🎫 *Código de Passe:* ${currentCardData.codigo_passe}\n📋 *Validade:* ${currentCardData.data_validade_formatada}\n🔗 *Acessar Cartão:* ${shareUrl}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    });
+
+    loadPasse();
+  </script>
+</body>
+</html>

@@ -141,7 +141,21 @@ CREATE TABLE IF NOT EXISTS public.comissoes (
 
 CREATE INDEX IF NOT EXISTS idx_comissoes_vendedor_mes ON public.comissoes(vendedor_codigo, data_fechamento);
 
--- 8. HABILITAR ROW LEVEL SECURITY (RLS)
+-- 8. TABELA DE LEADS B2B (Quero Vender e Seja uma Cervejaria Parceira)
+CREATE TABLE IF NOT EXISTS public.leads (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tipo VARCHAR(50) NOT NULL, -- 'vendedor' ou 'cervejaria'
+    nome TEXT NOT NULL,
+    empresa_nome TEXT,
+    telefone VARCHAR(30) NOT NULL,
+    cidade VARCHAR(100),
+    categoria VARCHAR(50),
+    mensagem TEXT,
+    status VARCHAR(30) DEFAULT 'novo', -- 'novo', 'em_contato', 'aprovado'
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 9. HABILITAR ROW LEVEL SECURITY (RLS)
 ALTER TABLE public.clientes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.pedidos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.cards ENABLE ROW LEVEL SECURITY;
@@ -149,6 +163,7 @@ ALTER TABLE public.cervejarias ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.validacoes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.vendedores ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.comissoes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
 
 -- Políticas Públicas de Leitura e Inserção para Aplicação Web
 CREATE POLICY "Leitura pública de cervejarias ativas" ON public.cervejarias FOR SELECT USING (status = 'ativo');
@@ -157,3 +172,5 @@ CREATE POLICY "Consulta de cartões por QR Token" ON public.cards FOR SELECT USI
 CREATE POLICY "Criação de clientes e pedidos no checkout" ON public.clientes FOR ALL USING (true);
 CREATE POLICY "Criação de pedidos no checkout" ON public.pedidos FOR ALL USING (true);
 CREATE POLICY "Validação de cartões" ON public.validacoes FOR ALL USING (true);
+CREATE POLICY "Inserção de leads de parceiros" ON public.leads FOR ALL USING (true);
+
