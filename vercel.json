@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/validador", "destination": "/validador.html" },
+    { "source": "/aprovacao", "destination": "/aprovacao.html" }
+  ]
+}

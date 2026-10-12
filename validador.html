@@ -246,10 +246,10 @@
         resultCard.innerHTML = `<span class="animate-pulse text-brandGold font-bold text-sm">🔍 Consultando base de dados oficial...</span>`;
 
         try {
-          // Tenta API do Backend Node.js
+          // Tenta API do Backend Serverless / Supabase
           const resp = await fetch(`/api/validador/consultar?token=${encodeURIComponent(tokenOuCodigo)}&cervejaria_id=${breweryId}`);
-          if (resp.ok) {
-            const data = await resp.json();
+          const data = await resp.json();
+          if (resp.ok || resp.status === 403) {
             renderValidationResult(data, tokenOuCodigo, breweryId, breweryName);
             return;
           }

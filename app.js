@@ -1076,16 +1076,16 @@ function initClientModal() {
 
     let customerData = null;
 
-    // 1. Tenta API do Backend Node.js
+    // 1. Tenta API do Backend Serverless / Supabase
     try {
-      const resp = await fetch(`/api/cliente/${cleanCpf}`);
+      const resp = await fetch(`/api/cliente?cpf=${cleanCpf}`);
       if (resp.ok) {
         const json = await resp.json();
         if (json.sucesso && json.cliente) {
           customerData = {
             pagador: json.cliente,
             cards: json.cards || [],
-            historico: json.historico_visitas || []
+            historico: json.validacoes || []
           };
         }
       }
@@ -1248,7 +1248,7 @@ function initVendorPortalModal() {
     'LUCASPROMO': { nome: 'Lucas Promotor Autônomo', tipo: '👤 Promotor da Serra', vendas: 8 }
   };
 
-  searchForm?.addEventListener('submit', (e) => {
+  searchForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const code = (codeInput?.value || '').trim().toUpperCase();
 
@@ -1257,11 +1257,31 @@ function initVendorPortalModal() {
       return;
     }
 
-    const vendedor = vendedoresBase[code] || {
-      nome: `Parceiro (${code})`,
-      tipo: '👤 Promotor Credenciado',
-      vendas: 1
-    };
+    let vendedor = null;
+    let resumo = null;
+
+    try {
+      const resp = await fetch(`/api/vendedor?codigo=${encodeURIComponent(code)}`);
+      if (resp.ok) {
+        const json = await resp.json();
+        if (json.sucesso && json.vendedor) {
+          vendedor = json.vendedor;
+          resumo = json.resumo;
+        }
+      }
+    } catch (err) {}
+
+    if (!vendedor) {
+      vendedor = vendedoresBase[code] || {
+        nome: `Parceiro (${code})`,
+        tipo: '👤 Promotor Credenciado',
+        vendas: 1
+      };
+      resumo = {
+        total_vendas: vendedor.vendas || 1,
+        total_comissao: (vendedor.vendas || 1) * 20.00
+      };
+    }
 
     loginView?.classList.add('hidden');
     dashView?.classList.remove('hidden');
@@ -1269,10 +1289,12 @@ function initVendorPortalModal() {
     if (vpNome) vpNome.textContent = vendedor.nome;
     if (vpTipo) vpTipo.textContent = vendedor.tipo;
 
-    const totalComissao = vendedor.vendas * 20.00;
+    const totalComissao = resumo ? resumo.total_comissao : ((vendedor.vendas || 1) * 20.00);
+    const qtdVendas = resumo ? resumo.total_vendas : (vendedor.vendas || 1);
+
     if (vpValorComissao) vpValorComissao.textContent = formatCurrency(totalComissao);
-    if (vpQtdVendas) vpQtdVendas.textContent = `${vendedor.vendas} venda(s) na 1ª experiência`;
-    if (vpMetaBonus) vpMetaBonus.textContent = `${vendedor.vendas} / 20 vendas`;
+    if (vpQtdVendas) vpQtdVendas.textContent = `${qtdVendas} venda(s) na 1ª experiência`;
+    if (vpMetaBonus) vpMetaBonus.textContent = `${qtdVendas} / 20 vendas`;
   });
 }
 
