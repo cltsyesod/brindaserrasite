@@ -705,8 +705,9 @@ function initCheckoutModal() {
   confirmPixSimBtn?.addEventListener('click', () => processOrderCompletion('PIX'));
   confirmCardPayBtn?.addEventListener('click', () => processOrderCompletion('Cartão de Crédito'));
 
+  // Impressão Isolada de Alta Fidelidade (1 Página Colorida Fiel ao Cartão)
   downloadCardBtn?.addEventListener('click', () => {
-    window.print();
+    triggerCardPrint(document.getElementById('renderedCardContainer'));
   });
 
   shareWhatsappBtn?.addEventListener('click', () => {
@@ -716,6 +717,42 @@ function initCheckoutModal() {
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
   });
 }
+
+// Mecanismo Global de Impressão de 1 Página Colorida do BRINDA CARD
+function triggerCardPrint(sourceContainer) {
+  const printArea = document.getElementById('printOnlyCardArea');
+  if (!printArea) {
+    window.print();
+    return;
+  }
+  const card = sourceContainer ? sourceContainer.querySelector('.brinda-card-official') : null;
+  if (card) {
+    printArea.innerHTML = card.outerHTML;
+  } else {
+    const anyCard = document.querySelector('.brinda-card-official');
+    if (anyCard) printArea.innerHTML = anyCard.outerHTML;
+  }
+  window.print();
+}
+
+window.addEventListener('beforeprint', () => {
+  const printArea = document.getElementById('printOnlyCardArea');
+  if (printArea && !printArea.innerHTML.trim()) {
+    const activeCard = document.querySelector('#renderedCardContainer .brinda-card-official') 
+      || document.querySelector('#clienteCardRendered .brinda-card-official')
+      || document.querySelector('.brinda-card-official');
+    if (activeCard) {
+      printArea.innerHTML = activeCard.outerHTML;
+    }
+  }
+});
+
+window.addEventListener('afterprint', () => {
+  const printArea = document.getElementById('printOnlyCardArea');
+  if (printArea) {
+    printArea.innerHTML = '';
+  }
+});
 
 // Persistência local segura para Minha Conta
 function saveCustomerCardsLocally(pagador, cards) {
@@ -788,6 +825,10 @@ function renderOfficialCardHtml(activeCard, qrCodeDataUri) {
   } else if (activeCard.modalidade === 'brinda_premium' || activeCard.saldo_restante === 5) {
     benefitLabel = '5 Degustações Inclusas';
   }
+
+  const validationUrl = `https://brindaserra.com.br/validar?token=${encodeURIComponent(activeCard.qr_token || activeCard.codigo_passe || 'BS-2026-VIP')}`;
+  const qrFallbackUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(validationUrl)}`;
+  const qrSrc = qrCodeDataUri || activeCard.qr_image_base64 || qrFallbackUrl;
 
   return `
     <div class="brinda-card-official" style="
@@ -887,7 +928,7 @@ function renderOfficialCardHtml(activeCard, qrCodeDataUri) {
             align-items: center;
             text-align: center;
           ">
-            <img src="${qrCodeDataUri}" alt="QR Code" style="width: 68px; height: 68px; display: block;" />
+            <img src="${qrSrc}" alt="QR Code" style="width: 68px; height: 68px; display: block; object-fit: contain;" onerror="if(this.src!=='${qrFallbackUrl}') this.src='${qrFallbackUrl}';" />
             <span style="font-size: 0.55rem; color: #374151; font-family: monospace; font-weight: bold; margin-top: 2px;">${codigoPasse}</span>
           </div>
         </div>
@@ -989,6 +1030,8 @@ function initClientModal() {
   document.querySelectorAll('.open-client-modal').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      const mobileMenu = document.getElementById('mobileMenu');
+      if (mobileMenu) mobileMenu.classList.add('hidden');
       modal?.classList.add('open');
       document.body.style.overflow = 'hidden';
     });
@@ -1144,6 +1187,11 @@ function initClientModal() {
         `;
       }
     }
+  });
+
+  const clientePrintBtn = document.getElementById('clientePrintCardBtn');
+  clientePrintBtn?.addEventListener('click', () => {
+    triggerCardPrint(document.getElementById('clienteCardRendered'));
   });
 }
 

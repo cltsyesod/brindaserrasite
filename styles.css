@@ -139,17 +139,51 @@ a {
 }
 
 .nav-link {
-  font-size: 0.98rem;
+  font-size: 0.93rem;
   font-weight: 600;
   color: var(--color-primary-green);
-  padding: 0.5rem 0.9rem;
+  padding: 0.45rem 0.8rem;
   border-radius: var(--radius-full);
   transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+@media (min-width: 1280px) {
+  .nav-link {
+    font-size: 0.98rem;
+    padding: 0.5rem 0.9rem;
+  }
 }
 
 .nav-link:hover, .nav-link.active {
   background-color: rgba(63, 74, 62, 0.08);
   color: var(--color-accent-terracotta);
+}
+
+/* Botão Acesso à Conta no Cabeçalho */
+.btn-client-access {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-primary-green);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid rgba(63, 74, 62, 0.22);
+  padding: 0.5rem 0.95rem;
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(63, 74, 62, 0.06);
+  cursor: pointer;
+}
+
+.btn-client-access:hover {
+  background: #FFFFFF;
+  color: var(--color-accent-terracotta);
+  border-color: var(--color-accent-terracotta);
+  box-shadow: 0 2px 8px rgba(201, 108, 74, 0.16);
+  transform: translateY(-1px);
 }
 
 /* Fundo Refinado do Hero (Sem pontos, degradê suave e acolhedor) */
@@ -963,27 +997,81 @@ a {
   box-shadow: 0 2px 8px rgba(63, 74, 62, 0.3);
 }
 
-/* Suporte à Impressão Isolada do Cartão */
+/* ============================================================== */
+/* SUPORTE À IMPRESSÃO OFICIAL DO BRINDA CARD (1 PÁGINA COLORIDA) */
+/* ============================================================== */
 @media print {
-  body * {
-    visibility: hidden !important;
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
   }
-  #renderedCardContainer,
-  #renderedCardContainer * {
-    visibility: visible !important;
+
+  *, *:before, *:after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
-  #renderedCardContainer {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 100% !important;
-    max-width: 500px !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
+    background: #FAF6EF !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Oculta tudo na página, exceto a área isolada de impressão */
+  body > *:not(#printOnlyCardArea) {
+    display: none !important;
+  }
+
+  /* Área exclusiva de impressão: centralizada na folha única */
+  #printOnlyCardArea {
+    display: flex !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #FAF6EF !important;
     padding: 0 !important;
     margin: 0 !important;
+    box-sizing: border-box !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  #printOnlyCardArea .brinda-card-official {
+    display: block !important;
+    width: 480px !important;
+    max-width: 480px !important;
+    aspect-ratio: 1.586 / 1 !important;
+    background: linear-gradient(135deg, #1E261D 0%, #2D362C 50%, #3F4A3E 100%) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+    border-radius: 24px !important;
+    margin: auto !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  #printOnlyCardArea .brinda-card-official * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 }
+
 
