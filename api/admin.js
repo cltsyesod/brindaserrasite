@@ -97,6 +97,46 @@ module.exports = async function handler(req, res) {
         return res.json({ sucesso: true, mensagem: 'Vendedor excluído com sucesso.' });
       }
 
+      // 3.1 Atualizar Dados do Vendedor
+      if (action === 'atualizar_vendedor') {
+        const { codigoOriginal, nome, codigo, tipo, hotel_nome, telefone, status } = payload || {};
+        const targetCodigo = (codigoOriginal || codigo || '').trim().toUpperCase();
+        if (!targetCodigo) return res.status(400).json({ error: 'Código do vendedor é obrigatório.' });
+
+        const novoCodigo = (codigo || targetCodigo).trim().toUpperCase();
+        const novoStatus = status || 'ativo';
+
+        store.vendedores = store.vendedores.map(v => {
+          if (v.codigo && v.codigo.toUpperCase() === targetCodigo) {
+            return {
+              ...v,
+              nome: (nome || v.nome).trim(),
+              codigo: novoCodigo,
+              tipo: tipo || v.tipo,
+              hotel_nome: hotel_nome !== undefined ? hotel_nome : v.hotel_nome,
+              telefone: telefone || v.telefone,
+              status: novoStatus
+            };
+          }
+          return v;
+        });
+
+        setOverride(novoCodigo, novoStatus);
+
+        if (supabase && isSupabaseConfigured()) {
+          await supabase.from('vendedores').update({
+            nome: (nome || '').trim(),
+            codigo: novoCodigo,
+            tipo: tipo || 'autonomo',
+            hotel_nome: hotel_nome || null,
+            telefone: telefone || null,
+            status: novoStatus
+          }).eq('codigo', targetCodigo);
+        }
+
+        return res.json({ sucesso: true, mensagem: 'Dados do vendedor atualizados com sucesso.' });
+      }
+
       // 4. Cadastrar Hotel Parceiro
       if (action === 'criar_hotel') {
         const { nome, endereco, cidade, telefone, resp } = payload || {};
@@ -164,6 +204,44 @@ module.exports = async function handler(req, res) {
         return res.json({ sucesso: true, mensagem: 'Hotel excluído com sucesso.' });
       }
 
+      // 6.1 Atualizar Hotel Parceiro
+      if (action === 'atualizar_hotel') {
+        const { nomeOriginal, nome, endereco, cidade, telefone, resp, status } = payload || {};
+        const targetNome = nomeOriginal || nome;
+        if (!targetNome) return res.status(400).json({ error: 'Nome do hotel é obrigatório.' });
+
+        const novoNome = (nome || targetNome).trim();
+        const novoStatus = status || 'ativo';
+
+        store.hoteis = store.hoteis.map(h => {
+          if (h.nome.toLowerCase().trim() === targetNome.toLowerCase().trim()) {
+            return {
+              ...h,
+              nome: novoNome,
+              cidade: cidade || h.cidade,
+              endereco: endereco !== undefined ? endereco : h.endereco,
+              tel: telefone !== undefined ? telefone : h.tel,
+              resp: resp !== undefined ? resp : h.resp,
+              status: novoStatus
+            };
+          }
+          return h;
+        });
+
+        setOverride(novoNome, novoStatus);
+
+        if (supabase && isSupabaseConfigured()) {
+          await supabase.from('vendedores').update({
+            hotel_nome: novoNome,
+            nome: `${resp || 'Concierge'} (${novoNome})`,
+            telefone: telefone || null,
+            status: novoStatus
+          }).eq('hotel_nome', targetNome);
+        }
+
+        return res.json({ sucesso: true, mensagem: 'Dados do hotel atualizados com sucesso.' });
+      }
+
       // 7. Cadastrar Cervejaria Parceira
       if (action === 'criar_cervejaria') {
         const { nome, cidade, endereco, telefone, tour_guiado, pin_acesso } = payload || {};
@@ -226,6 +304,76 @@ module.exports = async function handler(req, res) {
         }
 
         return res.json({ sucesso: true, mensagem: 'Cervejaria excluída com sucesso.' });
+      }
+
+      // 9.1 Atualizar Cervejaria
+      if (action === 'atualizar_cervejaria') {
+        const { nomeOriginal, nome, cidade, endereco, telefone, tour_guiado, status } = payload || {};
+        const targetNome = nomeOriginal || nome;
+        if (!targetNome) return res.status(400).json({ error: 'Nome da cervejaria é obrigatório.' });
+
+        const novoNome = (nome || targetNome).trim();
+        const novoStatus = status || 'ativo';
+
+        store.cervejarias = store.cervejarias.map(c => {
+          if (c.nome.toLowerCase().trim() === targetNome.toLowerCase().trim()) {
+            return {
+              ...c,
+              nome: novoNome,
+              cidade: cidade || c.cidade,
+              endereco: endereco !== undefined ? endereco : c.endereco,
+              telefone: telefone || c.telefone,
+              tour_guiado: tour_guiado !== undefined ? Boolean(tour_guiado) : c.tour_guiado,
+              status: novoStatus
+            };
+          }
+          return c;
+        });
+
+        setOverride(novoNome, novoStatus);
+
+        if (supabase && isSupabaseConfigured()) {
+          await supabase.from('cervejarias').update({
+            nome: novoNome,
+            cidade: cidade || 'Serra Gaúcha',
+            endereco: endereco || null,
+            telefone: telefone || null,
+            tour_guiado: Boolean(tour_guiado),
+            status: novoStatus
+          }).eq('nome', targetNome);
+        }
+
+        return res.json({ sucesso: true, mensagem: 'Dados da cervejaria atualizados com sucesso.' });
+      }
+
+      // 9.2 Atualizar Status do Ticket de Suporte (SAC)
+      if (action === 'atualizar_ticket') {
+        const { id, status, resposta_admin } = payload || {};
+        if (!id) return res.status(400).json({ error: 'ID do ticket é obrigatório.' });
+
+        store.tickets = (store.tickets || []).map(t => {
+          if (t.id === id) {
+            return {
+              ...t,
+              status: status || t.status,
+              resposta_admin: resposta_admin !== undefined ? resposta_admin : t.resposta_admin,
+              respondido_em: new Date().toISOString()
+            };
+          }
+          return t;
+        });
+
+        if (supabase && isSupabaseConfigured()) {
+          try {
+            await supabase.from('tickets_suporte').update({
+              status: status || 'respondido',
+              resposta_admin: resposta_admin || null,
+              updated_at: new Date().toISOString()
+            }).eq('id', id);
+          } catch (e) {}
+        }
+
+        return res.json({ sucesso: true, mensagem: 'Ticket atualizado com sucesso.' });
       }
 
       // 10. Atualizar Status de Lead B2B
@@ -317,6 +465,8 @@ module.exports = async function handler(req, res) {
     let comissoes = [];
     let leads = [];
     let cervejarias = [];
+    let clientes = [];
+    let tickets = [];
 
     if (supabase && isSupabaseConfigured()) {
       const [
@@ -326,7 +476,9 @@ module.exports = async function handler(req, res) {
         resVend,
         resCom,
         resLeads,
-        resCerv
+        resCerv,
+        resCli,
+        resTick
       ] = await Promise.all([
         supabase.from('pedidos').select('*').order('created_at', { ascending: false }).limit(200),
         supabase.from('cards').select('*').order('created_at', { ascending: false }).limit(200),
@@ -334,7 +486,9 @@ module.exports = async function handler(req, res) {
         supabase.from('vendedores').select('*').order('created_at', { ascending: false }),
         supabase.from('comissoes').select('*').order('created_at', { ascending: false }),
         supabase.from('leads').select('*').order('created_at', { ascending: false }),
-        supabase.from('cervejarias').select('*').order('id', { ascending: true })
+        supabase.from('cervejarias').select('*').order('id', { ascending: true }),
+        supabase.from('clientes').select('*').order('created_at', { ascending: false }).limit(200).catch(() => ({ data: [] })),
+        supabase.from('tickets_suporte').select('*').order('created_at', { ascending: false }).limit(200).catch(() => ({ data: [] }))
       ]);
 
       pedidos = resPed.data || [];
@@ -344,6 +498,8 @@ module.exports = async function handler(req, res) {
       comissoes = resCom.data || [];
       leads = resLeads.data || [];
       cervejarias = resCerv.data || [];
+      clientes = resCli?.data || [];
+      tickets = resTick?.data || [];
     }
 
     // 1. Leads: mescla Supabase e Store (sem mock falso)
@@ -549,6 +705,22 @@ module.exports = async function handler(req, res) {
       };
     });
 
+    // Mesclar tickets do store com banco
+    const ticketsMap = new Map();
+    (store.tickets || []).forEach(t => ticketsMap.set(t.id, t));
+    tickets.forEach(t => ticketsMap.set(t.id, t));
+    const ticketsFinal = Array.from(ticketsMap.values()).sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+
+    // Audit logs consolidados
+    const auditLogsFinal = [...(store.audit_logs || [])];
+    clientes.forEach(c => {
+      let historico = [];
+      try {
+        historico = Array.isArray(c.historico_alteracoes) ? c.historico_alteracoes : JSON.parse(c.historico_alteracoes || '[]');
+      } catch (e) {}
+      historico.forEach(entry => auditLogsFinal.push(entry));
+    });
+
     return res.json({
       sucesso: true,
       ambiente: supabase && isSupabaseConfigured() ? 'Supabase PostgreSQL (Produção)' : 'Ambiente Resiliente Local',
@@ -558,6 +730,7 @@ module.exports = async function handler(req, res) {
         cards_ativos: totalCardsAtivos,
         validacoes_total: totalValidacoes,
         leads_total: leadsFinal.length,
+        tickets_abertos: ticketsFinal.filter(t => t.status === 'aberto').length,
         origens: origensContagem
       },
       pedidos,
@@ -567,7 +740,10 @@ module.exports = async function handler(req, res) {
       comissoes,
       leads: leadsFinal,
       cervejarias: cervejariasFinal,
-      hoteis: hoteisFinal
+      hoteis: hoteisFinal,
+      tickets: ticketsFinal,
+      clientes,
+      audit_logs: auditLogsFinal
     });
 
   } catch (err) {

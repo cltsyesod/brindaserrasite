@@ -198,6 +198,12 @@
         <button type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-100 transition-all flex items-center gap-2" data-tab="tabLeads">
           <span>📥</span><span>Leads B2B</span>
         </button>
+        <button type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-100 transition-all flex items-center gap-2" data-tab="tabSac">
+          <span>💬</span><span>SAC / Atendimento</span>
+        </button>
+        <button type="button" class="tab-btn px-4 py-2 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-100 transition-all flex items-center gap-2" data-tab="tabAuditoria">
+          <span>🛡️</span><span>Auditoria de Contatos</span>
+        </button>
       </div>
     </nav>
 
@@ -414,9 +420,14 @@
             <h2 class="text-lg font-bold text-brandGreen">Cervejarias Parceiras Credenciadas</h2>
             <p class="text-xs text-stone-500">Estabelecimentos com validador oficial ativo na Serra Gaúcha</p>
           </div>
-          <button type="button" id="btnCadastrarCervejaria" class="px-4 py-2.5 bg-brandGreen hover:bg-brandGreen-dark text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
-            <span>+</span><span>Cadastrar Cervejaria Parceira</span>
-          </button>
+          <div class="flex items-center gap-2 flex-wrap">
+            <button type="button" id="exportCervejariasBtn" class="px-3 py-2 bg-stone-100 hover:bg-stone-200 border border-stone-300 rounded-xl text-xs font-bold text-brandGreen flex items-center gap-1.5 whitespace-nowrap">
+              <span>📥</span><span>Exportar Cervejarias (CSV)</span>
+            </button>
+            <button type="button" id="btnCadastrarCervejaria" class="px-4 py-2.5 bg-brandGreen hover:bg-brandGreen-dark text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
+              <span>+</span><span>Cadastrar Cervejaria Parceira</span>
+            </button>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="cervejariasSummaryGrid">
@@ -464,9 +475,14 @@
             <h2 class="text-lg font-bold text-brandGreen">Gestão de Promotores, Motoristas & Hotéis</h2>
             <p class="text-xs text-stone-500">Apuração de comissões (R$ 20,00) e bônus de metas mensais (R$ 200,00)</p>
           </div>
-          <button type="button" id="btnOpenNewVendorModal" class="px-4 py-2.5 bg-brandTerracotta hover:bg-brandTerracotta-hover text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
-            <span>+</span><span>Cadastrar Novo Vendedor</span>
-          </button>
+          <div class="flex items-center gap-2 flex-wrap">
+            <button type="button" id="exportComissoesBtn" class="px-3 py-2 bg-stone-100 hover:bg-stone-200 border border-stone-300 rounded-xl text-xs font-bold text-brandGreen flex items-center gap-1.5 whitespace-nowrap">
+              <span>📥</span><span>Exportar Comissões (CSV)</span>
+            </button>
+            <button type="button" id="btnOpenNewVendorModal" class="px-4 py-2.5 bg-brandTerracotta hover:bg-brandTerracotta-hover text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
+              <span>+</span><span>Cadastrar Novo Vendedor</span>
+            </button>
+          </div>
         </div>
 
         <div class="bg-white rounded-3xl border border-stone-200 shadow-sm overflow-hidden">
@@ -550,6 +566,76 @@
           </div>
         </div>
 
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ABA 8: SAC / ATENDIMENTO AO CLIENTE        -->
+      <!-- ========================================== -->
+      <section id="tabSac" class="tab-content hidden space-y-6">
+        <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-stone-200 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-brandGreen">Central de Atendimento ao Cliente (SAC)</h3>
+              <p class="text-xs text-stone-500">Dúvidas dos clientes recebidas pelo Assistente Virtual e encaminhadas para atendimento humano</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="badgeTicketsAbertos" class="px-3 py-1 bg-amber-100 text-amber-900 border border-amber-300 rounded-full text-xs font-bold">
+                0 Abertos
+              </span>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase text-[0.68rem] tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Ticket</th>
+                  <th class="py-3 px-4">Data/Hora</th>
+                  <th class="py-3 px-4">Cliente</th>
+                  <th class="py-3 px-4">E-mail / WhatsApp</th>
+                  <th class="py-3 px-4">Mensagem / Dúvida</th>
+                  <th class="py-3 px-4">Status</th>
+                  <th class="py-3 px-4 text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="ticketsTableBody" class="divide-y divide-stone-100">
+                <!-- Inserido dinamicamente via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ABA 9: AUDITORIA DE ALTERAÇÃO DE CONTATO    -->
+      <!-- ========================================== -->
+      <section id="tabAuditoria" class="tab-content hidden space-y-6">
+        <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-brandGreen">Histórico de Auditoria • Alterações de Contato</h3>
+              <p class="text-xs text-stone-500">Registro inalterável de atualizações de e-mail e telefone realizadas pelos clientes para proteção contra contestações e chargebacks</p>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase text-[0.68rem] tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Data/Hora</th>
+                  <th class="py-3 px-4">CPF</th>
+                  <th class="py-3 px-4">Titular</th>
+                  <th class="py-3 px-4">E-mail Anterior &rarr; Novo</th>
+                  <th class="py-3 px-4">WhatsApp Anterior &rarr; Novo</th>
+                  <th class="py-3 px-4">Origem / Canal</th>
+                </tr>
+              </thead>
+              <tbody id="auditTableBody" class="divide-y divide-stone-100">
+                <!-- Inserido dinamicamente via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
     </main>
@@ -713,6 +799,219 @@
         <div class="pt-2 flex justify-end gap-2">
           <button type="button" id="cancelNewBreweryBtn" class="px-4 py-2 bg-stone-200 text-stone-700 font-bold rounded-xl hover:bg-stone-300">Cancelar</button>
           <button type="submit" class="px-5 py-2 bg-brandGreen text-white font-bold rounded-xl hover:bg-brandGreen-dark shadow-sm">Salvar Cervejaria</button>
+        </div>
+      </form>
+  <!-- MODAL 4: EDITAR HOTEL PARCEIRO -->
+  <div id="editHotelModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <h3 class="text-base font-bold text-brandGreen">Editar Hotel Parceiro</h3>
+        <button type="button" id="closeEditHotelModalBtn" class="text-stone-400 hover:text-stone-700 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="editHotelForm" class="space-y-3 text-xs">
+        <input type="hidden" id="ehNomeOriginal">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Nome do Hotel:</label>
+          <input type="text" id="ehNome" required class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Endereço Completo:</label>
+          <input type="text" id="ehEndereco" required class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Cidade:</label>
+            <select id="ehCidade" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+              <option value="Gramado">Gramado - RS</option>
+              <option value="Canela">Canela - RS</option>
+              <option value="Nova Petrópolis">Nova Petrópolis - RS</option>
+              <option value="Porto Alegre">Porto Alegre - RS</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Telefone / WhatsApp:</label>
+            <input type="text" id="ehTelefone" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Contato / Concierge:</label>
+            <input type="text" id="ehContato" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Status:</label>
+            <select id="ehStatus" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+              <option value="ativo">Ativo</option>
+              <option value="inativo">Inativo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" id="cancelEditHotelBtn" class="px-4 py-2 bg-stone-200 text-stone-700 font-bold rounded-xl hover:bg-stone-300">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-brandGreen text-white font-bold rounded-xl hover:bg-brandGreen-dark shadow-sm">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: EDITAR VENDEDOR / PROMOTOR -->
+  <div id="editVendorModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <h3 class="text-base font-bold text-brandGreen">Editar Vendedor / Promotor</h3>
+        <button type="button" id="closeEditVendorModalBtn" class="text-stone-400 hover:text-stone-700 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="editVendorForm" class="space-y-3 text-xs">
+        <input type="hidden" id="evCodigoOriginal">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Nome Completo:</label>
+          <input type="text" id="evNome" required class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Código:</label>
+            <input type="text" id="evCodigo" required class="w-full bg-stone-50 font-mono font-bold uppercase rounded-xl p-2.5 border border-stone-300 outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Categoria:</label>
+            <select id="evTipo" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+              <option value="uber">Motorista Uber / Táxi</option>
+              <option value="hotel">Concierge de Hotel</option>
+              <option value="autonomo">Promotor Autônomo</option>
+              <option value="guia">Guia de Turismo</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Hotel ou Cidade Vinculada:</label>
+          <input type="text" id="evHotel" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Telefone / WhatsApp:</label>
+            <input type="text" id="evTelefone" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Status:</label>
+            <select id="evStatus" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+              <option value="ativo">Ativo</option>
+              <option value="inativo">Inativo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" id="cancelEditVendorBtn" class="px-4 py-2 bg-stone-200 text-stone-700 font-bold rounded-xl hover:bg-stone-300">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-brandGreen text-white font-bold rounded-xl hover:bg-brandGreen-dark shadow-sm">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 6: EDITAR CERVEJARIA PARCEIRA -->
+  <div id="editBreweryModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <h3 class="text-base font-bold text-brandGreen">Editar Cervejaria Parceira</h3>
+        <button type="button" id="closeEditBreweryModalBtn" class="text-stone-400 hover:text-stone-700 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="editBreweryForm" class="space-y-3 text-xs">
+        <input type="hidden" id="ebNomeOriginal">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Nome da Cervejaria:</label>
+          <input type="text" id="ebNome" required class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Cidade:</label>
+            <select id="ebCidade" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+              <option value="Canela">Canela - RS</option>
+              <option value="Gramado">Gramado - RS</option>
+              <option value="Nova Petrópolis">Nova Petrópolis - RS</option>
+              <option value="Porto Alegre">Porto Alegre - RS</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Telefone / WhatsApp:</label>
+            <input type="text" id="ebTelefone" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Endereço Completo:</label>
+          <input type="text" id="ebEndereco" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Oferece Tour Guiado:</label>
+            <select id="ebTour" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+              <option value="true">Sim, tour na fábrica</option>
+              <option value="false">Não, somente degustação</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Status:</label>
+            <select id="ebStatus" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+              <option value="ativo">Ativo</option>
+              <option value="inativo">Inativo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" id="cancelEditBreweryBtn" class="px-4 py-2 bg-stone-200 text-stone-700 font-bold rounded-xl hover:bg-stone-300">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-brandGreen text-white font-bold rounded-xl hover:bg-brandGreen-dark shadow-sm">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 7: RESPONDER TICKET DE SUPORTE (SAC) -->
+  <div id="replyTicketModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <h3 class="text-base font-bold text-brandGreen">Atendimento de SAC • Ticket <span id="rtTicketDisplay" class="font-mono text-brandTerracotta"></span></h3>
+        <button type="button" id="closeReplyTicketModalBtn" class="text-stone-400 hover:text-stone-700 text-xl font-bold">&times;</button>
+      </div>
+
+      <div class="bg-stone-50 p-3.5 rounded-2xl border border-stone-200 space-y-1 text-xs">
+        <p><strong>Cliente:</strong> <span id="rtClienteNome">-</span></p>
+        <p><strong>Contato:</strong> <span id="rtClienteContato">-</span></p>
+        <p class="pt-1 text-stone-800 border-t border-stone-200 mt-1"><strong>Dúvida / Solicitação:</strong></p>
+        <p id="rtMensagem" class="text-stone-700 bg-white p-2.5 rounded-xl border border-stone-200 whitespace-pre-wrap"></p>
+      </div>
+
+      <form id="replyTicketForm" class="space-y-3 text-xs">
+        <input type="hidden" id="rtTicketId">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Resposta / Observação Interna do Atendente:</label>
+          <textarea id="rtResposta" rows="3" required placeholder="Digite a resposta enviada ao cliente ou registro do contato feito..." class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Atualizar Status do Ticket:</label>
+          <select id="rtStatus" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+            <option value="respondido">Respondido / Contatado</option>
+            <option value="fechado">Concluído / Fechado</option>
+            <option value="em_atendimento">Em Atendimento</option>
+          </select>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" id="cancelReplyTicketBtn" class="px-4 py-2 bg-stone-200 text-stone-700 font-bold rounded-xl hover:bg-stone-300">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-brandGreen text-white font-bold rounded-xl hover:bg-brandGreen-dark shadow-sm">Salvar Atendimento</button>
         </div>
       </form>
     </div>
@@ -1115,6 +1414,8 @@
         renderVendedores(data.vendedores);
         renderHoteis(data.hoteis || []);
         renderLeads(data.leads);
+        renderTickets(data.tickets || []);
+        renderAuditLogs(data.audit_logs || []);
       }
 
       // Origem das Vendas
@@ -1269,6 +1570,9 @@
                 </div>
               </div>
               <div class="pt-2 border-t border-stone-100 flex items-center justify-end gap-1.5 flex-wrap">
+                <button type="button" class="btn-editar-cervejaria px-2.5 py-1 bg-stone-700 hover:bg-stone-800 text-white font-bold rounded-lg text-[0.65rem] shadow-xs transition-colors" data-nome="${c.nome}" data-cidade="${c.cidade || ''}" data-endereco="${c.endereco || ''}" data-tel="${c.telefone || ''}" data-tour="${c.tour_guiado ? 'true' : 'false'}" data-status="${c.status || 'ativo'}" title="Editar dados da cervejaria">
+                  Editar
+                </button>
                 ${isAtivo ? `
                   <button type="button" class="btn-toggle-cervejaria px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-[0.65rem] shadow-xs transition-colors" data-nome="${c.nome}" data-status="inativo" title="Desativar cervejaria">
                     Desativar
@@ -1285,6 +1589,21 @@
             </div>
           `;
         }).join('');
+
+        // Eventos Cervejarias: Editar
+        document.querySelectorAll('.btn-editar-cervejaria').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const { nome, cidade, endereco, tel, tour, status } = btn.dataset;
+            document.getElementById('ebNomeOriginal').value = nome;
+            document.getElementById('ebNome').value = nome;
+            document.getElementById('ebCidade').value = cidade || 'Gramado';
+            document.getElementById('ebEndereco').value = endereco || '';
+            document.getElementById('ebTelefone').value = tel || '';
+            document.getElementById('ebTour').value = tour || 'false';
+            document.getElementById('ebStatus').value = status || 'ativo';
+            document.getElementById('editBreweryModal').classList.remove('hidden');
+          });
+        });
 
         // Eventos Cervejarias: Desativar / Reativar
         document.querySelectorAll('.btn-toggle-cervejaria').forEach(btn => {
@@ -1395,6 +1714,9 @@
               </td>
               <td class="py-3 px-4 text-center">
                 <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                  <button type="button" class="btn-editar-vendedor px-2 py-1 bg-stone-700 hover:bg-stone-800 text-white font-bold rounded-lg text-[0.65rem] shadow-xs" data-codigo="${v.codigo}" data-nome="${v.nome}" data-tipo="${v.tipo || 'autonomo'}" data-hotel="${v.hotel_nome || ''}" data-tel="${v.telefone || ''}" data-status="${v.status || 'ativo'}" title="Editar vendedor">
+                    Editar
+                  </button>
                   ${isAtivo ? `
                     <button type="button" class="btn-toggle-vendedor px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-[0.65rem] shadow-xs" data-codigo="${v.codigo}" data-status="inativo" title="Desativar vendedor">
                       Desativar
@@ -1417,6 +1739,21 @@
             </tr>
           `;
         }).join('');
+
+        // Eventos Vendedores: Editar
+        document.querySelectorAll('.btn-editar-vendedor').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const { codigo, nome, tipo, hotel, tel, status } = btn.dataset;
+            document.getElementById('evCodigoOriginal').value = codigo;
+            document.getElementById('evCodigo').value = codigo;
+            document.getElementById('evNome').value = nome;
+            document.getElementById('evTipo').value = tipo || 'autonomo';
+            document.getElementById('evHotel').value = hotel || '';
+            document.getElementById('evTelefone').value = tel || '';
+            document.getElementById('evStatus').value = status || 'ativo';
+            document.getElementById('editVendorModal').classList.remove('hidden');
+          });
+        });
 
         // Eventos Vendedores: Desativar / Reativar
         document.querySelectorAll('.btn-toggle-vendedor').forEach(btn => {
@@ -1517,6 +1854,9 @@
               </div>
 
               <div class="pt-2 border-t border-stone-200 flex items-center justify-end gap-1.5 flex-wrap">
+                <button type="button" class="btn-editar-hotel px-2.5 py-1 bg-stone-700 hover:bg-stone-800 text-white font-bold rounded-lg text-[0.65rem] shadow-xs transition-colors" data-nome="${h.nome}" data-cidade="${h.cidade || ''}" data-endereco="${h.endereco || ''}" data-tel="${h.tel || h.telefone || ''}" data-resp="${h.resp || ''}" data-status="${h.status || 'ativo'}" title="Editar dados do hotel">
+                  Editar
+                </button>
                 ${isAtivo ? `
                   <button type="button" class="btn-toggle-hotel px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-[0.65rem] shadow-xs transition-colors" data-nome="${h.nome}" data-status="inativo" title="Desativar hotel">
                     Desativar
@@ -1533,6 +1873,21 @@
             </div>
           `;
         }).join('');
+
+        // Eventos Hotéis: Editar
+        document.querySelectorAll('.btn-editar-hotel').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const { nome, cidade, endereco, tel, resp, status } = btn.dataset;
+            document.getElementById('ehNomeOriginal').value = nome;
+            document.getElementById('ehNome').value = nome;
+            document.getElementById('ehCidade').value = cidade || 'Gramado';
+            document.getElementById('ehEndereco').value = endereco || '';
+            document.getElementById('ehTelefone').value = tel || '';
+            document.getElementById('ehContato').value = resp || '';
+            document.getElementById('ehStatus').value = status || 'ativo';
+            document.getElementById('editHotelModal').classList.remove('hidden');
+          });
+        });
 
         // Eventos Hotéis: Desativar / Reativar
         document.querySelectorAll('.btn-toggle-hotel').forEach(btn => {
@@ -1825,6 +2180,314 @@
 
         newBreweryModal.classList.add('hidden');
         newBreweryForm.reset();
+        loadDashboardData();
+      });
+
+      // 8. RENDERIZAÇÃO DOS TICKETS DE SAC
+      function renderTickets(tickets) {
+        const tbody = document.getElementById('ticketsTableBody');
+        const badge = document.getElementById('badgeTicketsAbertos');
+        if (!tbody) return;
+
+        const allTickets = tickets || [];
+        const abertosCount = allTickets.filter(t => t.status === 'aberto').length;
+        if (badge) badge.textContent = `${abertosCount} Aberto${abertosCount !== 1 ? 's' : ''}`;
+
+        if (allTickets.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" class="py-6 text-center text-stone-400">
+                Nenhum chamado de atendimento registrado até o momento.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = allTickets.map(t => {
+          const isAberto = t.status === 'aberto';
+          const isFechado = t.status === 'fechado';
+          const dataHora = t.created_at ? new Date(t.created_at).toLocaleString('pt-BR') : '-';
+          const contato = t.email ? (t.telefone ? `${t.email} • ${t.telefone}` : t.email) : (t.telefone || '-');
+
+          return `
+            <tr class="hover:bg-stone-50 transition-colors">
+              <td class="py-3 px-4 font-mono font-bold text-brandGreen">${t.id}</td>
+              <td class="py-3 px-4 text-stone-500 whitespace-nowrap">${dataHora}</td>
+              <td class="py-3 px-4 font-bold text-stone-800">${t.nome}</td>
+              <td class="py-3 px-4 text-stone-600">${contato}</td>
+              <td class="py-3 px-4 text-stone-700 max-w-xs truncate" title="${t.mensagem}">${t.mensagem}</td>
+              <td class="py-3 px-4">
+                <span class="px-2 py-0.5 rounded-full text-[0.65rem] font-bold ${isAberto ? 'bg-amber-100 text-amber-900 border border-amber-300' : isFechado ? 'bg-stone-100 text-stone-600' : 'bg-emerald-100 text-emerald-800'}">
+                  ${isAberto ? '● Aberto' : isFechado ? '✓ Fechado' : '● Em Atendimento'}
+                </span>
+              </td>
+              <td class="py-3 px-4 text-center">
+                <button type="button" class="btn-responder-ticket px-2.5 py-1 bg-brandGreen hover:bg-brandGreen-dark text-white font-bold rounded-lg text-[0.65rem] shadow-xs" data-id="${t.id}" data-nome="${t.nome}" data-contato="${contato}" data-msg="${encodeURIComponent(t.mensagem)}" data-resp="${encodeURIComponent(t.resposta_admin || '')}" data-status="${t.status || 'aberto'}">
+                  Responder
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        document.querySelectorAll('.btn-responder-ticket').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const { id, nome, contato, msg, resp, status } = btn.dataset;
+            document.getElementById('rtTicketId').value = id;
+            document.getElementById('rtTicketDisplay').textContent = id;
+            document.getElementById('rtClienteNome').textContent = nome;
+            document.getElementById('rtClienteContato').textContent = contato;
+            document.getElementById('rtMensagem').textContent = decodeURIComponent(msg || '');
+            document.getElementById('rtResposta').value = decodeURIComponent(resp || '');
+            document.getElementById('rtStatus').value = status || 'respondido';
+            document.getElementById('replyTicketModal').classList.remove('hidden');
+          });
+        });
+      }
+
+      // 9. RENDERIZAÇÃO DA AUDITORIA DE CONTATOS
+      function renderAuditLogs(logs) {
+        const tbody = document.getElementById('auditTableBody');
+        if (!tbody) return;
+
+        const allLogs = logs || [];
+        if (allLogs.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" class="py-6 text-center text-stone-400">
+                Nenhuma alteração de contato registrada. Os dados originais de cadastro permanecem intactos.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = allLogs.map(a => {
+          const dataHora = a.data ? new Date(a.data).toLocaleString('pt-BR') : '-';
+          const emailDiff = a.email_anterior ? `${a.email_anterior} &rarr; <strong class="text-brandGreen">${a.email_novo}</strong>` : `<strong class="text-brandGreen">${a.email_novo || '-'}</strong>`;
+          const telDiff = a.telefone_anterior ? `${a.telefone_anterior} &rarr; <strong class="text-brandGreen">${a.telefone_novo}</strong>` : `<strong class="text-brandGreen">${a.telefone_novo || '-'}</strong>`;
+
+          return `
+            <tr class="hover:bg-stone-50 transition-colors">
+              <td class="py-3 px-4 text-stone-500 whitespace-nowrap">${dataHora}</td>
+              <td class="py-3 px-4 font-mono font-bold text-stone-800">${a.cpf || '-'}</td>
+              <td class="py-3 px-4 font-semibold text-stone-900">${a.nome || 'Cliente'}</td>
+              <td class="py-3 px-4 text-stone-700">${emailDiff}</td>
+              <td class="py-3 px-4 text-stone-700">${telDiff}</td>
+              <td class="py-3 px-4">
+                <span class="px-2 py-0.5 rounded-full text-[0.65rem] font-bold bg-stone-100 text-stone-700">
+                  ${a.canal || a.origem || 'Área do Cliente'}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // 10. EXPORTAÇÃO CSV UNIVERSAL (Com UTF-8 BOM para compatibilidade com Microsoft Excel)
+      function downloadCsv(filename, headers, rows) {
+        const escapeCell = (val) => `"${String(val || '').replace(/"/g, '""')}"`;
+        const csvContent = '\uFEFF' + [
+          headers.map(escapeCell).join(';'),
+          ...rows.map(r => r.map(escapeCell).join(';'))
+        ].join('\r\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      // Eventos de Exportação CSV
+      document.getElementById('exportPedidosBtn')?.addEventListener('click', () => {
+        const pedidos = (adminData && adminData.pedidos) ? adminData.pedidos : [];
+        if (pedidos.length === 0) return alert('Nenhum pedido para exportar.');
+        const headers = ['Pedido ID', 'Data/Hora', 'Nome Pagador', 'CPF Pagador', 'Modalidade', 'Qtd Cards', 'Valor Total (R$)', 'Forma Pagamento', 'Origem Tipo', 'Origem Detalhe', 'Status'];
+        const rows = pedidos.map(p => [
+          p.id,
+          p.created_at ? new Date(p.created_at).toLocaleString('pt-BR') : '',
+          p.pagador_nome || '',
+          p.pagador_cpf || '',
+          p.plano_cervejaria || '',
+          p.qtd_cards || 1,
+          (Number(p.valor_total || 0)).toFixed(2).replace('.', ','),
+          p.forma_pagamento || '',
+          p.origem_tipo || '',
+          p.origem_detalhe || '',
+          p.status || ''
+        ]);
+        downloadCsv(`pedidos_brinda_serra_${new Date().toISOString().slice(0,10)}.csv`, headers, rows);
+      });
+
+      document.getElementById('exportComissoesBtn')?.addEventListener('click', () => {
+        const vendedores = (adminData && adminData.vendedores) ? adminData.vendedores : [];
+        if (vendedores.length === 0) return alert('Nenhum vendedor para exportar.');
+        const headers = ['Código', 'Nome Vendedor', 'Categoria', 'Hotel/Cidade', 'Telefone', 'Total Vendas', 'Comissão (R$)', 'Bônus (R$)', 'Total a Receber (R$)', 'Pendente (R$)', 'Status'];
+        const rows = vendedores.map(v => [
+          v.codigo,
+          v.nome,
+          v.tipo,
+          v.hotel_nome || '',
+          v.telefone || '',
+          v.total_vendas || 0,
+          (Number(v.total_comissao || 0)).toFixed(2).replace('.', ','),
+          (Number(v.valor_bonus || 0)).toFixed(2).replace('.', ','),
+          (Number(v.total_a_receber || 0)).toFixed(2).replace('.', ','),
+          (Number(v.total_pendente || 0)).toFixed(2).replace('.', ','),
+          v.status || 'ativo'
+        ]);
+        downloadCsv(`comissoes_vendedores_${new Date().toISOString().slice(0,10)}.csv`, headers, rows);
+      });
+
+      document.getElementById('exportCervejariasBtn')?.addEventListener('click', () => {
+        const cervejarias = (adminData && adminData.cervejarias) ? adminData.cervejarias : [];
+        const validacoes = (adminData && adminData.validacoes) ? adminData.validacoes : [];
+        if (cervejarias.length === 0) return alert('Nenhuma cervejaria para exportar.');
+        const headers = ['Nome Cervejaria', 'Cidade', 'Endereço', 'Telefone', 'Tour Guiado', 'Total Degustações Realizadas', 'Status'];
+        const rows = cervejarias.map(c => {
+          const totalVisitas = validacoes.filter(v => v.cervejaria_id === c.id || (v.cervejaria_nome && v.cervejaria_nome.toLowerCase() === c.nome.toLowerCase())).length;
+          return [
+            c.nome,
+            c.cidade || 'Serra Gaúcha',
+            c.endereco || '',
+            c.telefone || '',
+            c.tour_guiado ? 'Sim' : 'Não',
+            totalVisitas,
+            c.status || 'ativo'
+          ];
+        });
+        downloadCsv(`cervejarias_parceiras_${new Date().toISOString().slice(0,10)}.csv`, headers, rows);
+      });
+
+      // 11. SUBMISSÃO DE FORMULÁRIOS DE EDIÇÃO
+      // Editar Hotel
+      document.getElementById('closeEditHotelModalBtn')?.addEventListener('click', () => document.getElementById('editHotelModal').classList.add('hidden'));
+      document.getElementById('cancelEditHotelBtn')?.addEventListener('click', () => document.getElementById('editHotelModal').classList.add('hidden'));
+      document.getElementById('editHotelForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nomeOriginal = document.getElementById('ehNomeOriginal').value;
+        const nome = document.getElementById('ehNome').value.trim();
+        const cidade = document.getElementById('ehCidade').value;
+        const endereco = document.getElementById('ehEndereco').value.trim();
+        const telefone = document.getElementById('ehTelefone').value.trim();
+        const resp = document.getElementById('ehContato').value.trim();
+        const status = document.getElementById('ehStatus').value;
+
+        const payload = { nomeOriginal, nome, cidade, endereco, telefone, resp, status };
+        salvarStatusOverride(nome, status);
+        salvarStatusOverride(nomeOriginal, status);
+
+        const localHoteis = JSON.parse(localStorage.getItem('brinda_hoteis_cadastrados') || '[]');
+        const idx = localHoteis.findIndex(h => h.nome.toLowerCase() === nomeOriginal.toLowerCase());
+        if (idx >= 0) localHoteis[idx] = { ...localHoteis[idx], nome, cidade, endereco, tel: telefone, resp, status };
+        else localHoteis.push({ nome, cidade, endereco, tel: telefone, resp, status });
+        localStorage.setItem('brinda_hoteis_cadastrados', JSON.stringify(localHoteis));
+
+        try {
+          await fetch('/api/admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'atualizar_hotel', payload })
+          });
+        } catch(err) {}
+
+        document.getElementById('editHotelModal').classList.add('hidden');
+        loadDashboardData();
+      });
+
+      // Editar Vendedor
+      document.getElementById('closeEditVendorModalBtn')?.addEventListener('click', () => document.getElementById('editVendorModal').classList.add('hidden'));
+      document.getElementById('cancelEditVendorBtn')?.addEventListener('click', () => document.getElementById('editVendorModal').classList.add('hidden'));
+      document.getElementById('editVendorForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const codigoOriginal = document.getElementById('evCodigoOriginal').value;
+        const nome = document.getElementById('evNome').value.trim();
+        const codigo = document.getElementById('evCodigo').value.trim().toUpperCase();
+        const tipo = document.getElementById('evTipo').value;
+        const hotel_nome = document.getElementById('evHotel').value.trim();
+        const telefone = document.getElementById('evTelefone').value.trim();
+        const status = document.getElementById('evStatus').value;
+
+        const payload = { codigoOriginal, nome, codigo, tipo, hotel_nome, telefone, status };
+        salvarStatusOverride(codigo, status);
+        salvarStatusOverride(codigoOriginal, status);
+
+        const localVend = JSON.parse(localStorage.getItem('brinda_vendedores_cadastrados') || '[]');
+        const idx = localVend.findIndex(v => v.codigo?.toUpperCase() === codigoOriginal.toUpperCase());
+        if (idx >= 0) localVend[idx] = { ...localVend[idx], nome, codigo, tipo, hotel_nome, telefone, status };
+        else localVend.push({ nome, codigo, tipo, hotel_nome, telefone, status });
+        localStorage.setItem('brinda_vendedores_cadastrados', JSON.stringify(localVend));
+
+        try {
+          await fetch('/api/admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'atualizar_vendedor', payload })
+          });
+        } catch(err) {}
+
+        document.getElementById('editVendorModal').classList.add('hidden');
+        loadDashboardData();
+      });
+
+      // Editar Cervejaria
+      document.getElementById('closeEditBreweryModalBtn')?.addEventListener('click', () => document.getElementById('editBreweryModal').classList.add('hidden'));
+      document.getElementById('cancelEditBreweryBtn')?.addEventListener('click', () => document.getElementById('editBreweryModal').classList.add('hidden'));
+      document.getElementById('editBreweryForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nomeOriginal = document.getElementById('ebNomeOriginal').value;
+        const nome = document.getElementById('ebNome').value.trim();
+        const cidade = document.getElementById('ebCidade').value;
+        const endereco = document.getElementById('ebEndereco').value.trim();
+        const telefone = document.getElementById('ebTelefone').value.trim();
+        const tour_guiado = document.getElementById('ebTour').value === 'true';
+        const status = document.getElementById('ebStatus').value;
+
+        const payload = { nomeOriginal, nome, cidade, endereco, telefone, tour_guiado, status };
+        salvarStatusOverride(nome, status);
+        salvarStatusOverride(nomeOriginal, status);
+
+        const localCerv = JSON.parse(localStorage.getItem('brinda_cervejarias_cadastradas') || '[]');
+        const idx = localCerv.findIndex(c => c.nome.toLowerCase() === nomeOriginal.toLowerCase());
+        if (idx >= 0) localCerv[idx] = { ...localCerv[idx], nome, cidade, endereco, telefone, tour_guiado, status };
+        else localCerv.push({ nome, cidade, endereco, telefone, tour_guiado, status });
+        localStorage.setItem('brinda_cervejarias_cadastradas', JSON.stringify(localCerv));
+
+        try {
+          await fetch('/api/admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'atualizar_cervejaria', payload })
+          });
+        } catch(err) {}
+
+        document.getElementById('editBreweryModal').classList.add('hidden');
+        loadDashboardData();
+      });
+
+      // Responder Ticket SAC
+      document.getElementById('closeReplyTicketModalBtn')?.addEventListener('click', () => document.getElementById('replyTicketModal').classList.add('hidden'));
+      document.getElementById('cancelReplyTicketBtn')?.addEventListener('click', () => document.getElementById('replyTicketModal').classList.add('hidden'));
+      document.getElementById('replyTicketForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('rtTicketId').value;
+        const resposta_admin = document.getElementById('rtResposta').value.trim();
+        const status = document.getElementById('rtStatus').value;
+
+        try {
+          await fetch('/api/admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'atualizar_ticket', payload: { id, status, resposta_admin } })
+          });
+        } catch(err) {}
+
+        document.getElementById('replyTicketModal').classList.add('hidden');
         loadDashboardData();
       });
 

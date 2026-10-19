@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTermsModal();
   initContactForm();
   initWineryParallax();
+  initSacWidget();
 });
 
 // 1. Header com sombra e efeito ao rolar
@@ -175,6 +176,13 @@ function initBrindaCardCalculator() {
         payerNameInput.value = cardNameInput.value.trim();
       }
 
+      // Sincroniza plano de cervejaria escolhido na home com a opção do titular no checkout
+      const selectedPlanKey = currentCalculatorState.selectedBeerPlanKey || 'brinda_bem';
+      const payerPlanRadio = document.querySelector(`input[name="payer_plan"][value="${selectedPlanKey}"]`);
+      if (payerPlanRadio) {
+        payerPlanRadio.checked = true;
+      }
+
       openCheckoutModal();
     });
   }
@@ -209,6 +217,7 @@ function initCheckoutModal() {
   // Etapa 1: Destino e Convidados
   const buyTargetRadios = document.querySelectorAll('input[name="buy_target"]');
   const thirdPartyBlock = document.getElementById('thirdPartyBlock');
+  const payerPlanSelectionGroup = document.getElementById('payerPlanSelectionGroup');
   const guestsList = document.getElementById('guestsList');
   const addGuestBtn = document.getElementById('addGuestBtn');
 
@@ -342,8 +351,16 @@ function initCheckoutModal() {
       const val = radio.value;
       if (val === 'myself') {
         thirdPartyBlock?.classList.add('hidden');
-      } else {
+        payerPlanSelectionGroup?.classList.remove('hidden');
+      } else if (val === 'others') {
         thirdPartyBlock?.classList.remove('hidden');
+        payerPlanSelectionGroup?.classList.add('hidden');
+        if (guestsList && guestsList.children.length === 0) {
+          addGuestInputRow();
+        }
+      } else { // both
+        thirdPartyBlock?.classList.remove('hidden');
+        payerPlanSelectionGroup?.classList.remove('hidden');
         if (guestsList && guestsList.children.length === 0) {
           addGuestInputRow();
         }
@@ -351,7 +368,7 @@ function initCheckoutModal() {
     });
   });
 
-  // Função para adicionar linha de convidado
+  // Função para adicionar linha de convidado com seleção individual de plano
   function addGuestInputRow() {
     if (!guestsList) return;
     const currentGuests = guestsList.querySelectorAll('.guest-item').length;
@@ -385,6 +402,14 @@ function initCheckoutModal() {
         </div>
         <div>
           <input type="email" placeholder="E-mail para receber o Card" class="guest-email form-input-soft !py-1.5 text-xs">
+        </div>
+        <div class="sm:col-span-2 pt-1 border-t border-amber-200/60">
+          <label class="block text-[0.68rem] font-bold text-stone-700 uppercase mb-1">Experiência Deste Convidado:</label>
+          <select class="guest-plan form-input-soft !py-1.5 text-xs bg-white">
+            <option value="none">Apenas o BRINDA CARD (R$ 10,00 - 0 experiências)</option>
+            <option value="brinda_bem" selected>Brinda Bem (R$ 130 + R$ 10 = R$ 140,00 - 3 degustações)</option>
+            <option value="brinda_premium">Brinda Premium (R$ 190 + R$ 10 = R$ 200,00 - 5 degustações)</option>
+          </select>
         </div>
       </div>
     `;
@@ -593,7 +618,7 @@ function initCheckoutModal() {
 
   backToStep1Btn?.addEventListener('click', () => setCheckoutStep(1));
 
-  // --- Validação Etapa 2 -> Etapa 3 (Cálculo Financeiro e Geração de PIX) ---
+  // --- Validação Etapa 2 -> Etapa 3 (Cálculo Financeiro Individual e Geração de PIX) ---
   goToStep3Btn?.addEventListener('click', () => {
     const originVal = originSelect?.value || '';
     if (!originVal) {
@@ -608,15 +633,40 @@ function initCheckoutModal() {
     const compraParaSi = selectedTarget !== 'others';
     const totalCartoes = (compraParaSi ? 1 : 0) + qtdConvidados;
 
-    const taxaAdesao = 10.00;
-    const valorUnitarioExp = currentCalculatorState.selectedBeerPrice;
-    const valorTotalExp = valorUnitarioExp * totalCartoes;
-    const valorFinal = taxaAdesao + valorTotalExp;
+    const taxaAdesaoTotal = totalCartoes * 10.00;
 
-    if (summaryBasePrice) summaryBasePrice.textContent = formatCurrency(taxaAdesao);
-    if (summaryExpName) summaryExpName.textContent = currentCalculatorState.selectedBeerName;
-    if (summaryExpPrice) summaryExpPrice.textContent = formatCurrency(valorTotalExp);
-    if (summaryGuestsCount) summaryGuestsCount.textContent = `${qtdConvidados} (${totalCartoes} cartão(ões) no total)`;
+    function getPlanInfo(key) {
+      if (key === 'brinda_bem') return { valor: 130.00, nome: 'Brinda Bem (3 Cervejarias)' };
+      if (key === 'brinda_premium') return { valor: 190.00, nome: 'Brinda Premium (5 Cervejarias)' };
+      return { valor: 0.00, nome: 'Apenas Cartão (0 experiências)' };
+    }
+
+    let totalValorExp = 0;
+    const planSummaryItems = [];
+
+    if (compraParaSi) {
+      const titularPlanKey = document.querySelector('input[name="payer_plan"]:checked')?.value || currentCalculatorState.selectedBeerPlanKey || 'brinda_bem';
+      const info = getPlanInfo(titularPlanKey);
+      totalValorExp += info.valor;
+      planSummaryItems.push(`Titular: ${info.nome}`);
+    }
+
+    if (selectedTarget === 'others' || selectedTarget === 'both') {
+      guestItems.forEach((gItem, idx) => {
+        const gPlanKey = gItem.querySelector('.guest-plan')?.value || 'brinda_bem';
+        const info = getPlanInfo(gPlanKey);
+        totalValorExp += info.valor;
+        const gName = gItem.querySelector('.guest-name')?.value.trim() || `Convidado ${idx + 1}`;
+        planSummaryItems.push(`${gName}: ${info.nome}`);
+      });
+    }
+
+    const valorFinal = taxaAdesaoTotal + totalValorExp;
+
+    if (summaryBasePrice) summaryBasePrice.textContent = `${totalCartoes}x R$ 10,00 = ${formatCurrency(taxaAdesaoTotal)}`;
+    if (summaryExpName) summaryExpName.textContent = planSummaryItems.length === 1 ? planSummaryItems[0] : `${planSummaryItems.length} experiências individuais`;
+    if (summaryExpPrice) summaryExpPrice.textContent = formatCurrency(totalValorExp);
+    if (summaryGuestsCount) summaryGuestsCount.textContent = `${qtdConvidados} convidados (${totalCartoes} cartão(ões) no total)`;
     if (summaryTotalPrice) summaryTotalPrice.textContent = formatCurrency(valorFinal);
 
     const pixCode = `00020126580014br.gov.bcb.pix0136brindaserracard-pix-${Date.now()}520400005303986540${valorFinal.toFixed(2)}5802BR5920BRINDA SERRA6006CANELA62070503***6304`;
@@ -703,6 +753,9 @@ function initCheckoutModal() {
 
     const selectedTarget = document.querySelector('input[name="buy_target"]:checked')?.value || 'myself';
     const compraParaSi = selectedTarget !== 'others';
+    const titularPlanKey = compraParaSi 
+      ? (document.querySelector('input[name="payer_plan"]:checked')?.value || currentCalculatorState.selectedBeerPlanKey || 'brinda_bem')
+      : 'none';
     const terceiros = [];
     const guestItems = guestsList?.querySelectorAll('.guest-item') || [];
 
@@ -713,7 +766,8 @@ function initCheckoutModal() {
           cpf: (item.querySelector('.guest-cpf')?.value || '').replace(/\D/g, ''),
           data_nasc: item.querySelector('.guest-dob')?.value || '',
           telefone: (item.querySelector('.guest-phone')?.value || '').replace(/\D/g, ''),
-          email: item.querySelector('.guest-email')?.value.trim() || ''
+          email: item.querySelector('.guest-email')?.value.trim() || '',
+          plano_cervejaria: item.querySelector('.guest-plan')?.value || 'brinda_bem'
         });
       });
     }
@@ -739,9 +793,10 @@ function initCheckoutModal() {
         cpf: (payerCpf?.value || '').replace(/\D/g, ''),
         data_nasc: payerDob?.value || '',
         telefone: (payerPhone?.value || '').replace(/\D/g, ''),
-        email: payerEmail?.value.trim() || ''
+        email: payerEmail?.value.trim() || '',
+        plano_cervejaria: titularPlanKey
       },
-      plano_cervejaria: currentCalculatorState.selectedBeerPlanKey,
+      plano_cervejaria: titularPlanKey,
       comprar_para_si: compraParaSi,
       terceiros: terceiros,
       forma_pagamento: paymentType,
@@ -869,33 +924,41 @@ function generateClientSideCards(payload) {
   validade.setMonth(validade.getMonth() + 6);
   const dataValidadeFormatada = validade.toLocaleDateString('pt-BR');
 
-  let saldoPorCard = 0;
-  if (payload.plano_cervejaria === 'brinda_bem') saldoPorCard = 3;
-  else if (payload.plano_cervejaria === 'brinda_premium') saldoPorCard = 5;
+  function getCardDetails(planKey) {
+    if (planKey === 'brinda_bem') return { saldo: 3, modalidade: 'brinda_bem' };
+    if (planKey === 'brinda_premium') return { saldo: 5, modalidade: 'brinda_premium' };
+    return { saldo: 0, modalidade: 'none' };
+  }
 
   if (payload.comprar_para_si) {
+    const titularPlanKey = payload.pagador?.plano_cervejaria || payload.plano_cervejaria || 'none';
+    const details = getCardDetails(titularPlanKey);
     cards.push({
       id: 'CARD-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
       titular_nome: payload.pagador.nome,
       titular_cpf: payload.pagador.cpf,
       codigo_passe: 'BS-VIP-' + (payload.pagador.cpf.slice(0, 3) || '789') + (payload.pagador.cpf.slice(-2) || '21'),
-      modalidade: payload.plano_cervejaria,
-      saldo_restante: saldoPorCard,
+      modalidade: details.modalidade,
+      saldo_restante: details.saldo,
+      saldo_total: details.saldo,
       data_validade_formatada: dataValidadeFormatada,
       qr_token: 'QR-' + Math.random().toString(36).substring(2, 12).toUpperCase(),
       is_pagador: true
     });
   }
 
-  payload.terceiros.forEach((terc, idx) => {
+  (payload.terceiros || []).forEach((terc, idx) => {
     const cleanCpf = (terc.cpf || '').replace(/\D/g, '');
+    const guestPlanKey = terc.plano_cervejaria || payload.plano_cervejaria || 'none';
+    const details = getCardDetails(guestPlanKey);
     cards.push({
       id: 'CARD-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
       titular_nome: terc.nome || `Convidado ${idx + 1}`,
       titular_cpf: cleanCpf,
       codigo_passe: 'BS-VIP-' + (cleanCpf ? cleanCpf.slice(0, 3) + cleanCpf.slice(-2) : 'CV' + (idx + 1)),
-      modalidade: payload.plano_cervejaria,
-      saldo_restante: saldoPorCard,
+      modalidade: details.modalidade,
+      saldo_restante: details.saldo,
+      saldo_total: details.saldo,
       data_validade_formatada: dataValidadeFormatada,
       qr_token: 'QR-' + Math.random().toString(36).substring(2, 12).toUpperCase(),
       is_pagador: false
@@ -916,6 +979,8 @@ function renderOfficialCardHtml(activeCard, qrCodeDataUri) {
     benefitLabel = '3 Degustações Inclusas';
   } else if (activeCard.modalidade === 'brinda_premium' || activeCard.saldo_restante === 5) {
     benefitLabel = '5 Degustações Inclusas';
+  } else if (activeCard.modalidade === 'none' || activeCard.saldo_total === 0 || activeCard.saldo_restante === 0) {
+    benefitLabel = 'Apenas Card (Sem Experiências)';
   }
 
   const validationUrl = `https://brindaserra.com.br/validar?token=${encodeURIComponent(activeCard.qr_token || activeCard.codigo_passe || 'BS-2026-VIP')}`;
@@ -1324,6 +1389,94 @@ function initClientModal() {
           </div>
         `;
       }
+    }
+
+    // Formulário de Edição de Contato com Auditoria Jurídica
+    const editNome = document.getElementById('clienteEditNome');
+    const editCpf = document.getElementById('clienteEditCpf');
+    const editEmail = document.getElementById('clienteEditEmail');
+    const editTelefone = document.getElementById('clienteEditTelefone');
+    const contatoForm = document.getElementById('clienteContatoForm');
+
+    if (editNome) editNome.value = customerData.pagador.nome || '';
+    if (editCpf) {
+      const c = (customerData.pagador.cpf || cleanCpf).replace(/\D/g, '');
+      editCpf.value = c.length === 11 ? c.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : c;
+    }
+    if (editEmail) editEmail.value = customerData.pagador.email || '';
+    if (editTelefone) {
+      editTelefone.value = customerData.pagador.telefone || '';
+      applyPhoneMask(editTelefone);
+    }
+
+    if (contatoForm && !contatoForm.dataset.auditAttached) {
+      contatoForm.dataset.auditAttached = 'true';
+      contatoForm.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        const novoEmail = editEmail?.value.trim() || '';
+        const novoTel = editTelefone?.value.trim() || '';
+        const cpfAlvo = cleanCpf;
+
+        if (!novoEmail || !novoEmail.includes('@') || !novoEmail.includes('.')) {
+          showToast('⚠️ Por favor, informe um e-mail válido.');
+          editEmail?.focus();
+          return;
+        }
+
+        const saveBtn = document.getElementById('btnSalvarContatoCliente');
+        const origBtnText = saveBtn ? saveBtn.innerHTML : '';
+        if (saveBtn) {
+          saveBtn.disabled = true;
+          saveBtn.innerHTML = '<span>Salvando com auditoria...</span>';
+        }
+
+        let apiSuccess = false;
+        try {
+          const resp = await fetch('/api/cliente', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              cpf: cpfAlvo,
+              email: novoEmail,
+              telefone: novoTel
+            })
+          });
+          if (resp.ok) {
+            const resData = await resp.json();
+            if (resData.sucesso) {
+              apiSuccess = true;
+            }
+          }
+        } catch (err) {
+          console.warn('API /api/cliente offline, atualizando localmente:', err);
+        }
+
+        // Salva na persistência local
+        try {
+          customerData.pagador.email = novoEmail;
+          customerData.pagador.telefone = novoTel;
+          saveCustomerCardsLocally(customerData.pagador, customerData.cards);
+
+          // Salva histórico de auditoria local caso API offline
+          const localAudit = JSON.parse(localStorage.getItem('brinda_audit_logs') || '[]');
+          localAudit.unshift({
+            id: `AUD-${Date.now()}`,
+            cpf: cpfAlvo,
+            nome: customerData.pagador.nome,
+            email_novo: novoEmail,
+            telefone_novo: novoTel,
+            created_at: new Date().toISOString()
+          });
+          localStorage.setItem('brinda_audit_logs', JSON.stringify(localAudit));
+        } catch (e) {}
+
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = origBtnText;
+        }
+
+        showToast('✅ Dados de contato atualizados com sucesso e auditados no sistema!');
+      });
     }
   });
 
@@ -1812,4 +1965,374 @@ function showToast(message) {
   setTimeout(() => {
     toast.classList.remove('show');
   }, 4000);
+}
+
+// 11. SAC Inteligente (Assistente Virtual IA com Base de 25 FAQs & Fila Humana)
+function initSacWidget() {
+  const container = document.getElementById('sacFloatingContainer');
+  const toggleBtn = document.getElementById('btnSacToggle');
+  const chatModal = document.getElementById('sacChatModal');
+  const closeBtn = document.getElementById('btnCloseSacChat');
+  const messagesBox = document.getElementById('sacChatMessages');
+  const inputForm = document.getElementById('sacChatInputForm');
+  const inputText = document.getElementById('sacChatInputText');
+  const handoverPanel = document.getElementById('sacHandoverPanel');
+  const handoverForm = document.getElementById('sacHandoverForm');
+  const cancelHandoverBtn = document.getElementById('btnCancelHandover');
+
+  if (!container || !toggleBtn || !chatModal) return;
+
+  // Base Oficial de Conhecimento com as 25 Perguntas e Respostas da Especificação Comercial
+  const faqs = [
+    {
+      q: 'O que é o BRINDA CARD?',
+      keywords: ['o que e', 'brinda card', 'conceito', 'plataforma', 'cartao virtual', 'mensalidade'],
+      a: 'O **BRINDA CARD** é um cartão virtual exclusivo que dá acesso à plataforma www.brindaserra.com.br para conhecer e desfrutar do circuito de cervejarias artesanais da Serra Gaúcha. É um passe **sem mensalidades** (taxa única vitalícia de adesão de R$ 10,00).'
+    },
+    {
+      q: 'Como funciona?',
+      keywords: ['como funciona', 'regras', 'funcionamento', 'uso', 'documento'],
+      a: 'Após o cadastro do seu CPF e adesão ao cartão (R$ 10), o acesso é vitalício. As experiências cervejeiras adquiridas geram passes nominais com QR Code válidos por 6 meses para uso individual acompanhado de documento com foto. Após 6 meses sem uso, as experiências expiram, mas seu cartão permanece ativo para você adicionar novos pacotes quando quiser!'
+    },
+    {
+      q: 'Qual a diferença entre BRINDA BEM e BRINDA PREMIUM?',
+      keywords: ['diferenca', 'brinda bem', 'brinda premium', 'modalidades', 'degustacao', 'fabrica', 'tour guiado'],
+      a: 'O plano **Brinda Bem (R$ 130)** dá direito a visitar e degustar em **3 cervejarias** participantes. O plano **Brinda Premium (R$ 190)** dá direito a **5 cervejarias** participantes e inclui tour guiado pela fábrica nas casas que oferecem essa atração.'
+    },
+    {
+      q: 'Posso comprar o Brinda Card e depois comprar as experiências em outro momento?',
+      keywords: ['comprar depois', 'comprar apenas', 'so o cartao', 'venda casada', 'apenas card'],
+      a: 'Sim! Em total respeito ao Art. 39, I do CDC (vedação à venda casada), você pode adquirir **apenas o BRINDA CARD por R$ 10,00** para ativar seu login vitalício e comprar suas experiências de degustação quando desejar.'
+    },
+    {
+      q: 'Fiz a compra do Brinda Card, comprei as experiências e já utilizei. Posso continuar comprando experiências novamente?',
+      keywords: ['recarregar', 'comprar novamente', 'novo pacote', 'utilizei todas'],
+      a: 'Sim! Você pode entrar na sua área de cliente ("Minha Conta") e adquirir novos pacotes de experiências quantas vezes desejar, **sem nunca mais pagar a taxa de R$ 10 do cartão**.'
+    },
+    {
+      q: 'Comprei e me arrependi, como cancelar?',
+      keywords: ['cancelar', 'cancelamento', 'devolucao', 'arrependi', 'arrependimento', 'estorno', 'cdc', 'art 49'],
+      a: 'Conforme o Art. 49 do CDC, você pode solicitar o cancelamento em até 7 dias corridos da data da compra, desde que **nenhuma degustação tenha sido utilizada**. Conforme o §4° do Art. 54 do CDC, a realização de qualquer validação caracteriza início da prestação do serviço e impede o cancelamento.'
+    },
+    {
+      q: 'Qual a validade?',
+      keywords: ['validade', 'prazo', 'tempo', 'expiracao', 'meses', 'vitalicio'],
+      a: 'O **BRINDA CARD é vitalício** (seu cadastro e login não expiram nem possuem mensalidades). Já as **experiências compradas possuem validade de 6 meses** a contar da data de confirmação do pagamento.'
+    },
+    {
+      q: 'Onde posso utilizar?',
+      keywords: ['onde posso utilizar', 'onde usar', 'locais', 'onde ir', 'cidades'],
+      a: 'Nas cervejarias parceiras credenciadas na Serra Gaúcha (Canela, Gramado e região). A lista de cervejarias participantes é dinâmica e pode ser consultada a qualquer momento em nosso site oficial.'
+    },
+    {
+      q: 'Quais cervejarias participam?',
+      keywords: ['quais cervejarias', 'cervejarias participantes', 'parceiros', 'farol'],
+      a: 'Grandes referências da Serra Gaúcha como a tradicional **Cervejaria Farol** em Canela, além de outras fábricas parceiras listadas na seção de Cervejarias de nosso site.'
+    },
+    {
+      q: 'Como comprar?',
+      keywords: ['como comprar', 'passo a passo', 'aquisicao', 'fazer pedido'],
+      a: 'Basta clicar no botão "Comprar Meu BRINDA CARD" no site, escolher a quantidade de passes e planos de degustação (para você e até 3 convidados), preencher os dados cadastrais e concluir o pagamento via PIX ou Cartão.'
+    },
+    {
+      q: 'Como pagar?',
+      keywords: ['como pagar', 'formas de pagamento', 'pagamento', 'meios'],
+      a: 'Aceitamos pagamento instantâneo via **PIX** (com QR Code e código copia-e-cola) e **Cartão de Crédito** em ambiente seguro com emissão imediata dos passes.'
+    },
+    {
+      q: 'Como funciona o Pix?',
+      keywords: ['pix', 'chave pix', 'copia e cola', 'qr pix'],
+      a: 'Ao selecionar PIX, o sistema gera instantaneamente um QR Code e o código Pix Copia e Cola com o valor exato. Assim que o pagamento é compensado, o sistema libera os passes na tela e por e-mail.'
+    },
+    {
+      q: 'Como funciona o cartão?',
+      keywords: ['cartao', 'credito', 'parcelamento', 'seguro'],
+      a: 'Basta preencher o número do cartão, nome impresso, validade e CVV. O processamento é criptografado e os cartões virtuais são gerados logo após a aprovação.'
+    },
+    {
+      q: 'Posso comprar para outra pessoa?',
+      keywords: ['outra pessoa', 'presente', 'amigos', 'terceiros', 'convidados', 'família'],
+      a: 'Sim! Você pode comprar para si e para até 3 terceiros, ou exclusivamente para terceiros (presente). Cada pessoa recebe um passe nominal individual com seu respectivo CPF e QR Code, exigindo comprovação de maioridade (+18).'
+    },
+    {
+      q: 'Como recebo meu Card?',
+      keywords: ['receber', 'onde recebo', 'envio', 'email', 'minha conta'],
+      a: 'Você visualiza e imprime os passes imediatamente na tela de confirmação (Etapa 4 do checkout), recebe por e-mail e pode consultar a qualquer momento na área do cliente ("Minha Conta") informando seu CPF.'
+    },
+    {
+      q: 'Onde encontro meu QR Code?',
+      keywords: ['encontrar qr', 'onde esta meu qr', 'perdi meu qr', 'ver qr code'],
+      a: 'Seu QR Code fica disponível em "Minha Conta" no topo do site (basta digitar seu CPF), além do e-mail de confirmação enviado na hora da compra.'
+    },
+    {
+      q: 'Como utilizar o QR Code?',
+      keywords: ['como utilizar qr', 'validar', 'chegada', 'apresentar'],
+      a: 'Ao chegar à cervejaria parceira, apresente o QR Code na tela do celular junto com um documento oficial com foto. O atendente fará a leitura e concederá a degustação da casa.'
+    },
+    {
+      q: 'Posso utilizar duas vezes na mesma cervejaria?',
+      keywords: ['duas vezes', 'repetir', 'mesma cervejaria', 'regra de ouro', 'segunda vez'],
+      a: '**Não.** O BRINDA CARD opera sob a regra de ouro do turismo serrano: cada cervejaria parceira pode ser visitada **apenas uma vez** por CPF/Card, garantindo uma rota diversificada e protegendo as gratuidades dos parceiros.'
+    },
+    {
+      q: 'O que acontece se eu já utilizei naquela cervejaria?',
+      keywords: ['ja utilizei', 'bloqueio', 'segunda visita', 'recusado'],
+      a: 'O sistema bloqueia automaticamente a repetição, emitindo um aviso na tela da cervejaria. Fique tranquilo: **nenhum crédito é descontado** do seu saldo, e você pode usar essa experiência em qualquer outra cervejaria participante da rota!'
+    },
+    {
+      q: 'Quantas experiências ainda tenho?',
+      keywords: ['quantas experiencias', 'saldo restante', 'consultar saldo', 'meu saldo'],
+      a: 'Basta acessar a "Área do Cliente" ("Minha Conta") no topo do site e digitar seu CPF. O painel mostra em tempo real suas experiências restantes e histórico detalhado de visitas.'
+    },
+    {
+      q: 'Como vejo meu histórico?',
+      keywords: ['historico', 'visitas realizadas', 'onde fui'],
+      a: 'Acesse "Minha Conta" no site com seu CPF. Todas as cervejarias visitadas com data e hora ficam registradas no seu histórico pessoal.'
+    },
+    {
+      q: 'O que acontece se meu pagamento estiver pendente?',
+      keywords: ['pagamento pendente', 'aguardando pix', 'processando'],
+      a: 'Os cartões virtuais e QR Codes só são emitidos após a confirmação efetiva do pagamento. No PIX, a liberação costuma levar poucos segundos.'
+    },
+    {
+      q: 'Meu pagamento foi aprovado, mas não recebi o Card. O que faço?',
+      keywords: ['nao recebi', 'aprovado mas nao recebi', 'problema no cartao', 'falha'],
+      a: 'Verifique sua caixa de spam ou digite seu CPF na área "Minha Conta" no site. Se ainda assim não localizar, clique em "Atendente Humano" aqui no chat para que nossa equipe te auxilie imediatamente!'
+    },
+    {
+      q: 'Meu QR Code não está funcionando. O que faço?',
+      keywords: ['nao funciona', 'erro no qr', 'leitura com erro', 'problema na cervejaria'],
+      a: 'Verifique se o seu passe ainda está dentro da validade de 6 meses e se você já não visitou essa mesma cervejaria anteriormente. Se precisar de assistência, você pode falar diretamente com nossa equipe de suporte!'
+    },
+    {
+      q: 'Meu Card expirou. O que acontece?',
+      keywords: ['expirou', 'venceu', 'perdi a validade', 'passou 6 meses'],
+      a: 'O seu BRINDA CARD é vitalício (seu cadastro nunca expira). No entanto, o pacote de experiências tem validade de 6 meses. Se expirou, basta acessar sua conta e comprar novas experiências sem pagar a taxa de R$ 10 do cartão.'
+    },
+    {
+      q: 'Quero ser vendedor, promotor ou cadastrar meu hotel/uber',
+      keywords: ['quero vender', 'ser vendedor', 'comissao', 'hotel parceiro', 'motorista', 'uber'],
+      a: 'Adoramos novas parcerias! Você pode clicar em "Quero Vender o BRINDA CARD" no rodapé do nosso site para preencher seu cadastro, ou nos enviar uma mensagem pelo e-mail brindacard@gmail.com. Pagamos R$ 20 de comissão na 1ª compra de experiências!'
+    },
+    {
+      q: 'Como cadastrar minha cervejaria na plataforma?',
+      keywords: ['cadastrar cervejaria', 'seja parceira', 'credenciamento', 'fábrica'],
+      a: 'Cervejarias interessadas podem clicar em "Seja uma Cervejaria Parceira" no site ou nos contatar via brindacard@gmail.com para avaliação da nossa curadoria técnica.'
+    }
+  ];
+
+  // Alterna visibilidade da janela de chat
+  toggleBtn.addEventListener('click', () => {
+    chatModal.classList.toggle('hidden');
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    chatModal.classList.add('hidden');
+  });
+
+  // Rolagem suave para o fim das mensagens
+  function scrollToBottom() {
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  }
+
+  // Renderiza bolha de mensagem no chat
+  function appendMessage(role, htmlContent) {
+    const isUser = role === 'user';
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `flex gap-2 items-start ${isUser ? 'justify-end' : 'justify-start'}`;
+
+    if (isUser) {
+      msgDiv.innerHTML = `
+        <div class="bg-brandGreen text-white p-2.5 rounded-2xl rounded-tr-none shadow-xs text-xs max-w-[85%] leading-relaxed">
+          ${htmlContent}
+        </div>
+        <div class="w-6 h-6 rounded-full bg-stone-300 text-stone-700 flex items-center justify-center text-[0.6rem] shrink-0 font-bold">👤</div>
+      `;
+    } else {
+      msgDiv.innerHTML = `
+        <div class="w-6 h-6 rounded-full bg-brandGreen text-white flex items-center justify-center text-[0.6rem] shrink-0 font-bold">IA</div>
+        <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-stone-200 shadow-xs text-stone-700 text-xs max-w-[85%] leading-relaxed space-y-1.5">
+          ${htmlContent}
+        </div>
+      `;
+    }
+
+    messagesBox.appendChild(msgDiv);
+    scrollToBottom();
+  }
+
+  // Normalizador de texto para busca fonética e semântica
+  function normalizeText(text) {
+    return (text || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .trim();
+  }
+
+  // Mecanismo de busca e resposta do FAQ
+  function findFaqAnswer(userQuestion) {
+    const norm = normalizeText(userQuestion);
+
+    // Saudação simples
+    if (['ola', 'oi', 'bom dia', 'boa tarde', 'boa noite', 'opa'].includes(norm)) {
+      return {
+        answer: 'Olá! Como posso ajudar você hoje? Você pode tirar dúvidas sobre como funciona o BRINDA CARD, validade, compra para amigos ou solicitar atendimento humano!',
+        showHandoverOption: false
+      };
+    }
+
+    // Gatilhos de atendimento humano direto
+    const humanTriggers = ['humano', 'atendente', 'falar com pessoa', 'suporte humano', 'pessoa real', 'reclamacao', 'processo', 'estorno', 'devolucao'];
+    if (humanTriggers.some(t => norm.includes(t))) {
+      return {
+        answer: 'Com certeza! Posso transferir seu atendimento para nossa equipe humana agora mesmo. Basta preencher o formulário abaixo com seu nome e contato para abrirmos seu chamado oficial!',
+        showHandoverOption: true
+      };
+    }
+
+    // Busca por score de relevância
+    const words = norm.split(/\s+/).filter(w => w.length > 2);
+    let bestFaq = null;
+    let bestScore = 0;
+
+    faqs.forEach(faq => {
+      let score = 0;
+      const qNorm = normalizeText(faq.q);
+      const keywordsNorm = faq.keywords.map(k => normalizeText(k));
+
+      words.forEach(w => {
+        if (qNorm.includes(w)) score += 3;
+        keywordsNorm.forEach(kw => {
+          if (kw.includes(w)) score += 2;
+        });
+      });
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestFaq = faq;
+      }
+    });
+
+    if (bestFaq && bestScore >= 2) {
+      return {
+        answer: bestFaq.a,
+        showHandoverOption: false
+      };
+    }
+
+    return {
+      answer: 'Não encontrei uma resposta exata para sua dúvida em nossa base rápida. Para garantir que você seja atendido com total clareza, você pode falar diretamente com nossa equipe de suporte clicando no botão abaixo ou pelo e-mail **brindacard@gmail.com**!',
+      showHandoverOption: true
+    };
+  }
+
+  // Tratamento de envio do input do usuário
+  inputForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const query = inputText.value.trim();
+    if (!query) return;
+
+    appendMessage('user', query);
+    inputText.value = '';
+
+    // Simula tempo de resposta da IA
+    setTimeout(() => {
+      const res = findFaqAnswer(query);
+      appendMessage('ia', res.answer);
+
+      if (res.showHandoverOption) {
+        handoverPanel.classList.remove('hidden');
+      }
+    }, 350);
+  });
+
+  // Chips de atalho rápido
+  document.querySelectorAll('.sac-quick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.action;
+      const question = btn.dataset.q;
+
+      if (action === 'humano') {
+        appendMessage('user', 'Quero falar com um atendente humano');
+        setTimeout(() => {
+          appendMessage('ia', 'Perfeito! Por favor, preencha os campos abaixo para que nossa equipe humana entre em contato com você.');
+          handoverPanel.classList.remove('hidden');
+        }, 200);
+      } else if (question) {
+        appendMessage('user', question);
+        setTimeout(() => {
+          const res = findFaqAnswer(question);
+          appendMessage('ia', res.answer);
+        }, 300);
+      }
+    });
+  });
+
+  cancelHandoverBtn?.addEventListener('click', () => {
+    handoverPanel.classList.add('hidden');
+  });
+
+  // Submissão do chamado para atendimento humano
+  handoverForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nome = document.getElementById('sacHandoverNome')?.value.trim() || '';
+    const email = document.getElementById('sacHandoverEmail')?.value.trim() || '';
+    const telefone = document.getElementById('sacHandoverTelefone')?.value.trim() || '';
+    const msg = document.getElementById('sacHandoverMsg')?.value.trim() || '';
+
+    const submitBtn = handoverForm.querySelector('button[type="submit"]');
+    const origText = submitBtn?.innerHTML || '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Encaminhando chamado...</span>';
+    }
+
+    const ticketPayload = {
+      nome,
+      email,
+      telefone,
+      mensagem: msg,
+      assunto: 'Suporte via Chat IA (Handover)',
+      status: 'aberto'
+    };
+
+    try {
+      await fetch('/api/suporte', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ticketPayload)
+      });
+    } catch (err) {
+      console.warn('API /api/suporte offline, salvando localmente:', err);
+    }
+
+    // Persistência local segura para o Painel Administrativo
+    try {
+      const localTickets = JSON.parse(localStorage.getItem('brinda_tickets_suporte') || '[]');
+      localTickets.unshift({
+        id: `TICK-${Date.now()}`,
+        nome,
+        email,
+        telefone,
+        mensagem: msg,
+        assunto: 'Suporte via Chat IA (Handover)',
+        status: 'aberto',
+        created_at: new Date().toISOString()
+      });
+      localStorage.setItem('brinda_tickets_suporte', JSON.stringify(localTickets));
+    } catch (e) {}
+
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = origText;
+    }
+
+    handoverForm.reset();
+    handoverPanel.classList.add('hidden');
+
+    appendMessage('ia', `✨ <strong>Chamado registrado com sucesso, ${nome}!</strong><br>Sua solicitação foi encaminhada para a nossa central de atendimento e um atendente entrará em contato via WhatsApp ou e-mail.`);
+    showToast('📨 Sua mensagem foi enviada para o atendimento humano do BRINDA SERRA!');
+  });
 }

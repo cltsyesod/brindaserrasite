@@ -1,14 +1,142 @@
 // api/cliente.js
 // Endpoint Serverless Vercel: Consulta de Minha Conta / Passes do Cliente no Supabase
 const { getSupabaseClient, isSupabaseConfigured } = require('../lib/supabase');
+const { store, addAuditLog } = require('../lib/store');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
+  }
+
+  // ATUALIZAÇÃO DE CONTATO DO CLIENTE (Nome e CPF são estritamente bloqueados)
+  if (req.method === 'POST' || req.method === 'PUT') {
+    try {
+      const { cpf, email, telefone } = req.body || {};
+      const cleanCpf = String(cpf || '').replace(/\D/g, '');
+
+      if (!cleanCpf || cleanCpf.length !== 11) {
+        return res.status(400).json({ error: 'CPF inválido. Informe os 11 dígitos numéricos.' });
+      }
+
+      const emailTrim = String(email || '').trim();
+      const telTrim = String(telefone || '').trim();
+
+      if (!emailTrim || !emailTrim.includes('@')) {
+        return res.status(400).json({ error: 'Por favor, informe um endereço de e-mail válido.' });
+      }
+
+      // Conta de Teste
+      if (cleanCpf === '11111111111' || cleanCpf === '12345678900') {
+        const auditEntry = {
+          data: new Date().toISOString(),
+          cpf: cleanCpf,
+          nome: 'TURISTA VIP DE TESTE',
+          email_anterior: 'teste@brindaserra.com.br',
+          email_novo: emailTrim,
+          telefone_anterior: '54999999999',
+          telefone_novo: telTrim,
+          canal: 'area_do_cliente'
+        };
+        addAuditLog(auditEntry);
+        return res.json({
+          sucesso: true,
+          mensagem: 'Dados de contato atualizados com sucesso.',
+          cliente: {
+            nome: 'TURISTA VIP DE TESTE',
+            cpf: cleanCpf,
+            email: emailTrim,
+            telefone: telTrim
+          }
+        });
+      }
+
+      const supabase = getSupabaseClient();
+      if (supabase && isSupabaseConfigured()) {
+        const { data: cliente, error: errCliente } = await supabase
+          .from('clientes')
+          .select('*')
+          .eq('cpf', cleanCpf)
+          .maybeSingle();
+
+        if (errCliente || !cliente) {
+          return res.status(404).json({ error: 'Cliente não localizado para este CPF.' });
+        }
+
+        const auditEntry = {
+          data: new Date().toISOString(),
+          cpf: cleanCpf,
+          nome: cliente.nome,
+          email_anterior: cliente.email || '',
+          email_novo: emailTrim,
+          telefone_anterior: cliente.telefone || '',
+          telefone_novo: telTrim,
+          canal: 'area_do_cliente'
+        };
+        addAuditLog(auditEntry);
+
+        let historicoAtual = [];
+        try {
+          historicoAtual = Array.isArray(cliente.historico_alteracoes)
+            ? cliente.historico_alteracoes
+            : JSON.parse(cliente.historico_alteracoes || '[]');
+        } catch (e) {
+          historicoAtual = [];
+        }
+        historicoAtual.push(auditEntry);
+
+        await supabase
+          .from('clientes')
+          .update({
+            email: emailTrim,
+            telefone: telTrim,
+            historico_alteracoes: historicoAtual,
+            updated_at: new Date().toISOString()
+          })
+          .eq('cpf', cleanCpf);
+
+        return res.json({
+          sucesso: true,
+          mensagem: 'Dados de contato atualizados com sucesso.',
+          cliente: {
+            nome: cliente.nome,
+            cpf: cleanCpf,
+            email: emailTrim,
+            telefone: telTrim
+          }
+        });
+      }
+
+      // Fallback em memória
+      const auditEntry = {
+        data: new Date().toISOString(),
+        cpf: cleanCpf,
+        email_anterior: '',
+        email_novo: emailTrim,
+        telefone_anterior: '',
+        telefone_novo: telTrim,
+        canal: 'area_do_cliente_local'
+      };
+      addAuditLog(auditEntry);
+
+      return res.json({
+        sucesso: true,
+        mensagem: 'Dados atualizados localmente com sucesso.',
+        cliente: {
+          nome: 'Cliente BRINDA SERRA',
+          cpf: cleanCpf,
+          email: emailTrim,
+          telefone: telTrim
+        }
+      });
+
+    } catch (err) {
+      console.error('Erro ao atualizar contato do cliente:', err);
+      return res.status(500).json({ error: 'Erro ao processar a atualização dos dados.' });
+    }
   }
 
   if (req.method !== 'GET') {
