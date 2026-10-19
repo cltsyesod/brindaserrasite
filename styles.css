@@ -785,6 +785,7 @@ a {
 /* Scrollbar estilizada */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--color-bg-cream);
@@ -795,6 +796,36 @@ a {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-primary-green);
+}
+
+/* Barra corrida de dúvidas frequentes do chat IA */
+.sac-quick-bar {
+  overflow-x: scroll !important;
+  overflow-y: hidden !important;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-green) #E5E0D8;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 5px !important;
+}
+
+.sac-quick-bar::-webkit-scrollbar {
+  height: 5px !important;
+  display: block !important;
+}
+
+.sac-quick-bar::-webkit-scrollbar-track {
+  background: #E5E0D8 !important;
+  border-radius: 9999px;
+  margin: 0 4px;
+}
+
+.sac-quick-bar::-webkit-scrollbar-thumb {
+  background: var(--color-primary-green) !important;
+  border-radius: 9999px;
+}
+
+.sac-quick-bar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-terracotta) !important;
 }
 
 /* Notificação Toast */

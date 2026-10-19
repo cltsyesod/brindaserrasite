@@ -2348,6 +2348,52 @@ function initSacWidget() {
     });
   });
 
+  // Controles da Barra Corrida de Dúvidas Rápidas (Setas, Mouse Wheel e Drag)
+  const quickBar = document.getElementById('sacQuickBar');
+  const btnScrollLeft = document.getElementById('btnScrollQuickLeft');
+  const btnScrollRight = document.getElementById('btnScrollQuickRight');
+
+  if (quickBar) {
+    btnScrollLeft?.addEventListener('click', () => {
+      quickBar.scrollBy({ left: -160, behavior: 'smooth' });
+    });
+
+    btnScrollRight?.addEventListener('click', () => {
+      quickBar.scrollBy({ left: 160, behavior: 'smooth' });
+    });
+
+    // Rolagem horizontal direta com a rodinha do mouse
+    quickBar.addEventListener('wheel', (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        quickBar.scrollLeft += e.deltaY;
+      }
+    }, { passive: false });
+
+    // Suporte a clicar e arrastar (drag to scroll) no computador
+    let isDragging = false;
+    let startX = 0;
+    let scrollStart = 0;
+
+    quickBar.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.pageX - quickBar.offsetLeft;
+      scrollStart = quickBar.scrollLeft;
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    quickBar.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - quickBar.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      quickBar.scrollLeft = scrollStart - walk;
+    });
+  }
+
   cancelHandoverBtn?.addEventListener('click', () => {
     handoverPanel.classList.add('hidden');
   });

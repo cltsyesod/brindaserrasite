@@ -2081,25 +2081,50 @@
         <button type="button" id="btnCloseSacChat" class="text-white/80 hover:text-white text-xl font-bold px-2 py-1 leading-none transition-colors cursor-pointer" title="Fechar chat">✕</button>
       </div>
 
-      <!-- Barra de Ações Rápidas (Sugestões de FAQ com rolagem suave) -->
-      <div class="p-2 bg-stone-50 border-b border-stone-200 flex gap-1.5 overflow-x-auto text-[0.65rem] scrollbar-thin">
-        <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-200 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium" data-q="O que é o Brinda Card?">
-          O que é o Card?
+      <!-- Barra de Ações Rápidas (Sugestões de FAQ com barra corrida e setas de navegação) -->
+      <div class="relative bg-stone-100/90 border-b border-stone-200 px-1.5 py-1 flex items-center gap-1">
+        <!-- Botão scroll esquerda -->
+        <button type="button" id="btnScrollQuickLeft" class="shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-white hover:bg-stone-200 text-stone-700 shadow-xs border border-stone-300 text-xs font-bold transition-all cursor-pointer z-10" title="Rolar perguntas para a esquerda">
+          ‹
         </button>
-        <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-200 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium" data-q="Tem mensalidade?">
-          Sem mensalidade?
-        </button>
-        <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-200 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium" data-q="Qual a validade?">
-          Validade 6 meses
-        </button>
-        <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-200 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium" data-q="Posso comprar para outra pessoa?">
-          Comprar p/ amigos
-        </button>
-        <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-200 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium" data-q="Posso utilizar duas vezes na mesma cervejaria?">
-          Regra de Ouro
-        </button>
-        <button type="button" class="sac-quick-btn px-2.5 py-1 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-full text-amber-900 whitespace-nowrap font-bold" data-action="humano">
-          👤 Falar com Humano
+
+        <!-- Container com barra corrida visível -->
+        <div id="sacQuickBar" class="sac-quick-bar flex-1 flex gap-1.5 overflow-x-scroll py-1 px-1 text-[0.65rem] scroll-smooth">
+          <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-100 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium shadow-2xs hover:border-brandGreen transition-colors shrink-0 cursor-pointer" data-q="O que é o Brinda Card?">
+            O que é o Card?
+          </button>
+          <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-100 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium shadow-2xs hover:border-brandGreen transition-colors shrink-0 cursor-pointer" data-q="Tem mensalidade?">
+            Sem mensalidade?
+          </button>
+          <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-100 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium shadow-2xs hover:border-brandGreen transition-colors shrink-0 cursor-pointer" data-q="Qual a validade?">
+            Validade 6 meses
+          </button>
+          <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-100 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium shadow-2xs hover:border-brandGreen transition-colors shrink-0 cursor-pointer" data-q="Posso comprar para outra pessoa?">
+            Comprar p/ amigos
+          </button>
+          <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-100 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium shadow-2xs hover:border-brandGreen transition-colors shrink-0 cursor-pointer" data-q="Posso utilizar duas vezes na mesma cervejaria?">
+            Regra de Ouro (Repetir?)
+          </button>
+          <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-100 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium shadow-2xs hover:border-brandGreen transition-colors shrink-0 cursor-pointer" data-q="Qual a diferença entre Brinda Bem e Brinda Premium?">
+            Brinda Bem vs Premium
+          </button>
+          <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-100 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium shadow-2xs hover:border-brandGreen transition-colors shrink-0 cursor-pointer" data-q="Como utilizar o QR Code?">
+            Como usar QR Code?
+          </button>
+          <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-100 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium shadow-2xs hover:border-brandGreen transition-colors shrink-0 cursor-pointer" data-q="Quais cervejarias participam?">
+            Cervejarias participantes
+          </button>
+          <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-100 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium shadow-2xs hover:border-brandGreen transition-colors shrink-0 cursor-pointer" data-q="Comprei e me arrependi, como cancelar?">
+            Cancelamento / CDC
+          </button>
+          <button type="button" class="sac-quick-btn px-2.5 py-1 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-full text-amber-900 whitespace-nowrap font-bold shadow-2xs shrink-0 cursor-pointer" data-action="humano">
+            👤 Falar com Humano
+          </button>
+        </div>
+
+        <!-- Botão scroll direita -->
+        <button type="button" id="btnScrollQuickRight" class="shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-white hover:bg-stone-200 text-stone-700 shadow-xs border border-stone-300 text-xs font-bold transition-all cursor-pointer ml-1 z-10" title="Rolar perguntas para a direita">
+          ›
         </button>
       </div>
 
