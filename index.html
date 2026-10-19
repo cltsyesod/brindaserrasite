@@ -2053,47 +2053,53 @@
   <!-- ============================================================== -->
   <!-- WIDGET FLUTUANTE DE ATENDIMENTO SAC & IA (BASE DE 25 FAQS)     -->
   <!-- ============================================================== -->
-  <div id="sacFloatingContainer" class="fixed bottom-5 right-5 z-50">
+  <div id="sacFloatingContainer" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
     <!-- Botão Disparador Circular -->
-    <button type="button" id="btnSacToggle" class="flex items-center gap-2.5 px-4 py-3 bg-brandGreen hover:bg-brandGreen-dark text-white rounded-full shadow-2xl font-bold text-xs tracking-wide border-2 border-brandGold/60 hover:scale-105 transition-all cursor-pointer">
+    <button type="button" id="btnSacToggle" class="flex items-center gap-2.5 px-4 py-3.5 bg-brandGreen hover:bg-brandGreen-dark text-white rounded-full shadow-2xl font-bold text-xs tracking-wide border-2 border-brandGold/60 hover:scale-105 transition-all cursor-pointer">
       <span class="text-base">💬</span>
       <span class="hidden sm:inline">Dúvidas? Fale com a IA</span>
       <span class="sm:hidden">Ajuda</span>
-      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
     </button>
 
     <!-- Janela de Chat da IA (Oculta por padrão) -->
-    <div id="sacChatModal" class="hidden absolute bottom-16 right-0 w-[92vw] sm:w-96 max-h-[80vh] h-[540px] bg-white rounded-3xl shadow-2xl border border-stone-200 flex flex-col overflow-hidden animate-fade-in">
-      <!-- Topo do Chat -->
-      <div class="p-3.5 bg-brandGreen text-white flex items-center justify-between shadow-xs">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-full bg-white/20 border border-brandGold/40 flex items-center justify-center text-sm font-bold text-brandGold">
-            IA
+    <div id="sacChatModal" class="hidden absolute bottom-0 right-0 w-[94vw] sm:w-[390px] max-h-[85vh] h-[550px] bg-white rounded-3xl shadow-2xl border border-stone-200 flex flex-col overflow-hidden animate-fade-in z-50">
+      <!-- Topo do Chat (Cores e Contraste Otimizados) -->
+      <div class="p-3.5 bg-brandGreen text-white flex items-center justify-between shadow-md">
+        <div class="flex items-center gap-2.5">
+          <div class="relative">
+            <div class="w-9 h-9 rounded-full bg-white/15 border border-brandGold/60 flex items-center justify-center text-xs font-black text-brandGold shadow-inner">
+              IA
+            </div>
+            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-brandGreen"></span>
           </div>
           <div>
-            <h4 class="text-xs font-bold leading-tight">Assistente Virtual • BRINDA SERRA</h4>
-            <span class="text-[0.62rem] text-brandCream/80 block">Atendimento oficial 24h</span>
+            <span id="sacChatHeaderTitle" class="text-xs font-bold leading-tight block tracking-wide" style="color: #FFFFFF !important;">Assistente Virtual • BRINDA SERRA</span>
+            <span class="text-[0.62rem] text-[#F8E2CE] block font-medium">Atendimento Oficial 24h • Online</span>
           </div>
         </div>
-        <button type="button" id="btnCloseSacChat" class="text-white/80 hover:text-white text-lg font-bold px-2 py-1">✕</button>
+        <button type="button" id="btnCloseSacChat" class="text-white/80 hover:text-white text-xl font-bold px-2 py-1 leading-none transition-colors cursor-pointer" title="Fechar chat">✕</button>
       </div>
 
-      <!-- Barra de Ações Rápidas (Sugestões de FAQ) -->
+      <!-- Barra de Ações Rápidas (Sugestões de FAQ com rolagem suave) -->
       <div class="p-2 bg-stone-50 border-b border-stone-200 flex gap-1.5 overflow-x-auto text-[0.65rem] scrollbar-thin">
         <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-200 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium" data-q="O que é o Brinda Card?">
           O que é o Card?
         </button>
         <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-200 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium" data-q="Tem mensalidade?">
-          Tem mensalidade?
+          Sem mensalidade?
         </button>
         <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-200 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium" data-q="Qual a validade?">
-          Validade
+          Validade 6 meses
         </button>
         <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-200 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium" data-q="Posso comprar para outra pessoa?">
-          Terceiros
+          Comprar p/ amigos
+        </button>
+        <button type="button" class="sac-quick-btn px-2.5 py-1 bg-white hover:bg-stone-200 border border-stone-300 rounded-full text-stone-700 whitespace-nowrap font-medium" data-q="Posso utilizar duas vezes na mesma cervejaria?">
+          Regra de Ouro
         </button>
         <button type="button" class="sac-quick-btn px-2.5 py-1 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-full text-amber-900 whitespace-nowrap font-bold" data-action="humano">
-          👤 Atendente Humano
+          👤 Falar com Humano
         </button>
       </div>
 
@@ -2102,9 +2108,9 @@
         <!-- Boas-vindas -->
         <div class="flex gap-2 items-start">
           <div class="w-6 h-6 rounded-full bg-brandGreen text-white flex items-center justify-center text-[0.6rem] shrink-0 font-bold">IA</div>
-          <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-stone-200 shadow-xs text-stone-700 space-y-1.5 max-w-[85%]">
+          <div id="sacWelcomeBubble" class="bg-white p-3 rounded-2xl rounded-tl-none border border-stone-200 shadow-xs text-stone-700 space-y-1.5 max-w-[85%] leading-relaxed">
             <p>Olá! Sou a assistente virtual oficial do <strong>BRINDA SERRA</strong>.</p>
-            <p>Tire suas dúvidas sobre o BRINDA CARD, cervejarias participantes, regras de degustação e validade, ou solicite atendimento humano a qualquer momento!</p>
+            <p>Tire suas dúvidas sobre o BRINDA CARD, cervejarias parceiras, regras de degustação e validade, ou solicite atendimento humano a qualquer momento!</p>
           </div>
         </div>
       </div>
@@ -2113,21 +2119,21 @@
       <div id="sacHandoverPanel" class="hidden p-3.5 bg-amber-50/95 border-t border-amber-200 space-y-2 text-xs">
         <div class="flex items-center justify-between">
           <span class="font-bold text-amber-900">Falar com Atendente Humano</span>
-          <button type="button" id="btnCancelHandover" class="text-amber-800 text-[0.65rem] hover:underline">Voltar ao Chat</button>
+          <button type="button" id="btnCancelHandover" class="text-amber-800 text-[0.65rem] hover:underline cursor-pointer">Voltar ao Chat</button>
         </div>
         <form id="sacHandoverForm" class="space-y-2">
           <input type="text" id="sacHandoverNome" required placeholder="Seu Nome Completo" class="form-input-soft !py-1 text-xs">
           <input type="email" id="sacHandoverEmail" required placeholder="Seu E-mail" class="form-input-soft !py-1 text-xs">
           <input type="tel" id="sacHandoverTelefone" placeholder="WhatsApp / Telefone" class="form-input-soft !py-1 text-xs">
           <textarea id="sacHandoverMsg" required rows="2" placeholder="Descreva brevemente sua solicitação ou dúvida..." class="form-input-soft !py-1 text-xs"></textarea>
-          <button type="submit" class="btn-primary w-full text-xs !py-2">Enviar para Atendente Humano</button>
+          <button type="submit" class="btn-primary w-full text-xs !py-2 cursor-pointer">Enviar para Atendente Humano</button>
         </form>
       </div>
 
       <!-- Caixa de Input de Pergunta -->
       <form id="sacChatInputForm" class="p-2.5 bg-white border-t border-stone-200 flex items-center gap-1.5">
         <input type="text" id="sacChatInputText" placeholder="Digite sua pergunta..." required class="flex-1 bg-stone-100 rounded-xl px-3 py-2 text-xs outline-none focus:bg-white focus:ring-1 focus:ring-brandGreen border border-stone-200">
-        <button type="submit" class="p-2 bg-brandGreen hover:bg-brandGreen-dark text-white rounded-xl text-xs font-bold shrink-0 transition-colors" title="Enviar mensagem">
+        <button type="submit" class="p-2 bg-brandGreen hover:bg-brandGreen-dark text-white rounded-xl text-xs font-bold shrink-0 transition-colors cursor-pointer" title="Enviar mensagem">
           ➤
         </button>
       </form>

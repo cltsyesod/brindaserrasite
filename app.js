@@ -2122,12 +2122,17 @@ function initSacWidget() {
   ];
 
   // Alterna visibilidade da janela de chat
+  // Alterna visibilidade da janela de chat de forma limpa e fluida
   toggleBtn.addEventListener('click', () => {
-    chatModal.classList.toggle('hidden');
+    chatModal.classList.remove('hidden');
+    toggleBtn.classList.add('hidden');
+    inputText?.focus();
+    scrollToBottom();
   });
 
   closeBtn?.addEventListener('click', () => {
     chatModal.classList.add('hidden');
+    toggleBtn.classList.remove('hidden');
   });
 
   // Rolagem suave para o fim das mensagens
@@ -2135,24 +2140,45 @@ function initSacWidget() {
     messagesBox.scrollTop = messagesBox.scrollHeight;
   }
 
-  // Renderiza bolha de mensagem no chat
-  function appendMessage(role, htmlContent) {
+  // Formatador de Markdown para HTML Seguro
+  function formatMessageHtml(rawText) {
+    if (!rawText) return '';
+    let formatted = rawText
+      // Bold: **text** ou __text__
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-brandGreen">$1</strong>')
+      .replace(/__(.*?)__/g, '<strong class="font-bold text-brandGreen">$1</strong>')
+      // Italic: *text* ou _text_
+      .replace(/\*([^\*]+)\*/g, '<em class="italic text-stone-700">$1</em>')
+      .replace(/_([^_]+)_/g, '<em class="italic text-stone-700">$1</em>')
+      // Links: [label](url)
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener" class="text-brandTerracotta underline font-semibold hover:text-brandGreen">$1</a>')
+      // Listas com marcadores
+      .replace(/(?:^|\n)[-*]\s+([^\n]+)/g, '<li class="ml-3 list-disc">$1</li>')
+      // Quebras de parágrafo e linhas
+      .replace(/\n\n+/g, '</p><p class="mt-2">')
+      .replace(/\n/g, '<br>');
+    return `<div class="space-y-1.5 leading-relaxed">${formatted}</div>`;
+  }
+
+  // Renderiza bolha de mensagem no chat com suporte a formatação rica
+  function appendMessage(role, textContent) {
     const isUser = role === 'user';
     const msgDiv = document.createElement('div');
     msgDiv.className = `flex gap-2 items-start ${isUser ? 'justify-end' : 'justify-start'}`;
 
     if (isUser) {
+      const cleanUserText = textContent.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       msgDiv.innerHTML = `
         <div class="bg-brandGreen text-white p-2.5 rounded-2xl rounded-tr-none shadow-xs text-xs max-w-[85%] leading-relaxed">
-          ${htmlContent}
+          ${cleanUserText}
         </div>
         <div class="w-6 h-6 rounded-full bg-stone-300 text-stone-700 flex items-center justify-center text-[0.6rem] shrink-0 font-bold">👤</div>
       `;
     } else {
       msgDiv.innerHTML = `
-        <div class="w-6 h-6 rounded-full bg-brandGreen text-white flex items-center justify-center text-[0.6rem] shrink-0 font-bold">IA</div>
+        <div class="w-6 h-6 rounded-full bg-brandGreen text-white flex items-center justify-center text-[0.6rem] shrink-0 font-bold shadow-xs">IA</div>
         <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-stone-200 shadow-xs text-stone-700 text-xs max-w-[85%] leading-relaxed space-y-1.5">
-          ${htmlContent}
+          ${formatMessageHtml(textContent)}
         </div>
       `;
     }
@@ -2160,6 +2186,47 @@ function initSacWidget() {
     messagesBox.appendChild(msgDiv);
     scrollToBottom();
   }
+
+  // Carrega base de conhecimento customizada se configurada pelo painel administrativo
+  let activeFaqs = faqs;
+  try {
+    const customFaqs = JSON.parse(localStorage.getItem('brinda_ia_faqs') || 'null');
+    if (Array.isArray(customFaqs) && customFaqs.length > 0) {
+      activeFaqs = customFaqs;
+    }
+  } catch (e) {}
+
+  // Carrega configurações customizadas da IA (boas-vindas e nome)
+  function applyCustomIaConfig() {
+    try {
+      const customWelcome = localStorage.getItem('brinda_ia_welcome_msg');
+      const welcomeBubble = document.getElementById('sacWelcomeBubble');
+      if (customWelcome && welcomeBubble) {
+        welcomeBubble.innerHTML = formatMessageHtml(customWelcome);
+      }
+      const customName = localStorage.getItem('brinda_ia_name');
+      const headerTitle = document.getElementById('sacChatHeaderTitle');
+      if (customName && headerTitle) {
+        headerTitle.textContent = customName;
+      }
+    } catch (e) {}
+  }
+  applyCustomIaConfig();
+
+  // Escuta alteração em tempo real via localStorage
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'brinda_ia_name' || e.key === 'brinda_ia_welcome_msg') {
+      applyCustomIaConfig();
+    }
+    if (e.key === 'brinda_ia_faqs') {
+      try {
+        const customFaqs = JSON.parse(localStorage.getItem('brinda_ia_faqs') || 'null');
+        if (Array.isArray(customFaqs) && customFaqs.length > 0) {
+          activeFaqs = customFaqs;
+        }
+      } catch (err) {}
+    }
+  });
 
   // Normalizador de texto para busca fonética e semântica
   function normalizeText(text) {
@@ -2178,7 +2245,7 @@ function initSacWidget() {
     // Saudação simples
     if (['ola', 'oi', 'bom dia', 'boa tarde', 'boa noite', 'opa'].includes(norm)) {
       return {
-        answer: 'Olá! Como posso ajudar você hoje? Você pode tirar dúvidas sobre como funciona o BRINDA CARD, validade, compra para amigos ou solicitar atendimento humano!',
+        answer: 'Olá! Sou a assistente virtual do **BRINDA SERRA**. Como posso te ajudar hoje? Você pode tirar dúvidas sobre como funciona o cartão, validade, compra para amigos ou solicitar atendimento humano a qualquer momento!',
         showHandoverOption: false
       };
     }
@@ -2192,15 +2259,15 @@ function initSacWidget() {
       };
     }
 
-    // Busca por score de relevância
+    // Busca por score de relevância na base de conhecimento ativa
     const words = norm.split(/\s+/).filter(w => w.length > 2);
     let bestFaq = null;
     let bestScore = 0;
 
-    faqs.forEach(faq => {
+    activeFaqs.forEach(faq => {
       let score = 0;
       const qNorm = normalizeText(faq.q);
-      const keywordsNorm = faq.keywords.map(k => normalizeText(k));
+      const keywordsNorm = (faq.keywords || []).map(k => normalizeText(k));
 
       words.forEach(w => {
         if (qNorm.includes(w)) score += 3;
@@ -2228,7 +2295,7 @@ function initSacWidget() {
     };
   }
 
-  // Tratamento de envio do input do usuário
+  // Tratamento de envio do input do usuário com indicador de digitação
   inputForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const query = inputText.value.trim();
@@ -2237,15 +2304,26 @@ function initSacWidget() {
     appendMessage('user', query);
     inputText.value = '';
 
+    // Indicador sutil de digitação
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'flex gap-2 items-center text-[0.7rem] text-stone-400 italic py-1';
+    typingDiv.innerHTML = `
+      <div class="w-5 h-5 rounded-full bg-brandGreen/20 text-brandGreen flex items-center justify-center text-[0.55rem] font-bold">IA</div>
+      <span>Assistente digitando...</span>
+    `;
+    messagesBox.appendChild(typingDiv);
+    scrollToBottom();
+
     // Simula tempo de resposta da IA
     setTimeout(() => {
+      typingDiv.remove();
       const res = findFaqAnswer(query);
       appendMessage('ia', res.answer);
 
       if (res.showHandoverOption) {
         handoverPanel.classList.remove('hidden');
       }
-    }, 350);
+    }, 400);
   });
 
   // Chips de atalho rápido

@@ -569,14 +569,16 @@
       </section>
 
       <!-- ========================================== -->
-      <!-- ABA 8: SAC / ATENDIMENTO AO CLIENTE        -->
+      <!-- ABA 8: SAC / ATENDIMENTO AO CLIENTE & IA    -->
       <!-- ========================================== -->
       <section id="tabSac" class="tab-content hidden space-y-6">
+        
+        <!-- BLOCO 1: FILA DE ATENDIMENTO HUMANO (TICKETS DO SAC) -->
         <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-4">
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-stone-200 pb-3">
             <div>
-              <h3 class="text-base font-bold text-brandGreen">Central de Atendimento ao Cliente (SAC)</h3>
-              <p class="text-xs text-stone-500">Dúvidas dos clientes recebidas pelo Assistente Virtual e encaminhadas para atendimento humano</p>
+              <h3 class="text-base font-bold text-brandGreen">Fila de Atendimento Humano (SAC)</h3>
+              <p class="text-xs text-stone-500">Chamados e dúvidas de clientes transferidos pelo Assistente Virtual para atendimento humano</p>
             </div>
             <div class="flex items-center gap-2">
               <span id="badgeTicketsAbertos" class="px-3 py-1 bg-amber-100 text-amber-900 border border-amber-300 rounded-full text-xs font-bold">
@@ -604,6 +606,129 @@
             </table>
           </div>
         </div>
+
+        <!-- BLOCO 2: PARÂMETROS E CONFIGURAÇÃO DA IA -->
+        <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-stone-200 pb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-base font-bold text-brandGreen">Parâmetros do Assistente Virtual (IA)</h3>
+                <span class="px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Ativa 24h
+                </span>
+              </div>
+              <p class="text-xs text-stone-500">Configure as diretrizes, tom de voz e mensagens automáticas da inteligência artificial</p>
+            </div>
+          </div>
+
+          <form id="formIaConfig" class="space-y-4 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block font-bold text-stone-700 uppercase mb-1">Nome do Assistente:</label>
+                <input type="text" id="iaNomeDisplay" value="Assistente Virtual • BRINDA SERRA" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none font-semibold">
+              </div>
+              <div>
+                <label class="block font-bold text-stone-700 uppercase mb-1">Modo de Operação da IA:</label>
+                <select id="iaModoOperacao" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none font-semibold">
+                  <option value="base_oficial">Base de Conhecimento Oficial (Sem Alucinações • Recomendado)</option>
+                  <option value="ia_hibrida">Modo IA Inteligente com Suporte Avançado</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-bold text-stone-700 uppercase mb-1">Mensagem de Boas-Vindas Inicial:</label>
+              <textarea id="iaWelcomeMsg" rows="2" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none leading-relaxed">Olá! Sou a assistente virtual oficial do **BRINDA SERRA**.
+Tire suas dúvidas sobre o BRINDA CARD, cervejarias participantes, regras de degustação e validade, ou solicite atendimento humano a qualquer momento!</textarea>
+            </div>
+
+            <div>
+              <label class="block font-bold text-stone-700 uppercase mb-1">Diretrizes da IA / Instruções de Comportamento (Prompt):</label>
+              <textarea id="iaPromptInstrucoes" rows="3" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none leading-relaxed">Você é a Assistente Virtual Oficial do BRINDA SERRA, na Serra Gaúcha (Canela e Gramado).
+Sua missão é responder dúvidas com cordialidade, precisão e elegância turística.
+Regras fundamentais:
+1. O BRINDA CARD é vitalício (R$ 10,00 taxa única, sem mensalidades).
+2. Pacotes de experiências têm validade de 6 meses.
+3. Regra de Ouro: Cada cervejaria parceira pode ser visitada apenas uma vez por CPF/Card. O sistema bloqueia repetições automaticamente sem descontar saldo.
+4. Venda casada é proibida: é permitido comprar apenas o cartão (R$ 10).
+5. Casos de contestações financeiras, estornos ou cancelamentos devem ser encaminhados para atendimento humano.</textarea>
+            </div>
+
+            <div class="flex justify-end">
+              <button type="submit" class="px-5 py-2.5 bg-brandGreen hover:bg-brandGreen-dark text-white font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                <span>💾 Salvar Configurações da IA</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- BLOCO 3: BASE DE CONHECIMENTO CONTROLADA (FAQS GERENCIÁVEIS) -->
+        <div class="bg-white p-5 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-stone-200 pb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-base font-bold text-brandGreen">Base de Conhecimento Oficial (Perguntas & Respostas da IA)</h3>
+                <span id="badgeFaqsCount" class="px-2.5 py-0.5 rounded-full text-[0.65rem] font-bold bg-stone-100 text-stone-700 border border-stone-200">
+                  25 FAQs Ativas
+                </span>
+              </div>
+              <p class="text-xs text-stone-500">Perguntas e respostas oficiais que alimentam o motor de inteligência artificial do chat</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="btnRestaurarFaqsPadrao" class="px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold rounded-xl border border-stone-300 flex items-center gap-1 cursor-pointer">
+                <span>🔄 Restaurar 25 Padrões</span>
+              </button>
+              <button type="button" id="btnNovaFaq" class="px-4 py-1.5 bg-brandGreen hover:bg-brandGreen-dark text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-1 cursor-pointer">
+                <span>+ Adicionar Pergunta</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Campo de busca de FAQ -->
+          <div class="flex items-center gap-2">
+            <input type="text" id="buscaFaqInput" placeholder="🔍 Filtrar perguntas do FAQ por título ou palavra-chave..." class="flex-1 bg-stone-50 rounded-xl px-3.5 py-2 text-xs border border-stone-200 outline-none focus:bg-white focus:ring-1 focus:ring-brandGreen">
+          </div>
+
+          <!-- Tabela de FAQs -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase text-[0.68rem] tracking-wider">
+                <tr>
+                  <th class="py-3 px-4 w-12 text-center">#</th>
+                  <th class="py-3 px-4 w-1/4">Pergunta</th>
+                  <th class="py-3 px-4">Palavras-chave</th>
+                  <th class="py-3 px-4 w-1/3">Resposta Oficial da IA</th>
+                  <th class="py-3 px-4 text-center w-24">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="faqsTableBody" class="divide-y divide-stone-100">
+                <!-- Inserido dinamicamente via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- BLOCO 4: SIMULADOR DE TESTE DA IA -->
+        <div class="bg-stone-50 p-5 rounded-3xl border border-stone-200 space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🧪</span>
+            <div>
+              <h4 class="text-xs font-bold text-stone-800 uppercase tracking-wider">Simulador de Resposta da IA (Test Drive)</h4>
+              <p class="text-[0.68rem] text-stone-500">Teste como a IA responderá aos turistas em tempo real antes de salvar</p>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="simuladorIaInput" placeholder="Digite uma dúvida de teste (ex: posso repetir cervejaria?)" class="flex-1 bg-white rounded-xl px-3.5 py-2 text-xs border border-stone-300 outline-none focus:ring-1 focus:ring-brandGreen">
+            <button type="button" id="btnTestarSimuladorIa" class="px-4 py-2 bg-brandTerracotta hover:bg-brandTerracotta-dark text-white font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer">
+              Testar Resposta
+            </button>
+          </div>
+          <div id="simuladorIaResultado" class="hidden p-3.5 bg-white rounded-xl border border-stone-200 text-xs text-stone-700 space-y-1">
+            <span class="text-[0.65rem] uppercase font-bold text-brandGreen block">Resposta Simulada:</span>
+            <div id="simuladorIaRespostaTexto" class="leading-relaxed"></div>
+          </div>
+        </div>
+
       </section>
 
       <!-- ========================================== -->
@@ -1017,6 +1142,41 @@
     </div>
   </div>
 
+  <!-- MODAL 8: CADASTRAR OU EDITAR FAQ DA IA -->
+  <div id="faqModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <h3 class="text-base font-bold text-brandGreen" id="faqModalTitle">Cadastrar Pergunta para a IA</h3>
+        <button type="button" id="closeFaqModalBtn" class="text-stone-400 hover:text-stone-700 text-xl font-bold cursor-pointer">&times;</button>
+      </div>
+
+      <form id="faqForm" class="space-y-3 text-xs">
+        <input type="hidden" id="faqIndex" value="-1">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Pergunta do Cliente:</label>
+          <input type="text" id="faqPergunta" required placeholder="Ex: Qual a validade do cartão?" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none font-semibold">
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Palavras-chave de Reconhecimento (separadas por vírgula):</label>
+          <input type="text" id="faqKeywords" required placeholder="Ex: validade, prazo, tempo, meses" class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none">
+          <span class="text-[0.62rem] text-stone-400 block mt-0.5">* Termos que os turistas costumam digitar para disparar esta resposta</span>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Resposta Oficial da IA:</label>
+          <textarea id="faqResposta" rows="4" required placeholder="Digite a resposta oficial que a IA deve fornecer..." class="w-full bg-stone-50 rounded-xl p-2.5 border border-stone-300 outline-none leading-relaxed"></textarea>
+          <span class="text-[0.62rem] text-stone-400 block mt-0.5">* Suporta **negrito** e links automáticos</span>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" id="cancelFaqBtn" class="px-4 py-2 bg-stone-200 text-stone-700 font-bold rounded-xl hover:bg-stone-300 cursor-pointer">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-brandGreen text-white font-bold rounded-xl hover:bg-brandGreen-dark shadow-xs cursor-pointer">Salvar Pergunta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- SCRIPT OPERACIONAL DO PAINEL ADMINISTRATIVO -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -1416,6 +1576,8 @@
         renderLeads(data.leads);
         renderTickets(data.tickets || []);
         renderAuditLogs(data.audit_logs || []);
+        renderAdminFaqs();
+        loadAdminIaConfig();
       }
 
       // Origem das Vendas
@@ -2489,6 +2651,403 @@
 
         document.getElementById('replyTicketModal').classList.add('hidden');
         loadDashboardData();
+      });
+
+      // ==========================================
+      // 12. GESTÃO DA INTELIGÊNCIA ARTIFICIAL & BASE DE CONHECIMENTO (SAC)
+      // ==========================================
+      const DEFAULT_ADMIN_FAQS = [
+        {
+          q: 'O que é o BRINDA CARD?',
+          keywords: ['o que e', 'brinda card', 'conceito', 'plataforma', 'cartao virtual', 'mensalidade'],
+          a: 'O **BRINDA CARD** é um cartão virtual exclusivo que dá acesso à plataforma www.brindaserra.com.br para conhecer e desfrutar do circuito de cervejarias artesanais da Serra Gaúcha. É um passe **sem mensalidades** (taxa única vitalícia de adesão de R$ 10,00).'
+        },
+        {
+          q: 'Como funciona?',
+          keywords: ['como funciona', 'regras', 'funcionamento', 'uso', 'documento'],
+          a: 'Após o cadastro do seu CPF e adesão ao cartão (R$ 10), o acesso é vitalício. As experiências cervejeiras adquiridas geram passes nominais com QR Code válidos por 6 meses para uso individual acompanhado de documento com foto. Após 6 meses sem uso, as experiências expiram, mas seu cartão permanece ativo para você adicionar novos pacotes quando quiser!'
+        },
+        {
+          q: 'Qual a diferença entre BRINDA BEM e BRINDA PREMIUM?',
+          keywords: ['diferenca', 'brinda bem', 'brinda premium', 'modalidades', 'degustacao', 'fabrica', 'tour guiado'],
+          a: 'O plano **Brinda Bem (R$ 130)** dá direito a visitar e degustar em **3 cervejarias** participantes. O plano **Brinda Premium (R$ 190)** dá direito a **5 cervejarias** participantes e inclui tour guiado pela fábrica nas casas que oferecem essa atração.'
+        },
+        {
+          q: 'Posso comprar o Brinda Card e depois comprar as experiências em outro momento?',
+          keywords: ['comprar depois', 'comprar apenas', 'so o cartao', 'venda casada', 'apenas card'],
+          a: 'Sim! Em total respeito ao Art. 39, I do CDC (vedação à venda casada), você pode adquirir **apenas o BRINDA CARD por R$ 10,00** para ativar seu login vitalício e comprar suas experiências de degustação quando desejar.'
+        },
+        {
+          q: 'Fiz a compra do Brinda Card, comprei as experiências e já utilizei. Posso continuar comprando experiências novamente?',
+          keywords: ['recarregar', 'comprar novamente', 'novo pacote', 'utilizei todas'],
+          a: 'Sim! Você pode entrar na sua área de cliente ("Minha Conta") e adquirir novos pacotes de experiências quantas vezes desejar, **sem nunca mais pagar a taxa de R$ 10 do cartão**.'
+        },
+        {
+          q: 'Comprei e me arrependi, como cancelar?',
+          keywords: ['cancelar', 'cancelamento', 'devolucao', 'arrependi', 'arrependimento', 'estorno', 'cdc', 'art 49'],
+          a: 'Conforme o Art. 49 do CDC, você pode solicitar o cancelamento em até 7 dias corridos da data da compra, desde que **nenhuma degustação tenha sido utilizada**. Conforme o §4° do Art. 54 do CDC, a realização de qualquer validação caracteriza início da prestação do serviço e impede o cancelamento.'
+        },
+        {
+          q: 'Qual a validade?',
+          keywords: ['validade', 'prazo', 'tempo', 'expiracao', 'meses', 'vitalicio'],
+          a: 'O **BRINDA CARD é vitalício** (seu cadastro e login não expiram nem possuem mensalidades). Já as **experiências compradas possuem validade de 6 meses** a contar da data de confirmação do pagamento.'
+        },
+        {
+          q: 'Onde posso utilizar?',
+          keywords: ['onde posso utilizar', 'onde usar', 'locais', 'onde ir', 'cidades'],
+          a: 'Nas cervejarias parceiras credenciadas na Serra Gaúcha (Canela, Gramado e região). A lista de cervejarias participantes é dinâmica e pode ser consultada a qualquer momento em nosso site oficial.'
+        },
+        {
+          q: 'Quais cervejarias participam?',
+          keywords: ['quais cervejarias', 'cervejarias participantes', 'parceiros', 'farol'],
+          a: 'Grandes referências da Serra Gaúcha como a tradicional **Cervejaria Farol** em Canela, além de outras fábricas parceiras listadas na seção de Cervejarias de nosso site.'
+        },
+        {
+          q: 'Como comprar?',
+          keywords: ['como comprar', 'passo a passo', 'aquisicao', 'fazer pedido'],
+          a: 'Basta clicar no botão "Comprar Meu BRINDA CARD" no site, escolher a quantidade de passes e planos de degustação (para você e até 3 convidados), preencher os dados cadastrais e concluir o pagamento via PIX ou Cartão.'
+        },
+        {
+          q: 'Como pagar?',
+          keywords: ['como pagar', 'formas de pagamento', 'pagamento', 'meios'],
+          a: 'Aceitamos pagamento instantâneo via **PIX** (com QR Code e código copia-e-cola) e **Cartão de Crédito** em ambiente seguro com emissão imediata dos passes.'
+        },
+        {
+          q: 'Como funciona o Pix?',
+          keywords: ['pix', 'chave pix', 'copia e cola', 'qr pix'],
+          a: 'Ao selecionar PIX, o sistema gera instantaneamente um QR Code e o código Pix Copia e Cola com o valor exato. Assim que o pagamento é compensado, o sistema libera os passes na tela e por e-mail.'
+        },
+        {
+          q: 'Como funciona o cartão?',
+          keywords: ['cartao', 'credito', 'parcelamento', 'seguro'],
+          a: 'Basta preencher o número do cartão, nome impresso, validade e CVV. O processamento é criptografado e os cartões virtuais são gerados logo após a aprovação.'
+        },
+        {
+          q: 'Posso comprar para outra pessoa?',
+          keywords: ['outra pessoa', 'presente', 'amigos', 'terceiros', 'convidados', 'família'],
+          a: 'Sim! Você pode comprar para si e para até 3 terceiros, ou exclusivamente para terceiros (presente). Cada pessoa recebe um passe nominal individual com seu respectivo CPF e QR Code, exigindo comprovação de maioridade (+18).'
+        },
+        {
+          q: 'Como recebo meu Card?',
+          keywords: ['receber', 'onde recebo', 'envio', 'email', 'minha conta'],
+          a: 'Você visualiza e imprime os passes imediatamente na tela de confirmação (Etapa 4 do checkout), recebe por e-mail e pode consultar a qualquer momento na área do cliente ("Minha Conta") informando seu CPF.'
+        },
+        {
+          q: 'Onde encontro meu QR Code?',
+          keywords: ['encontrar qr', 'onde esta meu qr', 'perdi meu qr', 'ver qr code'],
+          a: 'Seu QR Code fica disponível em "Minha Conta" no topo do site (basta digitar seu CPF), além do e-mail de confirmação enviado na hora da compra.'
+        },
+        {
+          q: 'Como utilizar o QR Code?',
+          keywords: ['como utilizar qr', 'validar', 'chegada', 'apresentar'],
+          a: 'Ao chegar à cervejaria parceira, apresente o QR Code na tela do celular junto com um documento oficial com foto. O atendente fará a leitura e concederá a degustação da casa.'
+        },
+        {
+          q: 'Posso utilizar duas vezes na mesma cervejaria?',
+          keywords: ['duas vezes', 'repetir', 'mesma cervejaria', 'regra de ouro', 'segunda vez'],
+          a: '**Não.** O BRINDA CARD opera sob a regra de ouro do turismo serrano: cada cervejaria parceira pode ser visitada **apenas uma vez** por CPF/Card, garantindo uma rota diversificada e protegendo as gratuidades dos parceiros.'
+        },
+        {
+          q: 'O que acontece se eu já utilizei naquela cervejaria?',
+          keywords: ['ja utilizei', 'bloqueio', 'segunda visita', 'recusado'],
+          a: 'O sistema bloqueia automaticamente a repetição, emitindo um aviso na tela da cervejaria. Fique tranquilo: **nenhum crédito é descontado** do seu saldo, e você pode usar essa experiência em qualquer outra cervejaria participante da rota!'
+        },
+        {
+          q: 'Quantas experiências ainda tenho?',
+          keywords: ['quantas experiencias', 'saldo restante', 'consultar saldo', 'meu saldo'],
+          a: 'Basta acessar a "Área do Cliente" ("Minha Conta") no topo do site e digitar seu CPF. O painel mostra em tempo real suas experiências restantes e histórico detalhado de visitas.'
+        },
+        {
+          q: 'Como vejo meu histórico?',
+          keywords: ['historico', 'visitas realizadas', 'onde fui'],
+          a: 'Acesse "Minha Conta" no site com seu CPF. Todas as cervejarias visitadas com data e hora ficam registradas no seu histórico pessoal.'
+        },
+        {
+          q: 'O que acontece se meu pagamento estiver pendente?',
+          keywords: ['pagamento pendente', 'aguardando pix', 'processando'],
+          a: 'Os cartões virtuais e QR Codes só são emitidos após a confirmação efetiva do pagamento. No PIX, a liberação costuma levar poucos segundos.'
+        },
+        {
+          q: 'Meu pagamento foi aprovado, mas não recebi o Card. O que faço?',
+          keywords: ['nao recebi', 'aprovado mas nao recebi', 'problema no cartao', 'falha'],
+          a: 'Verifique sua caixa de spam ou digite seu CPF na área "Minha Conta" no site. Se ainda assim não localizar, clique em "Atendente Humano" aqui no chat para que nossa equipe te auxilie imediatamente!'
+        },
+        {
+          q: 'Meu QR Code não está funcionando. O que faço?',
+          keywords: ['nao funciona', 'erro no qr', 'leitura com erro', 'problema na cervejaria'],
+          a: 'Verifique se o seu passe ainda está dentro da validade de 6 meses e se você já não visitou essa mesma cervejaria anteriormente. Se precisar de assistência, você pode falar diretamente com nossa equipe de suporte!'
+        },
+        {
+          q: 'Meu Card expirou. O que acontece?',
+          keywords: ['expirou', 'venceu', 'perdi a validade', 'passou 6 meses'],
+          a: 'O seu BRINDA CARD é vitalício (seu cadastro nunca expira). No entanto, o pacote de experiências tem validade de 6 meses. Se expirou, basta acessar sua conta e comprar novas experiências sem pagar a taxa de R$ 10 do cartão.'
+        },
+        {
+          q: 'Quero ser vendedor, promotor ou cadastrar meu hotel/uber',
+          keywords: ['quero vender', 'ser vendedor', 'comissao', 'hotel parceiro', 'motorista', 'uber'],
+          a: 'Adoramos novas parcerias! Você pode clicar em "Quero Vender o BRINDA CARD" no rodapé do nosso site para preencher seu cadastro, ou nos enviar uma mensagem pelo e-mail brindacard@gmail.com. Pagamos R$ 20 de comissão na 1ª compra de experiências!'
+        },
+        {
+          q: 'Como cadastrar minha cervejaria na plataforma?',
+          keywords: ['cadastrar cervejaria', 'seja parceira', 'credenciamento', 'fábrica'],
+          a: 'Cervejarias interessadas podem clicar em "Seja uma Cervejaria Parceira" no site ou nos contatar via brindacard@gmail.com para avaliação da nossa curadoria técnica.'
+        }
+      ];
+
+      function getAdminFaqs() {
+        try {
+          const stored = localStorage.getItem('brinda_ia_faqs');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          }
+        } catch (e) {}
+        return DEFAULT_ADMIN_FAQS;
+      }
+
+      function saveAdminFaqs(faqsList) {
+        localStorage.setItem('brinda_ia_faqs', JSON.stringify(faqsList));
+        renderAdminFaqs();
+      }
+
+      function renderAdminFaqs(filterTerm = '') {
+        const tbody = document.getElementById('faqsTableBody');
+        const badgeCount = document.getElementById('badgeFaqsCount');
+        if (!tbody) return;
+
+        const allFaqs = getAdminFaqs();
+        const term = (filterTerm || '').toLowerCase().trim();
+
+        const filtered = allFaqs.map((f, idx) => ({ ...f, origIdx: idx })).filter(f => {
+          if (!term) return true;
+          const qMatch = (f.q || '').toLowerCase().includes(term);
+          const aMatch = (f.a || '').toLowerCase().includes(term);
+          const kwMatch = (f.keywords || []).some(k => k.toLowerCase().includes(term));
+          return qMatch || aMatch || kwMatch;
+        });
+
+        if (badgeCount) {
+          badgeCount.textContent = `${allFaqs.length} FAQs Ativas`;
+        }
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="5" class="py-6 text-center text-stone-400">
+                Nenhuma pergunta encontrada com o termo pesquisado.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = filtered.map(item => {
+          const kwChips = (item.keywords || []).slice(0, 4).map(kw => 
+            `<span class="inline-block px-1.5 py-0.5 bg-stone-100 text-stone-600 rounded text-[0.62rem] border border-stone-200 mr-1 mb-1 font-mono">${kw}</span>`
+          ).join('');
+          const moreKw = (item.keywords || []).length > 4 ? `<span class="text-[0.6rem] text-stone-400 font-semibold">+${(item.keywords || []).length - 4}</span>` : '';
+
+          const displayAnswer = (item.a || '').replace(/\*\*(.*?)\*\*/g, '<strong class="text-brandGreen">$1</strong>');
+
+          return `
+            <tr class="hover:bg-stone-50 transition-colors">
+              <td class="py-3 px-4 font-mono font-bold text-stone-400 text-center text-xs">${item.origIdx + 1}</td>
+              <td class="py-3 px-4 font-bold text-stone-800 text-xs">${item.q}</td>
+              <td class="py-3 px-4 text-xs">${kwChips}${moreKw}</td>
+              <td class="py-3 px-4 text-stone-600 max-w-sm text-xs leading-relaxed">
+                <div class="line-clamp-2" title="${(item.a || '').replace(/"/g, '&quot;')}">${displayAnswer}</div>
+              </td>
+              <td class="py-3 px-4 text-center whitespace-nowrap">
+                <div class="flex items-center justify-center gap-1.5">
+                  <button type="button" class="btn-edit-faq p-1.5 bg-brandGreen/10 hover:bg-brandGreen text-brandGreen hover:text-white rounded-lg transition-colors cursor-pointer" data-idx="${item.origIdx}" title="Editar Pergunta">
+                    ✏️
+                  </button>
+                  <button type="button" class="btn-delete-faq p-1.5 bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white rounded-lg transition-colors cursor-pointer" data-idx="${item.origIdx}" title="Excluir Pergunta">
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        tbody.querySelectorAll('.btn-edit-faq').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.dataset.idx, 10);
+            openEditFaqModal(idx);
+          });
+        });
+
+        tbody.querySelectorAll('.btn-delete-faq').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.dataset.idx, 10);
+            const target = allFaqs[idx];
+            if (confirm(`Deseja realmente excluir a pergunta "${target?.q}" da base da IA?`)) {
+              allFaqs.splice(idx, 1);
+              saveAdminFaqs(allFaqs);
+            }
+          });
+        });
+      }
+
+      function openEditFaqModal(idx = -1) {
+        const modal = document.getElementById('faqModal');
+        const title = document.getElementById('faqModalTitle');
+        const form = document.getElementById('faqForm');
+        const idxInput = document.getElementById('faqIndex');
+        const qInput = document.getElementById('faqPergunta');
+        const kwInput = document.getElementById('faqKeywords');
+        const aInput = document.getElementById('faqResposta');
+
+        if (!modal) return;
+
+        if (idx >= 0) {
+          const allFaqs = getAdminFaqs();
+          const target = allFaqs[idx];
+          if (!target) return;
+          if (title) title.textContent = `Editar Pergunta #${idx + 1}`;
+          idxInput.value = idx;
+          qInput.value = target.q || '';
+          kwInput.value = (target.keywords || []).join(', ');
+          aInput.value = target.a || '';
+        } else {
+          if (title) title.textContent = 'Cadastrar Nova Pergunta para a IA';
+          idxInput.value = -1;
+          form.reset();
+        }
+
+        modal.classList.remove('hidden');
+      }
+
+      function closeFaqModal() {
+        document.getElementById('faqModal')?.classList.add('hidden');
+      }
+
+      document.getElementById('btnNovaFaq')?.addEventListener('click', () => openEditFaqModal(-1));
+      document.getElementById('closeFaqModalBtn')?.addEventListener('click', closeFaqModal);
+      document.getElementById('cancelFaqBtn')?.addEventListener('click', closeFaqModal);
+
+      document.getElementById('faqForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const idx = parseInt(document.getElementById('faqIndex').value, 10);
+        const q = document.getElementById('faqPergunta').value.trim();
+        const kwRaw = document.getElementById('faqKeywords').value;
+        const a = document.getElementById('faqResposta').value.trim();
+
+        const keywords = kwRaw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+        const allFaqs = getAdminFaqs();
+        const newObj = { q, keywords, a };
+
+        if (idx >= 0 && idx < allFaqs.length) {
+          allFaqs[idx] = newObj;
+        } else {
+          allFaqs.push(newObj);
+        }
+
+        saveAdminFaqs(allFaqs);
+        closeFaqModal();
+      });
+
+      document.getElementById('btnRestaurarFaqsPadrao')?.addEventListener('click', () => {
+        if (confirm('Deseja restaurar as 25 perguntas e respostas originais da base oficial do BRINDA SERRA?')) {
+          saveAdminFaqs(DEFAULT_ADMIN_FAQS);
+          alert('✓ Base oficial de 25 FAQs restaurada com sucesso!');
+        }
+      });
+
+      document.getElementById('buscaFaqInput')?.addEventListener('input', (e) => {
+        renderAdminFaqs(e.target.value);
+      });
+
+      function loadAdminIaConfig() {
+        const iaNome = localStorage.getItem('brinda_ia_name') || 'Assistente Virtual • BRINDA SERRA';
+        const iaModo = localStorage.getItem('brinda_ia_mode') || 'base_oficial';
+        const iaWelcome = localStorage.getItem('brinda_ia_welcome_msg') || 'Olá! Sou a assistente virtual oficial do **BRINDA SERRA**.\nTire suas dúvidas sobre o BRINDA CARD, cervejarias participantes, regras de degustação e validade, ou solicite atendimento humano a qualquer momento!';
+        const iaPrompt = localStorage.getItem('brinda_ia_prompt');
+
+        if (document.getElementById('iaNomeDisplay')) document.getElementById('iaNomeDisplay').value = iaNome;
+        if (document.getElementById('iaModoOperacao')) document.getElementById('iaModoOperacao').value = iaModo;
+        if (document.getElementById('iaWelcomeMsg')) document.getElementById('iaWelcomeMsg').value = iaWelcome;
+        if (document.getElementById('iaPromptInstrucoes') && iaPrompt) document.getElementById('iaPromptInstrucoes').value = iaPrompt;
+      }
+
+      document.getElementById('formIaConfig')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nome = document.getElementById('iaNomeDisplay')?.value.trim() || 'Assistente Virtual • BRINDA SERRA';
+        const modo = document.getElementById('iaModoOperacao')?.value || 'base_oficial';
+        const welcome = document.getElementById('iaWelcomeMsg')?.value.trim() || '';
+        const prompt = document.getElementById('iaPromptInstrucoes')?.value.trim() || '';
+
+        localStorage.setItem('brinda_ia_name', nome);
+        localStorage.setItem('brinda_ia_mode', modo);
+        localStorage.setItem('brinda_ia_welcome_msg', welcome);
+        localStorage.setItem('brinda_ia_prompt', prompt);
+
+        alert('✓ Configurações da IA salvas com sucesso! As alterações já estão ativas no chat dos clientes.');
+      });
+
+      // Simulador de Resposta da IA (Test Drive)
+      document.getElementById('btnTestarSimuladorIa')?.addEventListener('click', () => {
+        const input = document.getElementById('simuladorIaInput');
+        const resBox = document.getElementById('simuladorIaResultado');
+        const resTexto = document.getElementById('simuladorIaRespostaTexto');
+        const question = (input?.value || '').trim();
+
+        if (!question) {
+          alert('Digite uma pergunta para testar o simulador.');
+          input?.focus();
+          return;
+        }
+
+        const faqs = getAdminFaqs();
+        const norm = question.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, ' ').trim();
+
+        // 1. Saudação
+        if (['ola', 'oi', 'bom dia', 'boa tarde', 'boa noite', 'opa'].includes(norm)) {
+          resTexto.innerHTML = 'Olá! Sou a assistente virtual do <strong>BRINDA SERRA</strong>. Como posso te ajudar hoje?';
+          resBox.classList.remove('hidden');
+          return;
+        }
+
+        // 2. Transferência para Atendimento Humano
+        const humanTriggers = ['humano', 'atendente', 'falar com pessoa', 'suporte humano', 'pessoa real', 'reclamacao', 'processo', 'estorno', 'devolucao'];
+        if (humanTriggers.some(t => norm.includes(t))) {
+          resTexto.innerHTML = '<em>[Disparo de Transferência para Atendimento Humano]</em><br>Com certeza! Posso transferir seu atendimento para nossa equipe humana agora mesmo. Basta preencher o formulário abaixo com seu nome e contato para abrirmos seu chamado oficial!';
+          resBox.classList.remove('hidden');
+          return;
+        }
+
+        // 3. Reconhecimento de Relevância
+        const words = norm.split(/\s+/).filter(w => w.length > 2);
+        let bestFaq = null;
+        let bestScore = 0;
+
+        faqs.forEach(faq => {
+          let score = 0;
+          const qNorm = (faq.q || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, ' ');
+          const kwList = (faq.keywords || []).map(k => k.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, ' '));
+
+          words.forEach(w => {
+            if (qNorm.includes(w)) score += 3;
+            kwList.forEach(kw => {
+              if (kw.includes(w)) score += 2;
+            });
+          });
+
+          if (score > bestScore) {
+            bestScore = score;
+            bestFaq = faq;
+          }
+        });
+
+        if (bestFaq && bestScore >= 2) {
+          const formatted = (bestFaq.a || '').replace(/\*\*(.*?)\*\*/g, '<strong class="text-brandGreen">$1</strong>');
+          resTexto.innerHTML = `<div><span class="font-bold text-stone-900">Pergunta Identificada:</span> "${bestFaq.q}" <span class="text-stone-400 text-[0.62rem]">(Relevância: ${bestScore})</span></div><div class="mt-2 pt-2 border-t border-stone-100">${formatted}</div>`;
+        } else {
+          resTexto.innerHTML = `<span class="text-amber-800">⚠️ Resposta padrão para dúvidas fora da base (Score: ${bestScore}):</span><br>Não encontrei uma resposta exata para a sua dúvida na minha base de conhecimento oficial. Deseja que eu transfira para um atendente humano agora mesmo?`;
+        }
+
+        resBox.classList.remove('hidden');
       });
 
       // Inicializa
